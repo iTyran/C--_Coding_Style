@@ -9,18 +9,18 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 - [头文件](#header-files)
 	- [#define用法](#the-define-guard)
 	- [前向声明](#forward-declarations)
-	- [内联函数](#inline-functions)
-	- [inl.h文件](#the--inlh-files)
-	- [参数顺序](#function-parameter-ordering)
-	- [头文件包含的顺序](#names-and-order-of-includes)
-- [作用域](#scoping)
-	- [名字空间](#namespaces)
-		- [未命名空间](#unnamed-namespaces)
-		- [命名空间](#named-namespaces)
-	- [嵌套类](#nested-classes)
-	- [非成员,静态成员,全局函数](#nonmember-static-member-and-global-functions)
-	- [局部变量](#local-variables)
-	- [静态与全局变量](#static-and-global-variables)
+	- [内联函数](#inline-functions) cissyhope
+	- [inl.h文件](#the--inlh-files) cissyhope
+	- [参数顺序](#function-parameter-ordering) cissyhope
+	- [头文件包含的顺序](#names-and-order-of-includes) cissyhope
+- [作用域](#scoping) balabula
+	- [名字空间](#namespaces) balabula
+		- [未命名空间](#unnamed-namespaces) balabula
+		- [命名空间](#named-namespaces) balabula
+	- [嵌套类](#nested-classes) balabula
+	- [非成员,静态成员,全局函数](#nonmember-static-member-and-global-functions) balabula
+	- [局部变量](#local-variables) balabula
+	- [静态与全局变量](#static-and-global-variables) balabula
 - [类](#classes)
 	- [构造函数中的工作](#doing-work-in-constructors)
 	- [初始化](#initialization)
