@@ -21,11 +21,11 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 	- [非成员,静态成员,全局函数](#nonmember-static-member-and-global-functions) balabula
 	- [局部变量](#local-variables) balabula
 	- [静态与全局变量](#static-and-global-variables) balabula
-- [类](#classes)
-	- [构造函数中的工作](#doing-work-in-constructors)
-	- [初始化](#initialization)
-	- [明确的构造函数](#explicit-constructors)
-	- [拷贝构造函数](#copy-constructors)
+- [类](#classes) NickYang
+	- [构造函数中的工作](#doing-work-in-constructors) NickYang
+	- [初始化](#initialization) NickYang
+	- [明确的构造函数](#explicit-constructors) NickYang
+	- [拷贝构造函数](#copy-constructors) NickYang
 	- [委派和继承构造函数](#delegating-and-inheriting-constructors)
 	- [结构 vs 类](#structs-vs-classes)
 	- [继承权](#inheritance)
