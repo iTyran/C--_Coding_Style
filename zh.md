@@ -192,25 +192,25 @@ You may forward declare ordinary classes in order to avoid unnecessary `#include
 
 Always #include the file that actually provides the declarations/definitions you need; do not rely on the symbol being brought in transitively via headers not directly included. One exception is that `Myfile.cpp` may rely on #includes and forward declarations from its corresponding header file `Myfile.h`.
 
-## Inline Functions
+## 内联函数
 
-Define functions inline only when they are small, say, 10 lines or less.
+只在函数体很小——10行代码以内——的时候将其定义为内联函数。
 
-**Definition:**
-You can declare functions in a way that allows the compiler to expand them inline rather than calling them through the usual function call mechanism.
+**定义：**
+你可以在声明函数时允许编译器将其扩展内联，而不是通过常见的函数调用机制调用。
 
-**Pros:** 
-Inlining a function can generate more efficient object code, as long as the inlined function is small. Feel free to inline accessors and mutators, and other short, performance-critical functions.
+**优点：** 
+内联短小精悍的函数可以生成更高效的对象码。推荐内联取值函数、设值函数以及其余性能关键的短函数。
 
-**Cons:** 
-Overuse of inlining can actually make programs slower. Depending on a function's size, inlining it can cause the code size to increase or decrease. Inlining a very small accessor function will usually decrease code size while inlining a very large function can dramatically increase code size. On modern processors smaller code usually runs faster due to better use of the instruction cache.
+**缺点：** 
+滥用内联可能导致程序更慢。内联可能让代码尺寸增加或者减少，这取决于函数的尺寸。内联一个非常小的取值函数通常会减少代码尺寸，而内联一个非常大的函数会显著增加代码尺寸。在现代处理器架构下，更小尺寸的代码因为可以更好的利用指令缓存，通常跑得更快。
 
-**Decision:**
-A decent rule of thumb is to not inline a function if it is more than 10 lines long. Beware of destructors, which are often longer than they appear because of implicit member- and base-destructor calls!
+**结论：**
+一个黄金法则是不要内联超过10行的函数。要小心析构函数，因为隐含成员和基类的析构函数，它们通常比看上去的要长。
 
-Another useful rule of thumb: it's typically not cost effective to inline functions with loops or switch statements (unless, in the common case, the loop or switch statement is never executed).
+另一个黄金法则：通常不建议内联带循环或者switch语句的函数（除非，大部分情况下，循环或者switch语句不会被执行）
 
-It is important to know that functions are not always inlined even if they are declared as such; for example, virtual and recursive functions are not normally inlined. Usually recursive functions should not be inline. The main reason for making a virtual function inline is to place its definition in the class, either for convenience or to document its behavior, e.g., for accessors and mutators.
+需要注意的是，即便函数被声明为内联他们也不一定会真的内联；例如虚函数以及递归函数一般都不会被内联。通常递归函数不应该被内联。将虚函数内联的主要原因是为了方便或者文档需要，将其定义放在类中，例如取值函数以及设值函数。
 
 ## The -inl.h Files
 
