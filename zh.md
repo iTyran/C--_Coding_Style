@@ -35,11 +35,11 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 	- [访问控制](#access-control)
 	- [声明顺序](#declaration-order)
 	- [短函数](#write-short-functions)
-- [其他C++特性](#other-c-features)
-	- [所有权和智能指针](#ownership-and-smart-pointers)
-	- [参考参数](#reference-arguments)
-	- [右值引用](#rvalue-references)
-	- [函数重载](#function-overloading)
+- [其他C++特性](#other-c-features) bruce0505
+	- [所有权和智能指针](#ownership-and-smart-pointers) bruce0505
+	- [参考参数](#reference-arguments) bruce0505
+	- [右值引用](#rvalue-references) bruce0505
+	- [函数重载](#function-overloading) bruce0505
 	- [默认参数](#default-arguments)
 	- [变长数组和alloca()](#variable-length-arrays-and-alloca)
 	- [友员](#friends)
