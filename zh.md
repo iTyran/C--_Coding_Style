@@ -1870,7 +1870,7 @@ a constant, as in INT_MAX
 
 ## Doxygen
 
-* 在头文件中使用Doxygen字符。在实现文件中不需要写Doxygen注释。
+* 在头文件中添加Doxygen注释。在实现文件中不需要写Doxygen注释。
 * 所有的pulic `class`的对象**必须**有Doxygen注释解释它的功能。
 * 所有类的`public`方法，除了重载的方法，**必须**有Doxygen注释。
 * `protected`和`private`方法建议添加Doxygen注释，但不是强制的。
