@@ -1862,20 +1862,20 @@ STL-like entity; follows STL naming conventions
 
 a constant, as in INT_MAX 
 
-# Comments
+# 注释
 
-Though a pain to write, comments are absolutely vital to keeping our code readable. The following rules describe what you should comment and where. But remember: while comments are very important, the best code is self-documenting. Giving sensible names to types and variables is much better than using obscure names that you must then explain through comments.
+虽然写起来很痛苦，但是注释对于保持代码可读性绝对非常重要。接下来的规则描述了哪些代码需要注释以及在什么地方添加注释。请记住：注释固然非常重要，但是好的代码就是自己的文档。为类型和变量取有意义的名字比晦涩的名字加注释要好的多。
 
-When writing your comments, write for your audience: the next contributor who will need to understand your code. Be generous — the next one may be you!
+为你的读者，也就是下一个需要读懂你的代码的贡献者写注释。不要吝啬－下一个可能就是你！
 
 ## Doxygen
 
-* Use Doxygen strings in the header files. Doxygen comments on the implementation file are not required.
-* All public `class` objects MUST have a Doxygen comment that explains what it does.
-* All `public` methods of the class, with the exception of overridden methods, MUST be documented using Doxygen comments.
-* `protected` and `private` methods are suggested to have Doxygen comments, but are not mandatory.
-* Instance variables should NOT have Doxygen comments, unless they are public.
-* Markdown systax is allowed within your Doxygen comments
+* 在头文件中添加Doxygen注释。在实现文件中不需要写Doxygen注释。
+* 所有的pulic `class`的对象**必须**有Doxygen注释解释它的功能。
+* 所有类的`public`方法，除了重载的方法，**必须**有Doxygen注释。
+* `protected`和`private`方法建议添加Doxygen注释，但不是强制的。
+* 实例变量**不**需要Doxygen注释，除非他们是`public`的。
+* 可以在Doxygen注释中使用Markdown语法。
 
 Example:
 ```cpp
@@ -1916,23 +1916,23 @@ protected:
 };
 ```
 
-## Comment Style
+## 注释风格
 
-Use either the `//` or `/* */` syntax, as long as you are consistent.
+使用`//`或者`/* */`，但是需要保持一致。
 
-You can use either the `//` or the `/* */` syntax; however, `//` is much more common. Be consistent with how you comment and what style you use where.
+你可以使用`//`或者`/* */`，不过`//`更常用。与你如何注释以及使用的风格保持一致。
 
-## File Comments
+## 文件注释
 
-Start each file with license boilerplate, followed by a description of its contents.
+每个文件以许可条文开始，紧接着是许可内容描述。
 
-### Legal Notice and Author Line
+### 法律声明和作者
 
-Every file should contain license boilerplate. Choose the appropriate boilerplate for the license used by the project (for example, Apache 2.0, BSD, MIT, etc).
+每个文件都应该包含许可条文。为项目使用的许可选择适用的条文（例如Apache 2.0、BSD、MIT等等）。
 
-The license must be compatible for the different App Stores, so GPL and LGPL code cannot be used in cocos2d-x.
+许可必须兼容不同的应用商店，所以cocos2d-x不能使用GPL和LGPL。
 
-If you make significant changes to a file with an author line, consider deleting the author line.
+如果文件的某个作者发生了重大改变，那么考虑删除该作者这一行。
 
 ### File Contents
 
