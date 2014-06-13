@@ -212,17 +212,17 @@ Always #include the file that actually provides the declarations/definitions you
 
 需要注意的是，即便函数被声明为内联他们也不一定会真的内联；例如虚函数以及递归函数一般都不会被内联。通常递归函数不应该被内联。将虚函数内联的主要原因是为了方便或者文档需要，将其定义放在类中，例如取值函数以及设值函数。
 
-## The -inl.h Files
+## -inl.h文件
 
-You may use file names with a -inl.h suffix to define complex inline functions when needed.
+如果有需要，可以用带-inl.h后缀的文件来定义复杂内联函数。
 
-The definition of an inline function needs to be in a header file, so that the compiler has the definition available for inlining at the call sites. However, implementation code properly belongs in .cpp files, and we do not like to have much actual code in .h files unless there is a readability or performance advantage.
+内联函数的定义必须放在头文件中，这样编译器在函数调用处内联展开时才有函数定义可用。但实现代码通常还是放在.cpp文件比较合适，因为除非会带来可读性或者性能上的好处，否则我们不希望在.h文件里堆放太多具体的代码。
 
-If an inline function definition is short, with very little, if any, logic in it, you should put the code in your .h file. For example, accessors and mutators should certainly be inside a class definition. More complex inline functions may also be put in a .h file for the convenience of the implementer and callers, though if this makes the .h file too unwieldy you can instead put that code in a separate -inl.h file. This separates the implementation from the class definition, while still allowing the implementation to be included where necessary.
+如果一个内联函数的定义非常短，只含有少量逻辑，你可以把代码放在你的.h文件里。例如取值函数与设值函数都毫无疑问的应该放在类定义中。更复杂的内联函数为了实现者和调用者的方便，也要放在.h文件里，但是如果这样会让.h文件过于臃肿，你也可以将其放在一个单独的-inl.h文件里。这样可以将具体实现与类定义分开，同时又确保了实现在需要用到的时候是被包含的。
 
-Another use of -inl.h files is for definitions of function templates. This can be used to keep your template definitions easy to read.
+-inl.h文件还有一个用途是存放函数模板的定义。这样可以让你的模板定义更加易读。
 
-Do not forget that a -inl.h file requires a #define guard just like any other header file.
+不要忘记，就像其他的头文件一样，一个-inl.h文件也是需要#define防护的。
 
 ## Function Parameter Ordering
 
