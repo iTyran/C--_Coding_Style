@@ -224,39 +224,39 @@ Always #include the file that actually provides the declarations/definitions you
 
 不要忘记，就像其他的头文件一样，一个-inl.h文件也是需要#define防护的。
 
-## Function Parameter Ordering
+## 函数参数顺序
 
-When defining a function, parameter order is: inputs, then outputs.
+定义函数时，参数顺序应该为：输入，然后是输出。
 
-Parameters to C/C++ functions are either input to the function, output from the function, or both. Input parameters are usually `values` or `const references`, while output and input/output parameters will be `non-const pointers` . When ordering function parameters, put all input-only parameters before any output parameters. In particular, do not add new parameters to the end of the function just because they are new; place new input-only parameters before the output parameters.
+C/C++函数的参数要么是对函数的输入，要么是函数给出的输出，要么两者兼是。输入参数通常是值或者常引用，而输出以及输入/输出参数是非const指针。在给函数参数排序时，将所有仅输入用的参数放在一切输出参数的前面。特别需要注意的是，在加新参数时不要因为它们是新的就直接加到最后去；新的仅输入用参数仍然要放到输出参数前。
 
-This is not a hard-and-fast rule. Parameters that are both input and output (often classes/structs) muddy the waters, and, as always, consistency with related functions may require you to bend the rule.
+这不是一条不可动摇的铁律。那些既用于输入又用于输出的参数（通常是类/结构体）通常会把水搅浑，同时，为了保持相关函数的一致性，有时也会使你违背这条原则。
 
-## Names and Order of Includes
+## include的命名和顺序
 
-Use standard order for readability and to avoid hidden dependencies: C library, C++ library, other libraries' .h, your project's .h.
+使用以下标准顺序以增加可读性，同时避免隐藏的依赖关系：C库，C++库，其他库的.h文件，你自己项目的.h文件。
 
-All of a project's header files should be listed as descendants of the project's source directory without use of UNIX directory shortcuts . (the current directory) or .. (the parent directory). For example, google-awesome-project/src/base/logging.h should be included as
+所有本项目的头文件都应该包含从源代码根目录开始的完整路径，而不要使用UNIX的目录快捷方式.（当前目录）或者..（上层目录）。例如google-awesome-project/src/base/logging.h应写为以下方式
 
 ```cpp
 #include "base/logging.h"
 ```
 
-In `dir/foo.cpp` or `dir/foo_test.cpp`, whose main purpose is to implement or test the stuff in `dir2/foo2.h`, order your includes as follows:
+例如有文件`dir/foo.cpp`或`dir/foo_test.cpp`，他们的主要用途是实现或者测试`dir2/foo2.h`头文件里的内容，那么include的顺序应该如下：
 
-* dir2/foo2.h (preferred location — see details below).
+* dir2/foo2.h （推荐位置——理由见后）
 * C system files.
 * C++ system files.
 * Other libraries' .h files.
 * Your project's .h files.
 
-With the preferred ordering, if `dir2/foo2.h` omits any necessary includes, the build of `dir/foo.cpp` or `dir/foo_test.cpp` will break. Thus, this rule ensures that build breaks show up first for the people working on these files, not for innocent people in other packages.
+按照这个推荐顺序，如果`dir2/foo2.h`漏掉了什么必须的包含文件，`dir/foo.cpp`或者`dir/foo_test.cpp`就会编译失败。这样的规则就保证了工作在这些文件的人而不是在其他包工作的无辜的人最先发现问题。
 
-`dir/foo.cpp` and `dir2/foo2.h` are often in the same directory (e.g. `base/basictypes_test.cpp` and `base/basictypes.h`), but can be in different directories too.
+`dir/foo.cpp`和`dir2/foo2.h`通常位于同一个目录（例如`base/basictypes_test.cpp`和`base/basictypes.h`），但是在不同目录也没问题。
 
-Within each section the includes should be ordered alphabetically. Note that older code might not conform to this rule and should be fixed when convenient.
+在同一部分中包含文件应该按照字母顺序排列。注意如果老代码不符合这条规则，那就在方便的时候改过来。
 
-For example, the includes in `cocos2dx/sprite_nodes/CCSprite.cpp` might look like this:
+例如`cocos2dx/sprite_nodes/CCSprite.cpp`的include部分可能如下：
 
 ```cpp
 #include "sprite_nodes/CCSprite.h"  // Preferred location.
@@ -271,7 +271,7 @@ For example, the includes in `cocos2dx/sprite_nodes/CCSprite.cpp` might look lik
 #include "foo/public/bar.h"
 ```
 
-Exception: sometimes, system-specific code needs conditional includes. Such code can put conditional includes after other includes. Of course, keep your system-specific code small and localized. Example:
+特例：有时候系统相关代码需要使用条件包含。这种情况下可以把条件包含放在最后。当然，要保持系统相关代码短小精悍并做好本地化。例如：
 
 ```cpp
 #include "foo/public/fooserver.h"
