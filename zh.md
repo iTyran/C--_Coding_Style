@@ -1924,27 +1924,31 @@ protected:
 
 ## 文件注释
 
-每个文件以许可条文开始，紧接着是许可内容描述。
+文件以许可条文开始，紧接着是许可内容描述。
 
 ### 法律声明和作者
 
-每个文件都应该包含许可条文。为项目使用的许可选择适用的条文（例如Apache 2.0、BSD、MIT等等）。
+文件应该包含许可条文。为项目使用的许可选择适用的条文（例如Apache 2.0、BSD、MIT等等）。
 
 许可必须兼容不同的应用商店，所以cocos2d-x不能使用GPL和LGPL。
 
 如果文件的某个作者发生了重大改变，那么考虑删除该作者这一行。
 
-### File Contents
+### File Contents文件内容
 
 Every file should have a comment at the top describing its contents.
+文件要在开始的地方添加注释描述文件的内容。
 
 Generally a .h file will describe the classes that are declared in the file with an overview of what they are for and how they are used. A .cpp file should contain more information about implementation details or discussions of tricky algorithms. If you feel the implementation details or a discussion of the algorithms would be useful for someone reading the .h, feel free to put it there instead, but mention in the .cpp that the documentation is in the .h file.
+通常.h文件会概述它所声明的类的功能以及如何适用。.cpp文件会包含实现细节或者复杂算法的更多信息。如果你认为实现细节或者复杂算法的讨论有助于别人阅读.h文件，那就放到.h文件中，但是要在.cpp文件中注明文档在.h文件中。
 
 Do not duplicate comments in both the .h and the .cpp. Duplicated comments diverge.
+**不要**在.h和.cpp中重复注释。重复注释产生歧义。
 
-## Class Comments
+## Class Comments类注释
 
 Every class definition should have an accompanying comment that describes what it is for and how it should be used. If the class is public (exposed to the users), it should use Doxygen comments.
+类定义应该随带着说明类的功能和如何使用的注释。如果类是`public`（暴露给用户），那么应该有Doxygen注释。
 
 ```cpp
 // Iterates over the contents of a GargantuanTable.  Sample usage:
@@ -1959,29 +1963,42 @@ class GargantuanTableIterator {
 ```
 
 If you have already described a class in detail in the comments at the top of your file feel free to simply state "See comment at top of file for a complete description", but be sure to have some sort of comment.
+如果已经在文件顶部已经有详细描述一个类的注释，那么可以通过"See comment at top of file for a complete description"简单的说明，但是一定要确保有类似的注释。
 
 Document the synchronization assumptions the class makes, if any. If an instance of the class can be accessed by multiple threads, take extra care to document the rules and invariants surrounding multithreaded use.
+如果类有假设的话，记录这些假设。如果某个实例可以在多线程里访问，那么请倍加小心的记录多线程使用的规则和常量(invariants)。
 
-## Function Comments
+## Function Comments函数注释
 
 Declaration comments describe use of the function; comments at the definition of a function describe operation.
+声明函数的时候注释函数的用法；定义函数的时候注释函数的操作。
 
 If the function is public (exposed to the users), it should be documented using Doxygen comments.
+如果函数是`public`（暴露给用户），用Doxygen注释。
 
-### Function Declarations
+### Function Declarations函数声明
 
 Every function declaration should have comments immediately preceding it that describe what the function does and how to use it. These comments should be descriptive ("Opens the file") rather than imperative ("Open the file"); the comment describes the function, it does not tell the function what to do. In general, these comments do not describe how the function performs its task. Instead, that should be left to comments in the function definition.
+声明函数前，需要添加描述函数功能和调用方法的注释。注释应该是描述式的("Opens the file")，而不是命令式的("Open the file")；注释描述函数功能，但是不描述函数实现。通常，函数声明的注释不描述函数如何执行任务。这类的注释应该在函数定义的时候添加。
 
 Types of things to mention in comments at the function declaration:
+函数声明的注释需要包含下面的方面：
 
 * What the inputs and outputs are.
+* 输入、输出
 * For class member functions: whether the object remembers reference arguments beyond the duration of the method call, and whether it will free them or not.
+* 对于类成员函数：对象是否超出方法调用周期记录引用参数，以及是否释放引用参数。
 * If the function allocates memory that the caller must free.
+* 函数是否分配了调用者需要释放的内存。
 * Whether any of the arguments can be a null pointer.
+* 是否有参数可以是NULL指针。
 * If there are any performance implications of how a function is used.
+* 是否有影响函数调用方法的行为
 * If the function is re-entrant. What are its synchronization assumptions?
+* 
 
 Here is an example:
+示例：
 
 ```cpp
 // Returns an iterator for this table.  It is the client's
@@ -2001,7 +2018,8 @@ Here is an example:
 Iterator* getIterator() const;
 ```
 
-However, do not be unnecessarily verbose or state the completely obvious. Notice below that it is not necessary to say "returns false otherwise" because this is implied.
+However, do not be unnecessarily verbose or state the completely obvious. Notice below that it is not necessary to say "returns false otherwise" because this is implied
+但是，对于完全明显的东西，不要产生不必要的冗余描述。注意到下面的例子中，不需要说"returns false otherwise"，因为这已经包含在里面。
 
 ```cpp
 /// Returns true if the table cannot hold any more entries.
@@ -2009,20 +2027,25 @@ bool isTableFull();
 ```
 
 When commenting constructors and destructors, remember that the person reading your code knows what constructors and destructors are for, so comments that just say something like "destroys this object" are not useful. Document what constructors do with their arguments (for example, if they take ownership of pointers), and what cleanup the destructor does. If this is trivial, just skip the comment. It is quite common for destructors not to have a header comment.
+为构造函数和析构函数写注释时，请记住读者知道构造函数和析构函数的用途，所以类似“destorys this object”的注释没有用。记录构造函数对参数的处理（例如，是否拥有指针），析构函数的释放行为。如果很琐碎，那么跳过注释。析构函数没有注释是很普通的事。
 
-### Function Definitions
+### Function Definitions函数定义
 
 If there is anything tricky about how a function does its job, the function definition should have an explanatory comment. For example, in the definition comment you might describe any coding tricks you use, give an overview of the steps you go through, or explain why you chose to implement the function in the way you did rather than using a viable alternative. For instance, you might mention why it must acquire a lock for the first half of the function but why it is not needed for the second half.
+如果函数很复杂，那么函数定义应该有说明性的注释。例如，在函数定义的注释中，可以描述使用的复杂代码，概述步骤，或者解释为什么采用这种方法来实现函数，而不是用其他可行的方案。例如，你可能提及为什么在函数的前半部分获取一个锁但是在后半部分不需要。
 
 Note you should not just repeat the comments given with the function declaration, in the .h file or wherever. It's okay to recapitulate briefly what the function does, but the focus of the comments should be on how it does it.
+注意，你不能只是重复.h文件或者其他地方里函数声明时的注释。简要得复述函数的用途是可以的，但是注释应该聚焦在如何实现上。
 
-## Variable Comments
+## Variable Comments变量注释
 
 In general the actual name of the variable should be descriptive enough to give a good idea of what the variable is used for. In certain cases, more comments are required.
+一般情况下，变量的名字应该能很好得体现变量的用途。在某些情况下，需要更多的注释。
 
-### Class Data Members
+### Class Data Members类数据成员
 
 Each class data member (also called an instance variable or member variable) should have a comment describing what it is used for. If the variable can take sentinel values with special meanings, such as a null pointer or -1, document this. For example:
+类数据成员（亦称为实例变量或成员变量）需要注释描述它的用途。如果变量可以是有特殊意义的定值，例如NULL指针或者－1。例子如下：
 
 ```cpp
 private:
@@ -2032,9 +2055,10 @@ private:
  int _numTotalEntries;
 ```
 
-### Global Variables
+### Global Variables全局变量
 
 As with data members, all global variables should have a comment describing what they are and what they are used for. For example:
+
 
 ```cpp
 // The total number of tests cases that we run through in this regression test.
