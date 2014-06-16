@@ -8,7 +8,7 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 
 - [头文件](#header-files)
 	- [#define用法](#the-define-guard)
-	- [前向声明](#forward-declarations)
+	- [前向声明](#forward-declarations) cissyhope
 	- [内联函数](#inline-functions) cissyhope
 	- [inl.h文件](#the--inlh-files) cissyhope
 	- [参数顺序](#function-parameter-ordering) cissyhope
@@ -212,51 +212,51 @@ Always #include the file that actually provides the declarations/definitions you
 
 需要注意的是，即便函数被声明为内联他们也不一定会真的内联；例如虚函数以及递归函数一般都不会被内联。通常递归函数不应该被内联。将虚函数内联的主要原因是为了方便或者文档需要，将其定义放在类中，例如取值函数以及设值函数。
 
-## The -inl.h Files
+## -inl.h文件
 
-You may use file names with a -inl.h suffix to define complex inline functions when needed.
+如果有需要，可以用带-inl.h后缀的文件来定义复杂内联函数。
 
-The definition of an inline function needs to be in a header file, so that the compiler has the definition available for inlining at the call sites. However, implementation code properly belongs in .cpp files, and we do not like to have much actual code in .h files unless there is a readability or performance advantage.
+内联函数的定义必须放在头文件中，这样编译器在函数调用处内联展开时才有函数定义可用。但实现代码通常还是放在.cpp文件比较合适，因为除非会带来可读性或者性能上的好处，否则我们不希望在.h文件里堆放太多具体的代码。
 
-If an inline function definition is short, with very little, if any, logic in it, you should put the code in your .h file. For example, accessors and mutators should certainly be inside a class definition. More complex inline functions may also be put in a .h file for the convenience of the implementer and callers, though if this makes the .h file too unwieldy you can instead put that code in a separate -inl.h file. This separates the implementation from the class definition, while still allowing the implementation to be included where necessary.
+如果一个内联函数的定义非常短，只含有少量逻辑，你可以把代码放在你的.h文件里。例如取值函数与设值函数都毫无疑问的应该放在类定义中。更复杂的内联函数为了实现者和调用者的方便，也要放在.h文件里，但是如果这样会让.h文件过于臃肿，你也可以将其放在一个单独的-inl.h文件里。这样可以将具体实现与类定义分开，同时又确保了实现在需要用到的时候是被包含的。
 
-Another use of -inl.h files is for definitions of function templates. This can be used to keep your template definitions easy to read.
+-inl.h文件还有一个用途是存放函数模板的定义。这样可以让你的模板定义更加易读。
 
-Do not forget that a -inl.h file requires a #define guard just like any other header file.
+不要忘记，就像其他的头文件一样，一个-inl.h文件也是需要#define防护的。
 
-## Function Parameter Ordering
+## 函数参数顺序
 
-When defining a function, parameter order is: inputs, then outputs.
+定义函数时，参数顺序应该为：输入，然后是输出。
 
-Parameters to C/C++ functions are either input to the function, output from the function, or both. Input parameters are usually `values` or `const references`, while output and input/output parameters will be `non-const pointers` . When ordering function parameters, put all input-only parameters before any output parameters. In particular, do not add new parameters to the end of the function just because they are new; place new input-only parameters before the output parameters.
+C/C++函数的参数要么是对函数的输入，要么是函数给出的输出，要么两者兼是。输入参数通常是值或者常引用，而输出以及输入/输出参数是非const指针。在给函数参数排序时，将所有仅输入用的参数放在一切输出参数的前面。特别需要注意的是，在加新参数时不要因为它们是新的就直接加到最后去；新的仅输入用参数仍然要放到输出参数前。
 
-This is not a hard-and-fast rule. Parameters that are both input and output (often classes/structs) muddy the waters, and, as always, consistency with related functions may require you to bend the rule.
+这不是一条不可动摇的铁律。那些既用于输入又用于输出的参数（通常是类/结构体）通常会把水搅浑，同时，为了保持相关函数的一致性，有时也会使你违背这条原则。
 
-## Names and Order of Includes
+## include的命名和顺序
 
-Use standard order for readability and to avoid hidden dependencies: C library, C++ library, other libraries' .h, your project's .h.
+使用以下标准顺序以增加可读性，同时避免隐藏的依赖关系：C库，C++库，其他库的.h文件，你自己项目的.h文件。
 
-All of a project's header files should be listed as descendants of the project's source directory without use of UNIX directory shortcuts . (the current directory) or .. (the parent directory). For example, google-awesome-project/src/base/logging.h should be included as
+所有本项目的头文件都应该包含从源代码根目录开始的完整路径，而不要使用UNIX的目录快捷方式.（当前目录）或者..（上层目录）。例如google-awesome-project/src/base/logging.h应写为以下方式
 
 ```cpp
 #include "base/logging.h"
 ```
 
-In `dir/foo.cpp` or `dir/foo_test.cpp`, whose main purpose is to implement or test the stuff in `dir2/foo2.h`, order your includes as follows:
+例如有文件`dir/foo.cpp`或`dir/foo_test.cpp`，他们的主要用途是实现或者测试`dir2/foo2.h`头文件里的内容，那么include的顺序应该如下：
 
-* dir2/foo2.h (preferred location — see details below).
+* dir2/foo2.h （推荐位置——理由见后）
 * C system files.
 * C++ system files.
 * Other libraries' .h files.
 * Your project's .h files.
 
-With the preferred ordering, if `dir2/foo2.h` omits any necessary includes, the build of `dir/foo.cpp` or `dir/foo_test.cpp` will break. Thus, this rule ensures that build breaks show up first for the people working on these files, not for innocent people in other packages.
+按照这个推荐顺序，如果`dir2/foo2.h`漏掉了什么必须的包含文件，`dir/foo.cpp`或者`dir/foo_test.cpp`就会编译失败。这样的规则就保证了工作在这些文件的人而不是在其他包工作的无辜的人最先发现问题。
 
-`dir/foo.cpp` and `dir2/foo2.h` are often in the same directory (e.g. `base/basictypes_test.cpp` and `base/basictypes.h`), but can be in different directories too.
+`dir/foo.cpp`和`dir2/foo2.h`通常位于同一个目录（例如`base/basictypes_test.cpp`和`base/basictypes.h`），但是在不同目录也没问题。
 
-Within each section the includes should be ordered alphabetically. Note that older code might not conform to this rule and should be fixed when convenient.
+在同一部分中包含文件应该按照字母顺序排列。注意如果老代码不符合这条规则，那就在方便的时候改过来。
 
-For example, the includes in `cocos2dx/sprite_nodes/CCSprite.cpp` might look like this:
+例如`cocos2dx/sprite_nodes/CCSprite.cpp`的include部分可能如下：
 
 ```cpp
 #include "sprite_nodes/CCSprite.h"  // Preferred location.
@@ -271,7 +271,7 @@ For example, the includes in `cocos2dx/sprite_nodes/CCSprite.cpp` might look lik
 #include "foo/public/bar.h"
 ```
 
-Exception: sometimes, system-specific code needs conditional includes. Such code can put conditional includes after other includes. Of course, keep your system-specific code small and localized. Example:
+特例：有时候系统相关代码需要使用条件包含。这种情况下可以把条件包含放在最后。当然，要保持系统相关代码短小精悍并做好本地化。例如：
 
 ```cpp
 #include "foo/public/fooserver.h"
@@ -554,104 +554,92 @@ As a result we only allow static variables to contain POD data. This rule comple
 
 If you need a static or global variable of a class type, consider initializing a pointer (which will never be freed), from either your main() function or from pthread_once(). Note that this must be a raw pointer, not a "smart" pointer, since the smart pointer's destructor will have the order-of-destructor issue that we are trying to avoid.
 
-# Classes
+# 类
 
-Classes are the fundamental unit of code in C++. Naturally, we use them extensively. This section lists the main dos and don'ts you should follow when writing a class.
+类是C++代码中最根本的单元。很自然地，我们会经常用到类。本节列出了在写类的时候应该遵循的一些该做和不应该做的事情。
 
-## Doing Work in Constructors
+## 在构造函数里面完成工作
 
-Avoid doing complex initialization in constructors (in particular, initialization that can fail or that requires virtual method calls).
+在构造函数里面避免复杂的初始化（特别是那些初始化的时候可能会失败或者需要调用虚拟函数的情况）
 
-**Definition:**
-It is possible to perform initialization in the body of the constructor.
+**定义：**
+有可能在构造函数体内执行初始化
 
-**Pros:**
-Convenience in typing. No need to worry about whether the class has been initialized or not.
+**优点：**
+方便书写。不必要担心类是否已经被初始化。
 
-**Cons:**
-The problems with doing work in constructors are:
+**缺点：**
+在构造函数里完成工作面临如下问题：
+* 由于缺少异常处理（在构造函数中禁止使用），构造函数很难去定位错误。
+* 如果初始化失败，接着我们继续使用一个初始化失败的对象，可能会出现不可以预知的状态。
+* 如果初始化调用了虚拟函数，这些调用将不会正确的传至子类的实现。以后对该类的修改可能会悄悄的出现该问题，即使你的类当前并不是子类，也会引起混乱。
+* 如果创建一个该类的全局变量（虽然违反规则，但是仍然有人会这样子做），构造函数代码会在main函数之前被调用，可能会破坏一些在构造函数代码里面隐含的假设，譬如，gflags还没有被初始化。
 
-* There is no easy way for constructors to signal errors, short of using exceptions (which are forbidden).
-* If the work fails, we now have an object whose initialization code failed, so it may be an indeterminate state.
-* If the work calls virtual functions, these calls will not get dispatched to the subclass implementations. Future modification to your class can quietly introduce this problem even if your class is not currently subclassed, causing much confusion.
-* If someone creates a global variable of this type (which is against the rules, but still), the constructor code will be called before main(), possibly breaking some implicit assumptions in the constructor code. For instance, gflags will not yet have been initialized.
+**结论：** 
+构造函数不应该调用虚函数，否则会引起非致命的错误。如果你的对象需要的初始化工作比较重要，你可以考虑使用工厂方法或者Init()方法。
 
-**Decision:** Constructors should never call virtual functions or attempt to raise non-fatal failures. If your object requires non-trivial initialization, consider using a factory function or Init() method.
+## 初始化
 
-## Initialization
+如果你的类定义了成员变量，你必须在类里面为每一个成员变量提供初始化或者写一个默认的构造函数。如果你没有声明任何构造函数，编译器会为你生成一个默认的构造函数，这个默认构造函数可能没有初始化一些字段，也可能初始化为不恰当的值。
 
-If your class defines member variables, you must provide an in-class initializer for every member variable or write a constructor (which can be a default constructor). If you do not declare any constructors yourself then the compiler will generate a default constructor for you, which may leave some fields uninitialized or initialized to inappropriate values.
+**定义：** 
+当我们以无参数形式new一个类对象的时候会调用默认构造函数。当调用‘new[]’（用于创建数组）的时候默认构造函数总是会被调用。在类成员里面进行初始化是指声明一个成员变量的时候使用一个结构例如‘int _count = 17’或者‘string _name{"abc"}’来替代这样的形式‘int _count’或者‘string _name’
 
-**Definition:** The default constructor is called when we new a class object with no arguments. It is always called when calling `new[]` (for arrays). In-class member initialization means declaring a member variable using a construction like `int _count = 17;` or `string name_{"abc"};`, as opposed to just `int _count;` or `string _name;`.
+**优点：**
+如果没有提供初始化的操作，一个用户定义的默认构造函数是用来初始化一个对象。它能保证一个对象被创建后总是处于有效或者可用状态；它也能保证一个对象时在最初被创建的时候处于一个明显不可能出现的状态来简化调试。
+在类里面的成员进行初始化工作能保证一个成员变量正确的被初始化且不会出现在多个构造函数有同样的初始化代码。这样在你新增一个成员变量的时候就就可以减少出现bug的几率，因为你可能记得了在某一个构造函数里面初始化它了，却忘了在其他构造函数里面进行初始化。
 
-**Pros:**
+**缺点：**
+对于开发者，明确地定义一个默认构造函数是一个额外工作。
+在对类成员进行初始化工作时如果一个成员变量在声明时初始化同时也在构造函数里面初始化，这可能会引起混乱，因为在构造函数里面的值会替换掉在声明时的值。
 
-A user defined default constructor is used to initialize an object if no initializer is provided. It can ensure that an object is always in a valid and usable state as soon as it's constructed; it can also ensure that an object is initially created in an obviously "impossible" state, to aid debugging.
+**结论：**
+使用类成员初始化作为简单的初始化，特别是当一个成员变量在多个构造函数里面必须使用相同的方式初始化的时候。
+如果你的类定义了成员变量是没有在类里面进行初始化的，且如果没有其它构造函数，你必须定义一个无参数的默认构造函数。它应该使用保持内部状态一致和有效的方式来更好的初始化类对象。
+原因是因为如果你没有其他构造函数且没有定义一个默认的构造函数，编译器会生成同一个默认的构造函数给你。编译器生成的构造函数对你的对象的初始化可能并不正确。
+如果你的类继承自一个已经存在的类，但是你并没有添加新的成员变量，你就不需要默认构造函数了。
 
-In-class member initialization ensures that a member variable will be initialized appropriately without having to duplicate the initialization code in multiple constructors. This can reduce bugs where you add a new member variable, initialize it in one constructor, and forget to put that initialization code in another constructor.
+## 显式构造函数
 
-**Cons:**
+对只有一个参数的构造函数使用C++关键字explicit。
 
-Explicitly defining a default constructor is extra work for you, the code writer.
+**定义：**
+一般来说，如果一个构造函数只有一个参数，它可以当做转换函数使用。例如，如果你定义了Foo::Foo(string name)，然后传进一个string类型给一个函数是需要Foo类型的，Foo的构造函数将会被调用并转换这个string类型为Foo类型，然后把这个Foo类型传递给这个函数。这能提供便利，但是这也是产生麻烦的根源：当一个对象被转换了，但是它却不是你想要的类型。显式地声明一个构造函数可以防止这种隐性转换。
 
-In-class member initialization is potentially confusing if a member variable is initialized as part of its declaration and also initialized in a constructor, since the value in the constructor will override the value in the declaration.
+**优点：**
+避免出现不合需求的转换
 
-**Decision:**
+**缺点：**
+没有
 
-Use in-class member initialization for simple initializations, especially when a member variable must be initialized the same way in more than one constructor.
+**结论：**
+所有的单个参数的构造函数都应该使用explicit显式声明。在定义类的时候，对于只有一个参数的构造函数时总是要在其前面使用explicit：explicit Foo(string name);
 
-If your class defines member variables that aren't initialized in-class, and if it has no other constructors, you must define a default constructor (one that takes no arguments). It should preferably initialize the object in such a way that its internal state is consistent and valid.
+有一点例外的是拷贝构造函数，在一些比较少的情况我们允许它不使用explicit。还有一种例外的情况是，那些打算作为透明封装的类。这两种情况都应该明确的进行注释。
 
-The reason for this is that if you have no other constructors and do not define a default constructor, the compiler will generate one for you. This compiler generated constructor may not initialize your object sensibly.
+最后，构造函数中只有一个初始化列表的可以是非explicit。这是为了允许你的类型结构可以使用大括号初始列表的方式进行赋值。
 
-If your class inherits from an existing class but you add no new member variables, you are not required to have a default constructor.
+## 拷贝构造函数
 
+当需要时应该提供一个拷贝构造函数和赋值操作符。否则，使用‘DISALLOW_COPY_AND_ASSIGN’来禁用它们
 
-The reason for this is that if you have no other constructors and do not define a default constructor, the compiler will generate one for you. This compiler generated constructor may not initialize your object sensibly.
+**定义：**
+拷贝构造函数和赋值操作符是用来创建一个对象的拷贝。拷贝构造函数是有编译器在某些情况下隐式调用的，例如，以传值方式传一个对象的时候。
 
-If your class inherits from an existing class but you add no new member variables, you are not required to have a default constructor.
+**优点：**
+拷贝构造韩式使得拷贝对象变得简单。STL容器要求所有的内容都是可以拷贝和赋值的。拷贝构造函数比CopyFrom()方式这种替代方案更高效，在某些情况，编译器可以省去它们，它也避免了堆分配的开销。
 
-## Explicit Constructors
+**缺点：**
+在C++中，隐式的拷贝对象可能会引起bugs和性能问题的。它也会减少可读性，因为它使得以传值方式的对象难以跟踪，相对于传引用来说，对象的改变会立刻得到反馈。
 
-Use the C++ keyword explicit for constructors with one argument.
+**结论：**
+很少类需要能被拷贝。大部分类时不需要拷贝构造函数和赋值操作符的。在许多情况下，一个指针或者引用和一个被拷贝的值使用起来是差不多的，然而它们却更高效。例如，你可以以引用或者指针的方式传递函数参数来代替传值方式，你也可以用指针替代类对象来保存在STL容器里面。
 
-**Definition:**
- Normally, if a constructor takes one argument, it can be used as a conversion. For instance, if you define Foo::Foo(string name) and then pass a string to a function that expects a Foo, the constructor will be called to convert the string into a Foo and will pass the Foo to your function for you. This can be convenient but is also a source of trouble when things get converted and new objects created without you meaning them to. Declaring a constructor explicit prevents it from being invoked implicitly as a conversion.
+如果你的类需要能被拷贝，与其提供一个拷贝构造函数，不如提供提供一个例如‘clone()’的拷贝函数更好，因为这样的函数不能被隐式的调用。如果一个拷贝方法不满足你的需求情况（例如，考虑到性能原因，或者你的类需要以值方式保存在STL容器里面），可以也再提供拷贝构造函数和赋值操作符。
 
-**Pros:**
-Avoids undesirable conversions.
+如果你的类不需要拷贝构造函数或者赋值操作符，你必须显式禁用它们。你可以这样子做，在类里面以私有方式为拷贝构造函数和赋值操作符添加声明，记得不要对它们提供任何对应的实现（这样会导致链接错误）。
 
-**Cons:**
-None.
-
-**Decision:**
-We require all single argument constructors to be explicit. Always put explicit in front of one-argument constructors in the class definition: explicit Foo(string name);
-
-The exception is copy constructors, which, in the rare cases when we allow them, should probably not be explicit. Classes that are intended to be transparent wrappers around other classes are also exceptions. Such exceptions should be clearly marked with comments.
-
-Finally, constructors that take only an initializer_list may be non-explicit. This is to permit construction of your type using the assigment form for brace init lists (i.e. `MyType m = {1, 2}` ).
-
-## Copy Constructors
-
-Provide a copy constructor and assignment operator only when necessary. Otherwise, disable them with `DISALLOW_COPY_AND_ASSIGN`.
-
-**Definition:**
-The copy constructor and assignment operator are used to create copies of objects. The copy constructor is implicitly invoked by the compiler in some situations, e.g. passing objects by value.
-
-**Pros:**
-Copy constructors make it easy to copy objects. STL containers require that all contents be copyable and assignable. Copy constructors can be more efficient than CopyFrom()-style workarounds because they combine construction with copying, the compiler can elide them in some contexts, and they make it easier to avoid heap allocation.
-
-**Cons:**
-Implicit copying of objects in C++ is a rich source of bugs and of performance problems. It also reduces readability, as it becomes hard to track which objects are being passed around by value as opposed to by reference, and therefore where changes to an object are reflected.
-
-**Decision:**
-Few classes need to be copyable. Most should have neither a copy constructor nor an assignment operator. In many situations, a pointer or reference will work just as well as a copied value, with better performance. For example, you can pass function parameters by reference or pointer instead of by value, and you can store pointers rather than objects in an STL container.
-
-If your class needs to be copyable, prefer providing a copy method, such as `clone()`, rather than a copy constructor, because such methods cannot be invoked implicitly. If a copy method is insufficient in your situation (e.g. for performance reasons, or because your class needs to be stored by value in an STL container), provide both a copy constructor and assignment operator.
-
-If your class does not need a copy constructor or assignment operator, you must explicitly disable them. To do so, add dummy declarations for the copy constructor and assignment operator in the private: section of your class, but do not provide any corresponding definition (so that any attempt to use them results in a link error).
-
-For convenience, a `DISALLOW_COPY_AND_ASSIGN` macro can be used:
+为了方便，可以这样定义一个‘DISALLOW_COPY_AND_ASSIGN’宏：
 
 ```cpp
 // A macro to disallow the copy constructor and operator= functions
@@ -661,7 +649,7 @@ For convenience, a `DISALLOW_COPY_AND_ASSIGN` macro can be used:
   void operator=(const TypeName&)
 ```
 
-Then, in class Foo:
+然后，在类Foo里面的实现就可以这样：
 
 ```cpp
 class Foo
