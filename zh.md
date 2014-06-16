@@ -8,7 +8,7 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 
 - [头文件](#header-files)
 	- [#define用法](#the-define-guard)
-	- [前向声明](#forward-declarations)
+	- [前向声明](#forward-declarations) cissyhope
 	- [内联函数](#inline-functions) cissyhope
 	- [inl.h文件](#the--inlh-files) cissyhope
 	- [参数顺序](#function-parameter-ordering) cissyhope
