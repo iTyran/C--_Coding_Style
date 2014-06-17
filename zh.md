@@ -289,11 +289,11 @@ C/C++函数的参数要么是对函数的输入，要么是函数给出的输出
 
 ## 命名空间
 
-在.cpp文件中,提倡使用未命名的命名空间(unnamed namespaces,注:未命名的命名空间就像未命名的类一样,似乎被介绍的很少:-()。使用命名命名空间时,其名称可基亍项目戒路径名称。不要使用using指示符。不要使用内联命名空间。
+在.cpp文件中,提倡使用未命名的命名空间(unnamed namespaces,注:未命名的命名空间就像未命名的类一样,似乎被介绍的很少:-()。使用命名的命名空间时,其名称可基于项目的路径名称。不要使用using指示符。不要使用内联命名空间。
 
 
 **定义:**
-命名空间将全尿作用域绅分为丌同的、命名的作用域,可有效防止全尿作用域的命名冲突。
+命名空间将全局作用域细分为不同的、命名的作用域,可有效防止全局作用域的命名冲突。
 
 **优点：**
 命名空间提供了(层次化的)命名轴(name axis,注:将命名分割在不同命名空间内),当然,类也提供了(层次化的)的命名轴。
@@ -318,7 +318,7 @@ inline namespace Y {
 
 特别是内联命名空间，因为命名实际上并不局限于他们声明的命名空间。只有作为较大的版本控制策略的一部分时才有用。
 
-在头文件中使用未命名的空间容易违背C++的唯一定义原则(One Definition Rule (ODR))。
+在头文件中使用未命名的空间容易违背C++的唯一定义原则(One Definition Rule, ODR)。
 
 **结论：**
 根据下文将要提到的策略合理使用命名空间。如例子中那样结束命名空间时进行注释。
@@ -396,8 +396,7 @@ void MyClass::foo()
 }  // namespace mynamespace
 ```
 
-The typical .cpp file might have more complex detail, including the need to reference classes in other namespaces.
-通常的.cpp文件会包含更多、更复杂的细节,包括引用其他命名空间中的类等。
+通常.cpp文件会包含更多、更复杂的细节,包括引用其他命名空间中的类等。
 
 
 ```cpp
@@ -434,28 +433,26 @@ using ::foo::bar;
 * 在.h的函数、方法或包含整个.h的命名的命名空间中以及.cpp中,可以使用命名空间别名。
 
 ```cpp
-// Shorten access to some commonly used names in .cpp files.
+// .cpp中一些常用名的缩写
 namespace fbz = ::foo::bar::baz;
 
-// Shorten access to some commonly used names (in a .h file).
+// .h中一些常用名的缩写
 namespace librarian {
-// The following alias is available to all files including
-// this header (in namespace librarian):
-// alias names should therefore be chosen consistently
-// within a project.
+// 包括该头文件（在librarian命名空间中）在内的所有文件都可以使用下面的别名：
+// 因此同一个项目中的别名应该保持一致。
 namespace pd_s = ::pipeline_diagnostics::sidetable;
 
 inline void myInlineFunction() {
-// namespace alias local to a function (or method).
+// 函数或者方法中的本地命名空间别名。
 namespace fbz = ::foo::bar::baz;
 ...
 }
 }  // namespace librarian
 ```
 
-Note that an alias in a .h file is visible to everyone #including that file, so public headers (those available outside a project) and headers transitively #included by them, should avoid defining aliases, as part of the general goal of keeping public APIs as small as possible.
+注意，.h文件中的别名对所有包含该文件的所有文件都可见，因此公共的头文件(在项目外仍可用)以及通过他们间接办好的头文件应避免定义别名，为了保持公共的APIs尽可能小。
 
-* Do not use inline namespaces.
+* 不要用内联命名空间。
 
 ## Nested Classes
 
