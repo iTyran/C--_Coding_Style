@@ -1904,7 +1904,7 @@ protected:
 };
 ```
 
-## 注释风格
+## 注释规范
 
 使用`//`或者`/* */`，但是需要保持一致。
 
@@ -1912,27 +1912,27 @@ protected:
 
 ## 文件注释
 
-每个文件以许可条文开始，紧接着是许可内容描述。
+文件以许可条文开始，紧接着是许可内容描述。
 
 ### 法律声明和作者
 
-每个文件都应该包含许可条文。为项目使用的许可选择适用的条文（例如Apache 2.0、BSD、MIT等等）。
+文件应该包含许可条文。为项目使用的许可选择适用的条文（例如Apache 2.0、BSD、MIT等等）。
 
 许可必须兼容不同的应用商店，所以cocos2d-x不能使用GPL和LGPL。
 
 如果文件的某个作者发生了重大改变，那么考虑删除该作者这一行。
 
-### File Contents
+### 文件内容
 
-Every file should have a comment at the top describing its contents.
+文件要在开始的地方添加注释描述文件的内容。
 
-Generally a .h file will describe the classes that are declared in the file with an overview of what they are for and how they are used. A .cpp file should contain more information about implementation details or discussions of tricky algorithms. If you feel the implementation details or a discussion of the algorithms would be useful for someone reading the .h, feel free to put it there instead, but mention in the .cpp that the documentation is in the .h file.
+通常.h文件会概述它所声明的类的功能以及使用方法。.cpp文件会包含实现细节或者复杂算法的更多信息。如果你认为实现细节或者复杂算法的讨论有助于别人阅读.h文件，那就放到.h文件中，但是要在.cpp文件中注明文档在.h文件中。
 
-Do not duplicate comments in both the .h and the .cpp. Duplicated comments diverge.
+**不要**在.h和.cpp中重复注释。重复注释会产生歧义。
 
-## Class Comments
+## 类注释
 
-Every class definition should have an accompanying comment that describes what it is for and how it should be used. If the class is public (exposed to the users), it should use Doxygen comments.
+类定义应该附带着说明类的功能和使用方法的注释。如果类是`public`（暴露给用户），那么应该有Doxygen注释。
 
 ```cpp
 // Iterates over the contents of a GargantuanTable.  Sample usage:
@@ -1946,30 +1946,30 @@ class GargantuanTableIterator {
 };
 ```
 
-If you have already described a class in detail in the comments at the top of your file feel free to simply state "See comment at top of file for a complete description", but be sure to have some sort of comment.
+如果在文件顶部已经有详细描述一个类的注释，那么可以通过"See comment at top of file for a complete description"简单的说明，但是一定要确保有类似的注释。
 
-Document the synchronization assumptions the class makes, if any. If an instance of the class can be accessed by multiple threads, take extra care to document the rules and invariants surrounding multithreaded use.
+如果类有同步假设的话，记录这些劫杀。如果某个实例可以在多线程里访问，那么请倍加小心的记录多线程使用的规则和常量(invariants)。
 
-## Function Comments
+## 函数注释
 
-Declaration comments describe use of the function; comments at the definition of a function describe operation.
+声明函数的时候注释函数的用法；定义函数的时候注释函数的操作。
 
-If the function is public (exposed to the users), it should be documented using Doxygen comments.
+如果函数是`public`（暴露给用户），用Doxygen注释。
 
-### Function Declarations
+### 函数声明
 
-Every function declaration should have comments immediately preceding it that describe what the function does and how to use it. These comments should be descriptive ("Opens the file") rather than imperative ("Open the file"); the comment describes the function, it does not tell the function what to do. In general, these comments do not describe how the function performs its task. Instead, that should be left to comments in the function definition.
+声明函数前，需要添加描述函数功能和调用方法的注释。注释应该是描述式的("Opens the file")，而不是命令式的("Open the file")；注释描述函数功能，但是不描述函数实现。通常，函数声明的注释不描述函数如何执行任务。这类的注释应该放在函数定义的地方。
 
-Types of things to mention in comments at the function declaration:
+函数声明的注释需要包含以下内容：
 
-* What the inputs and outputs are.
-* For class member functions: whether the object remembers reference arguments beyond the duration of the method call, and whether it will free them or not.
-* If the function allocates memory that the caller must free.
-* Whether any of the arguments can be a null pointer.
-* If there are any performance implications of how a function is used.
-* If the function is re-entrant. What are its synchronization assumptions?
+* 输入、输出
+* 对于类成员函数：对象是否超出方法调用周期保存引用参数，以及是否释放引用参数。
+* 函数是否分配了需要调用者释放的内存。
+* 是否有参数可以是NULL指针。
+* 是否有影响函数调用方法的行为
+* 可重入函数的同步假设是什么
 
-Here is an example:
+示例：
 
 ```cpp
 // Returns an iterator for this table.  It is the client's
@@ -1989,28 +1989,28 @@ Here is an example:
 Iterator* getIterator() const;
 ```
 
-However, do not be unnecessarily verbose or state the completely obvious. Notice below that it is not necessary to say "returns false otherwise" because this is implied.
+但是，对于易懂的代码，不要产生不必要的冗余描述。注意到下面的例子中，不需要"returns false otherwise"，因为它已经隐含在注释中。
 
 ```cpp
 /// Returns true if the table cannot hold any more entries.
 bool isTableFull();
 ```
 
-When commenting constructors and destructors, remember that the person reading your code knows what constructors and destructors are for, so comments that just say something like "destroys this object" are not useful. Document what constructors do with their arguments (for example, if they take ownership of pointers), and what cleanup the destructor does. If this is trivial, just skip the comment. It is quite common for destructors not to have a header comment.
+为构造函数和析构函数写注释时，请记住读者知道构造函数和析构函数的用途，所以类似“destorys this object”的注释没有意义。记录构造函数对参数的处理（例如，是否拥有指针），析构函数的释放行为。如果很琐碎，可以不用注释。析构函数没有注释是很普遍的事。
 
-### Function Definitions
+### 函数定义
 
-If there is anything tricky about how a function does its job, the function definition should have an explanatory comment. For example, in the definition comment you might describe any coding tricks you use, give an overview of the steps you go through, or explain why you chose to implement the function in the way you did rather than using a viable alternative. For instance, you might mention why it must acquire a lock for the first half of the function but why it is not needed for the second half.
+如果函数很复杂，那么函数定义应该有说明性的注释。例如，在函数定义的注释中，可以描述使用的复杂代码，概述步骤，或者解释为什么采用这种方法来实现函数，而不是用其他可行的方案。例如，你可能提及为什么在函数的前半段必须获取锁但是在后半段不需要。
 
-Note you should not just repeat the comments given with the function declaration, in the .h file or wherever. It's okay to recapitulate briefly what the function does, but the focus of the comments should be on how it does it.
+注意，不能只是单纯重复.h文件或者其他地方里函数声明时的注释。简要得复述函数的用途是可以的，但是注释应该聚焦在如何实现上。
 
-## Variable Comments
+## 变量注释
 
-In general the actual name of the variable should be descriptive enough to give a good idea of what the variable is used for. In certain cases, more comments are required.
+一般情况下，变量的名字应该要很好得体现变量的用途。在某些情况下，需要更多的注释。
 
-### Class Data Members
+### 类成员
 
-Each class data member (also called an instance variable or member variable) should have a comment describing what it is used for. If the variable can take sentinel values with special meanings, such as a null pointer or -1, document this. For example:
+类成员（亦称为实例变量或成员变量）需要注释描述它的用途。如果变量可以是有特殊意义的定值，例如NULL指针或者－1，也要注释。例子如下：
 
 ```cpp
 private:
@@ -2020,22 +2020,22 @@ private:
  int _numTotalEntries;
 ```
 
-### Global Variables
+### 全局变量
 
-As with data members, all global variables should have a comment describing what they are and what they are used for. For example:
+和数据成员一样，所有的全局变量都要有注释来描述变量是什么以及用途。例如：
 
 ```cpp
 // The total number of tests cases that we run through in this regression test.
 const int NUM_TEST_CASES = 6;
 ```
 
-## Implementation Comments
+## 实现注释
 
-In your implementation you should have comments in tricky, non-obvious, interesting, or important parts of your code.
+在实现中复杂、不易理解、引人关注或者重要的代码需要注释。
 
-### Class Data Members
+### 类数据成员
 
-Tricky or complicated code blocks should have comments before them. Example:
+在复杂的代码前面添加注释。例如：
 
 ```cpp
 // Divide result by two, taking into account that x
@@ -2047,9 +2047,9 @@ for (int i = 0; i < result->size(); i++) {
 }
 ```
 
-### Line Comments
+### 单行注释
 
-Also, lines that are non-obvious should get a comment at the end of the line. These end-of-line comments should be separated from the code by 2 spaces. Example:
+同样的，不易理解的单行应该在行尾添加注释。注释和代码之间用2个空格隔开。例如：
 
 ```cpp
 // If we have enough memory, mmap the data portion too.
@@ -2058,9 +2058,9 @@ if (mmap_budget >= data_size_ && !MmapData(mmap_chunk_bytes, mlock))
     return;  // Error already logged.
 ```
 
-Note that there are both comments that describe what the code is doing, and comments that mention that an error has already been logged when the function returns.
+注意上面的例子，既注释代码所做的事情，当函数返回时，也注释说明错误信息已记录。
 
-If you have several comments on subsequent lines, it can often be more readable to line them up:
+如果注释分为几行，保持对齐让注释更易读：
 
 ```cpp
 doSomething();                  // Comment here so the comments line up.
@@ -2075,8 +2075,9 @@ doSomething(); /* For trailing block comments, one space is fine. */
 
 ### nullptr/NULL, true/false, 1, 2, 3...
 
-When you pass in a null pointer, boolean, or literal integer values to functions, you should consider adding a comment about what they are, or make your code self-documenting by using constants. For example, compare:
+当向函数传递空指针、布尔值或者整数值时，建议添加注释说明，或者使用常量。例如：
 
+不好的代码：
 ```cpp
 bool success = calculateSomething(interesting_value,
                                   10,
@@ -2084,7 +2085,7 @@ bool success = calculateSomething(interesting_value,
                                   NULL);  // What are these arguments??
 ```
 
-versus:
+好的代码：
 
 ```cpp
 bool success = calculateSomething(interesting_value,
@@ -2093,7 +2094,7 @@ bool success = calculateSomething(interesting_value,
                                   NULL);  // No callback.
 ```
 
-Or alternatively, constants or self-describing variables:
+另一种方案，使用常量或者名字有意义的变量：
 
 ```cpp
 const int DEFAULT_BASE_VALUE = 10;
@@ -2107,7 +2108,7 @@ bool success = CalculateSomething(interestingValue,
 
 ### Don'ts
 
-Note that you should never describe the code itself. Assume that the person reading the code knows C++ better than you do, even though he or she does not know what you are trying to do:
+注意，永远不要描述代码本身。阅读代码的人的C++可能比你好，即使他们还不知道你要做的事情：
 
 ```cpp
 // Now go through the b array and make sure that if i occurs,
@@ -2115,38 +2116,38 @@ Note that you should never describe the code itself. Assume that the person read
 ...        // Geez.  What a useless comment.
 ```
 
-## Punctuation, Spelling and Grammar
+## 标点，拼写和语法
 
-Pay attention to punctuation, spelling, and grammar; it is easier to read well-written comments than badly written ones.
+留意标点、拼写和语法；写的好的注释比坏的注释更容易阅读。
 
-Comments should be as readable as narrative text, with proper capitalization and punctuation. In many cases, complete sentences are more readable than sentence fragments. Shorter comments, such as comments at the end of a line of code, can sometimes be less formal, but you should be consistent with your style.
+注释应该是大小写、标点使用正确的叙述性的文字。很多情况下，完整的句子优于只言片语。简短的注释，如单行注释，有时不那么正式，但是让风格保持一致。
 
-Although it can be frustrating to have a code reviewer point out that you are using a comma when you should be using a semicolon, it is very important that source code maintain a high level of clarity and readability. Proper punctuation, spelling, and grammar help with that goal.
+尽管代码评审时被指出应该用分号(;)而不是逗号(,)令人沮丧，但是源代码保持高度清晰和可读是非常重要的事情。正确的标点、拼写以及语法有助于达到这一目标。
 
-## TODO Comments
+## TODO注释
 
-Use TODO comments for code that is temporary, a short-term solution, or good-enough but not perfect.
+为临时的或者短期解决方案或者很好但不完美的代码添加TODO注释。
 
-TODOs should include the string TODO in all caps, followed by the name, e-mail address, or other identifier of the person who can best provide context about the problem referenced by the TODO. A colon is optional. The main purpose is to have a consistent TODO format that can be searched to find the person who can provide more details upon request. A TODO is not a commitment that the person referenced will fix the problem. Thus when you create a TODO, it is almost always your name that is given.
+TODO注释要包含全大写的TODO字符，紧跟着是最适合完成TODO事项的人的姓名、E-mail地址或者其他任何身份。这样的主要目的是保持一致的TODO注释格式，可以根据需求查到可以提供更多信息的人。TODO不承诺提及的人将会解决这个问题。所以，当你创建一个TODO时，几乎总是写自己的名字。
 
 ```cpp
 // TODO(kl`gmail.com): Use a "*" here for concatenation operator.
 // TODO(Zeke) change this to use relations.
 ```
 
-If your TODO is of the form "At a future date do something" make sure that you either include a very specific date ("Fix by November 2005") or a very specific event ("Remove this code when all clients can handle XML responses.").
+如果TODO是“未来某天做某事”类型，确保要么包含一个确切的日期（"Fix by November 2005"），要么包含一个确切的事件（"Remove this code when all clients can hanle XML responses"）。
 
-## Deprecation Comments
+## 弃用注释
 
-Use the `CC_DEPRECATED_ATTRIBUTE` macro to mark an methods as deprecated.
+用宏`CC_DEPRECATED_ATTRIBUTE`来将方法标记为弃用。
 
-Also use the ` ``deprecated ` doxygen docstring to mark it as deprecated in the documentation.
+同时在注释中用` ``deprecated `来将其标记为弃用。
 
-A deprecation comment must include simple, clear directions for people to fix their callsites. In C++, you can implement a deprecated function as an inline function that calls the new interface point.
+弃用注释必须包含简单、清晰的说明来帮助用户修改调用点。在C++中，你可以通过在內联函数中调用新的接口来实现弃用函数。
 
-Marking an interface point DEPRECATED will not magically cause any callsites to change. If you want people to actually stop using the deprecated facility, you will have to fix the callsites yourself or recruit a crew to help you.
+标记一个接口为**弃用**并不会导致调用点发生变化。如果你希望别人真正的停止使用这些弃用的函数，你得自己或者找人帮你修改这些调用点。
 
-New code should not contain calls to deprecated interface points. Use the new interface point instead. If you cannot understand the directions, find the person who created the deprecation and ask them for help using the new interface point.
+新的代码不能调用已弃用的接口，使用新的接口来作为替代。如果你无法理解说明，向创建废弃的人咨询如何使用新的接口。
 
 # Formatting
 
