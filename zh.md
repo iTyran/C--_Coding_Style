@@ -164,33 +164,34 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 
 ## 前向声明
 
-You may forward declare ordinary classes in order to avoid unnecessary `#includes`.
+前向声明普通类可以避免不必要的`#includes`。
 
-**Definition:** A "forward declaration" is a declaration of a class, function, or template without an associated definition. #include lines can often be replaced with forward declarations of whatever symbols are actually used by the client code.
+**定义：**
+“前向声明”是类、函数或者模版的声明，没有定义。用前向声明来替代#include通常应用在客户端代码中。
 
-**Pros:**
+**优点：**
 
-* Unnecessary #includes force the compiler to open more files and process more input.
-* They can also force your code to be recompiled more often, due to changes in the header.
+* 不必要的#includes会强制编译器打开更多的文件并处理更多的输入。
+* 不必要的#includes也会导致代码被更经常重新编译，因为头文件修改。
 
-**Cons:**
+**缺点：**
 
-* It can be difficult to determine the correct form of a forward declaration in the presence of features like templates, typedefs, default parameters, and using declarations.
-* It can be difficult to determine whether a forward declaration or a full #include is needed for a given piece of code, particularly when implicit conversion operations are involved. In extreme cases, replacing an #include with a forward declaration can silently change the meaning of code.
-* Forward declaring multiple symbols from a header can be more verbose than simply #includeing the header.
-* Forward declarations of functions and templates can prevent the header owners from making otherwise-compatible changes to their APIs; for example, widening a parameter type, or adding a template parameter with a default value.
-* Forward declaring symbols from namespace std:: usually yields undefined behavior.
-* Structuring code to enable forward declarations (e.g. using pointer members instead of object members) can make the code slower and more complex.
-* The practical efficiency benefits of forward declarations are unproven.
+* 不容易确定模版、typedefs、默认参数等的前向声明以及使用声明。
+* 不容易判断对给定的代码该用前向声明还是#include，尤其是当有隐式转换时。极端情况下，用#include代替前向声明会悄悄的改变代码的含义。
+* 在头文件中多个前向声明比#include啰嗦。
+* 前向声明函数或者模版会阻止头文件对APIs做“否则兼容”（otherwise-compatible）修改；例如，扩展参数类型或者添加带有默认值的模版参数。
+* 前向声明std命名空间的符号通常会产生不确定的行为。
+* 为了前向声明而结构化代码（例如，适用指针成员，而不是对象成员）会使代码更慢更复杂。
+* 前向声明的实际效率提升未经证实。
 
-**Decision:**
+**结论：**
 
-* When using a function declared in a header file, always #include that header.
-* When using a class template, prefer to #include its header file.
-* When using an ordinary class, relying on a forward declaration is OK, but be wary of situations where a forward declaration may be insufficient or incorrect; when in doubt, just #include the appropriate header.
-* Do not replace data members with pointers just to avoid an #include.
+* 使用头文件中声明的函数，总是#include该头文件。
+* 使用类模版，优先使用#include。
+* 使用普通类，可以用前向声明，但是注意前向声明可能不够或者不正确的情况；如果有疑问，就用#include。
+* 不应只是为了避免#include而用指针成员代替数据成员。
 
-Always #include the file that actually provides the declarations/definitions you need; do not rely on the symbol being brought in transitively via headers not directly included. One exception is that `Myfile.cpp` may rely on #includes and forward declarations from its corresponding header file `Myfile.h`.
+总是#include实际声明/定义的文件；不依赖非直接包含的头文件中间接引入的符号。例外是，`Myfile.cpp`可以依赖`Myfile.h`中的#include和前向声明。
 
 ## 内联函数
 
@@ -284,21 +285,22 @@ C/C++函数的参数要么是对函数的输入，要么是函数给出的输出
 #endif  // LANG_CXX11
 ```
 
-# Scoping
+# 作用域
 
-## Namespaces
+## 命名空间
 
-Unnamed namespaces in `.cpp` files are encouraged. With named namespaces, choose the name based on the project, and possibly its path. Do not use a using-directive. Do not use inline namespaces. 
+在.cpp文件中,提倡使用未命名的命名空间(unnamed namespaces,注:未命名的命名空间就像未命名的类一样,似乎被介绍的很少:-()。使用命名命名空间时,其名称可基亍项目戒路径名称。不要使用using指示符。不要使用内联命名空间。
 
-**Definition:**
-Namespaces subdivide the global scope into distinct, named scopes, and so are useful for preventing name collisions in the global scope.
 
-**Pros:**
-Namespaces provide a (hierarchical) axis of naming, in addition to the (also hierarchical) name axis provided by classes.
+**定义:**
+命名空间将全尿作用域绅分为丌同的、命名的作用域,可有效防止全尿作用域的命名冲突。
 
-For example, if two different projects have a class Foo in the global scope, these symbols may collide at compile time or at runtime. If each project places their code in a namespace, project1::Foo and project2::Foo are now distinct symbols that do not collide.
+**优点：**
+命名空间提供了(层次化的)命名轴(name axis,注:将命名分割在不同命名空间内),当然,类也提供了(层次化的)的命名轴。
 
-Inline namespaces automatically place their names in the enclosing scope. Consider the following snippet, for example:
+举例来说,两个不同项目的全局作用域都有一个类Foo,这样在编译或运行时造成冲突。如果每个项目将代码置于不同命名空间中,project1::Foo和project2::Foo作为不同符号自然不会冲突。
+
+内联命令空间自动地将名字置于封闭作用域。例子如下：
 
 ```cpp
 namespace X {
@@ -307,21 +309,24 @@ inline namespace Y {
 }
 }
 ```
-The expressions `X::Y::foo()` and `X::foo()` are interchangeable. Inline namespaces are primarily intended for ABI compatibility across versions. 
+`X::Y::foo()`和`X::foo()`是一样的。内联命名空间是为了兼容不同版本的ABI而做的扩展。
 
-**Cons:**
-Namespaces can be confusing, because they provide an additional (hierarchical) axis of naming, in addition to the (also hierarchical) name axis provided by classes.
 
-Inline namespaces, in particular, can be confusing because names aren't actually restricted to the namespace where they are declared. They are only useful as part of some larger versioning policy. 
 
-Use of unnamed namespaces in header files can easily cause violations of the C++ One Definition Rule (ODR).
+**缺点：**
+命名空间具有迷惑性,因为它们和类一样提供了额外的(层次化的)命名轴。
 
-**Decision:**
-Use namespaces according to the policy described below. Terminate namespaces with comments as shown in the given examples.
+特别是内联命名空间，因为命名实际上并不局限于他们声明的命名空间。只有作为较大的版本控制策略的一部分时才有用。
 
-### Unnamed Namespaces
+在头文件中使用未命名的空间容易违背C++的唯一定义原则(One Definition Rule (ODR))。
 
-Unnamed namespaces are allowed and even encouraged in .cpp files, to avoid runtime naming conflicts:
+**结论：**
+根据下文将要提到的策略合理使用命名空间。如例子中那样结束命名空间时进行注释。
+
+
+### 未命名空间
+
+允许甚至鼓励在.cpp中使用未命名空间，以避免运行时的命名冲突：
 
 ```cpp
 namespace {                           // This is in a .cpp file.
@@ -333,23 +338,23 @@ bool atEof() { return _pos == EOF; }  // Uses our namespace's EOF.
 }  // namespace
 ```
 
-However, file-scope declarations that are associated with a particular class may be declared in that class as types, static data members or static member functions rather than as members of an unnamed namespace.
-Do not use unnamed namespaces in .h files.
+然而,与特定类关联的文件作用域声明在该类中被声明为类型、静态数据成员戒静态成员函数,而不是未命名命名空间的成员。
+不能在.h文件中使用未命名空间。
 
-### Named Namespaces
+### 命名空间
 
-Named namespaces should be used as follows:
+命名的命名空间使用规则如下：
 
-Namespaces wrap the entire source file after includes, gflags definitions/declarations, and forward declarations of classes from other namespaces:
+命名空间将除文件包含、全局标识的声明/定义以及类的前置声明外的整个源文件封装起来,以同其他命名空间相区分。
 
 
 ```cpp
-// In the .h file
-// When using the cocos2d namespace
+// .h文件
+// 使用cocos2d命名空间
 NS_CC_BEGIN
 
-// All declarations are within the namespace scope.
-// Notice the lack of indentation.
+// 所有声明均在命名空间作用域内。
+// 注意不用缩进。
 class MyClass
 {
 public:
@@ -362,12 +367,12 @@ NS_CC_END
 
 
 ```cpp
-// In the .h file
-// When NOT using the cocos2d namespace
+// .h文件
+// 不使用cocos2d命名空间
 namespace mynamespace {
 
-// All declarations are within the namespace scope.
-// Notice the lack of indentation.
+// 所有声明均在命名空间作用域中。
+// 注意不用缩进。
 class MyClass
 {
 public:
@@ -379,10 +384,10 @@ public:
 ```
 
 ```cpp
-// In the .cpp file
+// .cpp文件
 namespace mynamespace {
 
-// Definition of functions is within scope of the namespace.
+// 函数定义在命名空间作用域中。
 void MyClass::foo()
 {
     ...
@@ -392,39 +397,41 @@ void MyClass::foo()
 ```
 
 The typical .cpp file might have more complex detail, including the need to reference classes in other namespaces.
+通常的.cpp文件会包含更多、更复杂的细节,包括引用其他命名空间中的类等。
+
 
 ```cpp
 #include "a.h"
 
 DEFINE_bool(someflag, false, "dummy flag");
 
-class C;  // Forward declaration of class C in the global namespace.
-namespace a { class A; }  // Forward declaration of a::A.
+class C;  // 前向声明全局作用域中的类C。
+namespace a { class A; }  // 前向声明a::A。
 
 namespace b {
 
-...code for b...         // Code goes against the left margin.
+...code for b...         // 代码无缩进。
 
 }  // namespace b
 ```
 
-* Do not declare anything in namespace std, not even forward declarations of standard library classes. Declaring entities in namespace std is undefined behavior, i.e., not portable. To declare entities from the standard library, include the appropriate header file.
-You may not use a using-directive to make all names from a namespace available.
+* 不要声明std命名空间里的任何内容,包括标准库类的前置声明。声明std里的实体会导致不明确的行为，例如，不可移植。包含对应的头文件来声明标准库里的实体。
+最好不要使用using指示符,以保证命名空间下的所有名称都可以正常使用。
 
 ```cpp
-// Forbidden -- This pollutes the namespace.
+// 禁止－－污染了命名空间。
 using namespace foo;
 ```
 
-* You may use a using-declaration anywhere in a .cpp file, and in functions, methods or classes in .h files.
+* 在.h的函数、方法、类，.cpp的任何地方都可以使用using声明。
 
 ```cpp
-// OK in .cpp files.
-// Must be in a function, method or class in .h files.
+// 在.cpp中没有问题。
+// 在.h中必须在函数、方法或者累中。
 using ::foo::bar;
 ```
 
-* Namespace aliases are allowed anywhere in a .cpp file, anywhere inside the named namespace that wraps an entire .h file, and in functions and methods.
+* 在.h的函数、方法或包含整个.h的命名的命名空间中以及.cpp中,可以使用命名空间别名。
 
 ```cpp
 // Shorten access to some commonly used names in .cpp files.
