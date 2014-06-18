@@ -454,18 +454,18 @@ namespace fbz = ::foo::bar::baz;
 
 * 不要用内联命名空间。
 
-## Nested Classes
+## 嵌套类(Nested classes)
 
-Although you may use public nested classes when they are part of an interface, consider a namespace to keep declarations out of the global scope.
+当公开嵌套类作为接口的一部分时，虽然可以直接将他们保持在全局作用域中，但将嵌套类的声明置于命名空间中是更好的选择。
 
-**Definition:**
-A class can define another class within it; this is also called a member class.
+**定义：**
+可以在一个类中定义另一个类，嵌套类也称成员类（member class）。
 
 ```cpp
 class Foo
 {
 private:
-    // Bar is a member class, nested within Foo.
+    // Bar是嵌套在Foo中的成员类
     class Bar
     {
        ...
@@ -473,68 +473,68 @@ private:
 };
 ```
 
-**Pros:**
-This is useful when the nested (or member) class is only used by the enclosing class; making it a member puts it in the enclosing class scope rather than polluting the outer scope with the class name. Nested classes can be forward declared within the enclosing class and then defined in the .cpp file to avoid including the nested class definition in the enclosing class declaration, since the nested class definition is usually only relevant to the implementation.
+**优点：**
+当嵌套（成员）类只在被嵌套类（enclosing class）中使用时很有用，将其置于被嵌套类作用域作为被嵌套类的成员不会污染其他作用域同名类。可在被嵌套类中前置声明嵌套类，在.cpp文件中定义嵌套类，避免在被嵌套类声明中包含嵌套类的定义，因为嵌套类的定义通常只与实现相关。
 
-**Cons:**
-Nested classes can be forward-declared only within the definition of the enclosing class. Thus, any header file manipulating a Foo::Bar* pointer will have to include the full class declaration for Foo.
+**缺点：**
+只能在被嵌套类的定义中才能前置声明嵌套类。因此，任何使用Foo::Bar*指针的头文件必须包含整个Foo类的声明。
 
-**Decision:**
-Do not make nested classes public unless they are actually part of the interface, e.g., a class that holds a set of options for some method.
+**结论：**
+不要将嵌套类定义为public，除非它们是接口的一部分，比如，某方法使用了这个类的一系列选项。
 
-## Nonmember, Static Member, and Global Functions
+## 非成员、静态成员、全局函数
 
-Prefer nonmember functions within a namespace or static member functions to global functions; use completely global functions rarely.
+优先使用命名空间中的非成员函数或者静态成员函数，尽可能不使用全局函数。
 
-**Pros:**
-Nonmember and static member functions can be useful in some situations. Putting nonmember functions in a namespace avoids polluting the global namespace.
+**优点：**
+某些情况下，非成员函数和静态成员函数是非常有用的，将非成员函数置于命名空间中可避免污染全局命名空间。
 
-**Cons:**
-Nonmember and static member functions may make more sense as members of a new class, especially if they access external resources or have significant dependencies.
+**缺点：**
+将非成员函数和静态成员函数作为新类的成员或许更有意义，当它们需要访问外部资源戒具有重要依赖时更是如此。
 
-**Decision:**
+**结论：**
+有时，不把函数限定在类的实体中是有益的，甚至是必要的，要么作为静态成员，要么作为非成员函数。非成员函数不应依赖外部发量，并尽量置于某个命名空间中。相比单纯为了封装若干不共享任何静态数据的静态成员函数而创建类，不如使用命名空间。
 
-Sometimes it is useful, or even necessary, to define a function not bound to a class instance. Such a function can be either a static member or a nonmember function. Nonmember functions should not depend on external variables, and should nearly always exist in a namespace. Rather than creating classes only to group static member functions which do not share static data, use namespaces instead.
+定义在同一编译单元的函数，可能会在被其他编译单元直接调用时引入不必要的耦合和链接依赖；静态成员函数对此尤其敏感。可以考虑提取到新类中，戒者将函数置于独立库的命名空间中。
 
-Functions defined in the same compilation unit as production classes may introduce unnecessary coupling and link-time dependencies when directly called from other compilation units; static member functions are particularly susceptible to this. Consider extracting a new class, or placing the functions in a namespace possibly in a separate library.
+如果你确实需要定义非成员函数，又只是在.cpp中使用，可使用未命名的命名空间或静态关联（如static int Foo() {...}）限定其作用域。
 
-If you must define a nonmember function and it is only needed in its .cpp file, use an unnamed namespace or static linkage (eg static int Foo() {...}) to limit its scope.
+## 局部变量（Local Variables）
 
-## Local Variables
+尽可能缩小函数变量的作用域，并在声明变量时将其初始化。
 
-Place a function's variables in the narrowest scope possible, and initialize variables in the declaration.
 
 C++ allows you to declare variables anywhere in a function. We encourage you to declare them in as local a scope as possible, and as close to the first use as possible. This makes it easier for the reader to find the declaration and see what type the variable is and what it was initialized to. In particular, initialization should be used instead of declaration and assignment, e.g.
+C++允许在函数的任何位置声明发量。我们提倡在尽可能小的作用域中声明变量，离第一次使用越近越好。这使得代码易于阅读，易于定位变量的声明位置、类型和初始值。特别是，应使用初始化代替声明+赋值的方式。
 
 ```cpp
 int i;
-i = f();      // Bad -- initialization separate from declaration.
+i = f();      // // 坏——初始化和声明分离
 
-int j = g();  // Good -- declaration has initialization.
+int j = g();  // // 好——声明时初始化
 
 vector<int> v;
-v.push_back(1);  // Prefer initializing using brace initialization.
+v.push_back(1);  // 优先使用括号初始化。
 v.push_back(2);
 
-vector<int> v = {1, 2};  // Good -- v starts initialized.
+vector<int> v = {1, 2};  // 好－v有初始化。
 ```
-
-Note that gcc implements `for (int i = 0; i < 10; ++i)` correctly (the scope of i is only the scope of the for loop), so you can then reuse i in another for loop in the same scope. It also correctly scopes declarations in if and while statements, e.g.
+注意：gcc可正确实现了`for (int i = 0; i < 10; ++i)`（i的作用域仅限for循环），因此其他for循环中可重用i。if和while等语句中，作用域声明（scope declaration）同样是正确的。
 
 ```cpp
 while (const char* p = strchr(str, '/')) str = p + 1;
 ```
 
-There is one caveat: if the variable is an object, its constructor is invoked every time it enters scope and is created, and its destructor is invoked every time it goes out of scope.
+注意：如果变量是一个对象，每次进入作用域都要调用其构造函数，每次退出作用域都要调用其析构函数。
 
 ```cpp
-// Inefficient implementation:
+// 低效实现
 for (int i = 0; i < 1000000; ++i) {
     Foo f;  // My ctor and dtor get called 1000000 times each.
     f.doSomething(i);
 }
 
-It may be more efficient to declare such a variable used in a loop outside that loop:
+//类似变量放到循环作用域外面声明要高效的多：
 
 Foo f;  // My ctor and dtor get called once each.
 for (int i = 0; i < 1000000; ++i) {
@@ -542,21 +542,21 @@ for (int i = 0; i < 1000000; ++i) {
 }
 ```
 
-## Static and Global Variables
+## 静态变量和全局变量(Static and Global Variables)
 
-Static or global variables of class type are forbidden: they cause hard-to-find bugs due to indeterminate order of construction and destruction. However, such variables are allowed if they are `constexpr`: they have no dynamic initialization or destruction. 
+class类型的全局变量是被禁止的：这导致隐藏很深的bugs，因为构造和析构的顺序不明确。然而，允许`constexpr`类型的静态或全局变量：他们没有动态的初始化或者析构。
 
-Objects with static storage duration, including global variables, static variables, static class member variables, and function static variables, must be Plain Old Data (POD): only ints, chars, floats, or pointers, or arrays/structs of POD.
+包含静态存储的对象，包括全局变量，静态变量，全局类成员变量，以及函数静态变量，必须是POD类型(Plain Old Data)：只能是POD类型的整形(int)、字符(char)、浮点(float)或者指针或者数组/结构体
 
-The order in which class constructors and initializers for static variables are called is only partially specified in C++ and can even change from build to build, which can cause bugs that are difficult to find. Therefore in addition to banning globals of class type, we do not allow static POD variables to be initialized with the result of a function, unless that function (such as getenv(), or getpid()) does not itself depend on any other globals.
+对于静态变量，C++只定义了类构造和初始化的部分顺序，并且每次生成的结果可能不一样，这将导致隐藏很深的bugs。因此，除了禁用class类型的全局变量，也不允许使用函数的结果初始化静态POD变量，除非函数（如getenv(),getpid()）本身不依赖任何其他的全局变量。
 
-Likewise, global and static variables are destroyed when the program terminates, regardless of whether the termination is by returning from `main()` or by calling `exit()`. The order in which destructors are called is defined to be the reverse of the order in which the constructors were called. Since constructor order is indeterminate, so is destructor order. For example, at program-end time a static variable might have been destroyed, but code still running — perhaps in another thread — tries to access it and fails. Or the destructor for a static `string` variable might be run prior to the destructor for another variable that contains a reference to that string. 
+同样，全局变量和静态变量在程序终止时销毁，不管是因为`main()`返回还是调用了`exit()`。析构顺序和构造顺序刚好相反，因此析构顺序和构造顺序一样都是不明确的。例如，在程序结束时，静态变量可能已经销毁，但是仍在运行的代码-可能在另外一个线程-试图访问它，然后失败了。或者一个静态`string`变量先于另外一个包含该字符串的变量执行析构函数。
 
-One way to alleviate the destructor problem is to terminate the program by calling `quick_exit()` instead of `exit()`. The difference is that `quick_exit()` does not invoke destructors and does not invoke any handlers that were registered by calling `atexit()`. If you have a handler that needs to run when a program terminates via `quick_exit()` (flushing logs, for example), you can register it `using at_quick_exit()`. (If you have a handler that needs to run at both exit() and quick_exit(), you need to register it in both places.) 
+一个缓解析构函数问题的方法是调用`quick_exit()`而不是`exit()`来终止程序。区别是`quick_exit()`不调用析构函数，也不引入在`atexit()`中注册的任何句柄。如果程序终止时有句柄需要通过`quick_exit()`来运行（比如，刷新日志），在`at_quick_exit()`中注册它。（如果句柄需要在`exit()`和`quick_exit()`中都运行，那就在两个地方都注册）。
 
-As a result we only allow static variables to contain POD data. This rule completely disallows vector (use C arrays instead), or string (use const char []).
+综上所述，只允许静态变量包含POD数据。禁用`vector`（用C数组代替），禁用`string`（用`const char []`代替）。
 
-If you need a static or global variable of a class type, consider initializing a pointer (which will never be freed), from either your main() function or from pthread_once(). Note that this must be a raw pointer, not a "smart" pointer, since the smart pointer's destructor will have the order-of-destructor issue that we are trying to avoid.
+如果确实需要`class`类型的静态或者全局变量，考虑初始化一个指针（永不释放），要么在`main()`函数中，要么在`pthread_once()`中。注意指针必须是原始指针，不能是“智能”指针，因为智能指针的析构函数有我们一直在避免的析构函数顺序问题。
 
 # 类
 
