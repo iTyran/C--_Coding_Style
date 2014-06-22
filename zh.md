@@ -454,7 +454,7 @@ namespace fbz = ::foo::bar::baz;
 
 * 不要用内联命名空间。
 
-## 嵌套类(Nested classes)
+## 嵌套类(Nested Classes)
 
 当公开嵌套类作为接口的一部分时，虽然可以直接将他们保持在全局作用域中，但将嵌套类的声明置于命名空间中是更好的选择。
 
@@ -482,7 +482,7 @@ private:
 **结论：**
 不要将嵌套类定义为public，除非它们是接口的一部分，比如，某方法使用了这个类的一系列选项。
 
-## 非成员、静态成员、全局函数
+## 非成员函数、静态成员函数、全局函数
 
 优先使用命名空间中的非成员函数或者静态成员函数，尽可能不使用全局函数。
 
@@ -667,13 +667,13 @@ private:
 };
 ```
 
-## Delegating and inheriting constructors
+## 委派和继承构造函数
 
-Use delegating and inheriting constructors when they reduce code duplication.
+可以减少重复时使用委派和继承构造函数。
 
-**Definition:**
+**定义：**
 
-Delegating and inheriting constructors are two different features, both introduced in C++11, for reducing code duplication in constructors. Delegating constructors allow one of a class's constructors to forward work to one of the class's other constructors, using a special variant of the initialization list syntax. For example:
+委派构造函数和继承构造函数是为了减少构造函数重复代码而在C++11中引入的两个不同的特性。委派构造函数允许类的一个构造函数通过特殊的初始化列表语法调用另外的构造函数。
 
 ```cpp
 X::X(const string& name) : name_(name) {
@@ -683,7 +683,7 @@ X::X(const string& name) : name_(name) {
 X::X() : X("") { }
 ```
 
-Inheriting constructors allow a derived class to have its base class's constructors available directly, just as with any of the base class's other member functions, instead of having to redeclare them. This is especially useful if the base has multiple constructors. For example:
+继承构造函数允许派生类可以直接使用基类的构造函数，就像使用基类的其他成员函数，而不需要重新声明这些构造函数。尤其当基类有多个构造函数时特别有用。
 
 ```cpp
 class Base {
@@ -700,38 +700,38 @@ public:
 };
 ```
 
-This is especially useful when Derived's constructors don't have to do anything more than calling Base's constructors.
+当派生类构造函数仅仅只是调用基类构造函数时特别有用。
 
-**Pros:**
+**优点：**
 
-Delegating and inheriting constructors reduce verbosity and boilerplate, which can improve readability.
+委派构造函数和继承构造函数可以减少冗余代码，从而提高代码可读性。
 
-Delegating constructors are familiar to Java programmers.
+Java编程人员对委派构造函数很熟悉。
 
-**Cons:**
+**缺点：**
 
-It's possible to approximate the behavior of delegating constructors by using a helper function.
+使用辅助函数可以预估委派构造函数的行为。
 
-Inheriting constructors may be confusing if a derived class introduces new member variables, since the base class constructor doesn't know about them.
+如果派生类引入了新的成员变量，那么继承构造函数会被迷惑，因为基类构造函数不知道这些新的成员变量。
 
-**Decision:**
+**结论：**
 
-Use delegating and inheriting constructors when they reduce boilerplate and improve readability. Be cautious about inheriting constructors when your derived class has new member variables. Inheriting constructors may still be appropriate in that case if you can use in-class member initialization for the derived class's member variables.
+当可以减少冗余、提高可读性的时候使用委派构造函数和继承构造函数。当派生类有新的成员变量的时候谨慎对待继承构造函数。如果派生类成员变量使用类内成员初始化(in-class member initialization)，继承构造函数仍然是适用的。
 
 
-## Structs vs. Classes
+## 结构体 vs 类
 
-Use a struct only for passive objects that carry data; everything else is a class.
+仅当只有数据时使用struct，其它一概使用class。
 
-The struct and class keywords behave almost identically in C++. We add our own semantic meanings to each keyword, so you should use the appropriate keyword for the data-type you're defining.
+在C++中，关键字struct和class几乎含义等同，我们为其人为添加语义，以便为定义的数据类型合理选择使用哪个关键字。
 
-structs should be used for passive objects that carry data, and may have associated constants, but lack any functionality other than access/setting the data members. The accessing/setting of fields is done by directly accessing the fields rather than through method invocations. Methods should not provide behavior but should only be used to set up the data members, e.g., constructor, destructor, Initialize(), Reset(), Validate().
+struct被用在仅包含数据的消极对象（passive objects）上，可能包括有关联的常量，但没有存取数据成员之外的函数功能，而存取功能通过直接访问实现而无需方法调用，这里提到的方法是指只用于处理数据成员的，如构造函数、析构函数、Initialize()、Reset()、Validate()。
 
-If more functionality is required, a class is more appropriate. If in doubt, make it a class.
+如果需要更多的函数功能，class更适合，如果不确定的话，直接使用class。
 
-For consistency with STL, you can use struct instead of class for functors and traits.
+为了与STL保持一直，仿函数（functors）和特性（traits）可以不用class而是使用struct。
 
-Note that member variables in structs and classes have different naming rules.
+注意：类和结构体的成员变量使用不同的命名规则。
 
 ## Inheritance
 
