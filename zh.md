@@ -669,7 +669,7 @@ private:
 
 ## 委派和继承构造函数
 
-可以减少重复时使用委派和继承构造函数。
+可以减少重复代码时使用委派和继承构造函数。
 
 **定义：**
 
@@ -721,147 +721,157 @@ Java编程人员对委派构造函数很熟悉。
 
 ## 结构体 vs 类
 
-仅当只有数据时使用struct，其它一概使用class。
+仅当只有数据时使用`struct`，其它一概使用`class`。
 
-在C++中，关键字struct和class几乎含义等同，我们为其人为添加语义，以便为定义的数据类型合理选择使用哪个关键字。
+在C++中，关键字`struct`和`class`几乎含义等同，我们为其人为添加语义，以便为定义的数据类型合理选择使用哪个关键字。
 
 struct被用在仅包含数据的消极对象（passive objects）上，可能包括有关联的常量，但没有存取数据成员之外的函数功能，而存取功能通过直接访问实现而无需方法调用，这里提到的方法是指只用于s处理数据成员的，如构造函数、析构函数、Initialize()、Reset()、Validate()。
 
-如果需要更多的函数功能，class更适合，如果不确定的话，直接使用class。
+如果需要更多的函数功能，`class`更适合，如果不确定的话，直接使用`class`。
 
-为了与STL保持一直，仿函数（functors）和特性（traits）可以不用class而是使用struct。
+为了与STL保持一直，仿函数（functors）和特性（traits）可以不用`class`而是使用`struct`。
 
 注意：类和结构体的成员变量使用不同的命名规则。
 
-## Inheritance
+## 继承
 
-Composition is often more appropriate than inheritance. When using inheritance, make it public.
+使用组合（composition，注，这一点也是GoF在《Design Patterns》里反复强调的）通常比使用继承更适宜，如果使用继承的话，只使用公共继承。
 
-**Definition:**
-When a sub-class inherits from a base class, it includes the definitions of all the data and operations that the parent base class defines. In practice, inheritance is used in two major ways in C++: implementation inheritance, in which actual code is inherited by the child, and interface inheritance, in which only method names are inherited.
+**定义：**
+当子类继承基类时，子类包含了父类所有数据及操作的定义。C++实践中，继承主要用于两种场合：实现继承（implementation inheritance），子类继承父类的实现代码；接口继承（interface inheritance），子类仅继承父类的方法名称。
 
-**Pros:**
-Implementation inheritance reduces code size by re-using the base class code as it specializes an existing type. Because inheritance is a compile-time declaration, you and the compiler can understand the operation and detect errors. Interface inheritance can be used to programmatically enforce that a class expose a particular API. Again, the compiler can detect errors, in this case, when a class does not define a necessary method of the API.
+**优点：**
+实现继承通过原封不动的重用基类代码减少了代码量。由于继承是编译时声明（compile-time declaration），编码者和编译器都可以理解相应操作并发现错误。接口继承可用于程序上增强类的特定API的功能，在类没有定义API的必要实现时，编译器同样可以侦错。
 
-**Cons:**
-For implementation inheritance, because the code implementing a sub-class is spread between the base and the sub-class, it can be more difficult to understand an implementation. The sub-class cannot override functions that are not virtual, so the sub-class cannot change implementation. The base class may also define some data members, so that specifies physical layout of the base class.
+**缺点：**
+对于实现继承，由于实现子类的代码在父类和子类间延展，要理解其实现变得更加困难。子类不能重写父类的非虚函数，当然也就不能修改其实现。基类也可能定义了一些数据成员，用于区分基类的物理布局（physical layout）
 
-**Decision:**
-All inheritance should be public. If you want to do private inheritance, you should be including an instance of the base class as a member instead.
+**结论：**
+所有继承必须是`public`的，如果想私有继承的话，应该采取包含基类实例作为成员的方式作为替代。
 
-Do not overuse implementation inheritance. Composition is often more appropriate. Try to restrict use of inheritance to the "is-a" case: Bar subclasses Foo if it can reasonably be said that Bar "is a kind of" Foo.
+不要滥用实现继承，组合通常更加合适。努力做到只在“是一个”（"is-a"，译者注，其他"has-a"情况下请使用组合）的情况下使用继承：如果Bar的确“是一种”Foo，才令Bar是Foo的子类。
 
-Make your destructor virtual if necessary. If your class has virtual methods, its destructor should be virtual.
+必要的话，令析构函数为`virtual`，这里必要是指该类具有虚函数。
 
-Limit the use of protected to those member functions that might need to be accessed from subclasses. Note that data members should be private.
+限定仅在子类访问的成员函数为`protected`，需要注意的是数据成员应始终为私有。
 
-When redefining an inherited virtual function, explicitly declare it virtual in the declaration of the derived class. Rationale: If virtual is omitted, the reader has to check all ancestors of the class in question to determine if the function is virtual or not.
+当重定义派生的虚函数时，在派生类中明确声明其为`virtual`。根本原因：如果遗漏`virtual`，读者需要检索类的所有祖先以确定该函数是否为虚函数（注，虽然不影响其为虚函数的本质）。
 
-## Multiple Inheritance
+## 多重继承
 
-Only very rarely is multiple implementation inheritance actually useful. We allow multiple inheritance only when at most one of the base classes has an implementation; all other base classes must be pure interface classes tagged with the Interface suffix.
+真正需要用到多重实现继承（multiple implementation inheritance）的时候非常少，只有当最多一个基类中含有实现，其他基类都是以`Interface`为后缀的纯接口类时才会使用多重继承。
 
-**Definition:** Multiple inheritance allows a sub-class to have more than one base class. We distinguish between base classes that are pure interfaces and those that have an implementation.
+**定义**
+多重继承允许子类拥有多个基类，要将作为纯接口的基类和具有实现的基类区别开来。
 
-**Pros:** Multiple implementation inheritance may let you re-use even more code than single inheritance (see Inheritance).
+**优点：**
+相比单继承，多重实现继承可令你重用更多代码（参考“继承”章节）。
 
-**Cons:** Only very rarely is multiple implementation inheritance actually useful. When multiple implementation inheritance seems like the solution, you can usually find a different, more explicit, and cleaner solution.
+**缺点：**
+真正需要用到多重实现继承的时候非常少。当多重实现继承看上去是不错的解决方案时，通常可以找到更加明确、清晰的、不同的解决方案。
 
-**Decision:** Multiple inheritance is allowed only when all superclasses, with the possible exception of the first one, are pure interfaces. In order to ensure that they remain pure interfaces, they must end with the Interface suffix.
+**结论：**
+只有当所有超类（`superclass`）除第一个外都是纯接口类时才能使用多重继承。为确保它们是纯接口，类必须以`Interface`为后缀。
 
-Note: There is an exception to this rule on Windows.
+注意：关于此规则，Windows下有种例外情况（译者注，将在本译文最后一篇的例外规则中阐述）。
 
-## Interfaces
+## 接口
 
 Classes that satisfy certain conditions are allowed, but not required, to end with an `Interface` suffix.
+接口是指满足特定条件的类，这些类以`Interface`为后缀（非必需）。
 
-**Definition:**
+**定义：**
 
-A class is a pure interface if it meets the following requirements:
+当一个类满足以下要求时，称之为纯接口：
 
-* It has only public pure virtual ("= 0") methods and static methods (but see below for destructor).
-* It may not have non-static data members.
-* It need not have any constructors defined. If a constructor is provided, it must take no arguments and it must be protected.
-* If it is a subclass, it may only be derived from classes that satisfy these conditions and are tagged with the Interface suffix.
+* 只有纯虚函数（"=0"）和静态函数（下文提到的析构函数除外）； 
+* 没有非静态数据成员；
+* 没有定义任何构造函数。如果有，也不含参数，并且为`protected`；
+* 如果是子类，也只能继承满足上述条件并且后缀是`Interface`的类。
 
-An interface class can never be directly instantiated because of the pure virtual method(s) it declares. To make sure all implementations of the interface can be destroyed correctly, the interface must also declare a virtual destructor (in an exception to the first rule, this should not be pure). See Stroustrup, The C++ Programming Language, 3rd edition, section 12.4 for details.
+接口类不能被直接实例化，因为它声明了纯虚函数。为确保接口类的所有实现可被正确销毁，必须为之声明虚析构函数（作为第1条规则的例外，析构函数不能是纯虚函数）。具体细节可参考Stroustrup的《The C++ Programming Language, 3rd edition》第12.4节。
 
-**Pros:**
+**优点：**
 Tagging a class with the `Interface` suffix lets others know that they must not add implemented methods or non static data members. This is particularly important in the case of multiple inheritance. Additionally, the interface concept is already well-understood by Java programmers.
+以`Interface`为后缀可令他人知道不能为该接口类增加实现函数或非静态数据成员，这一点对多重继承尤其重要。另外，对于Java程序员来说，接口的概念已经深入人心。
 
-**Cons:**
-The `Interface` suffix lengthens the class name, which can make it harder to read and understand. Also, the interface property may be considered an implementation detail that shouldn't be exposed to clients.
+**缺点：**
+Interface后缀增加了类名长度，给阅诺和理解带来不便，同时，接口属性作为实现细节不应暴露给客户。
 
-**Decision:**
+**结论：**
 A class may end with `Interface` only if it meets the above requirements. We do not require the converse, however: classes that meet the above requirements are not required to end with `Interface`.
+只有满足上述需要，类才可能以`Interface`结尾，但反过来，满足上述需要的类未必一定以`Interface`结尾。
 
-## Operator Overloading
+## 操作符重载
 
-Do not overload operators except in rare, special circumstances.
+除少数特定环境外，不要重载操作符。
 
-**Definition:**
-A class can define that operators such as + and / operate on the class as if it were a built-in type. An overload of `operator""` allows the built-in literal syntax to be used to create objects of class types. 
+**定义：**
+一个类可以定义诸如+、/等操作符，使其可以像内建类型一样直接使用。重载操作符`""`允许使用内置文本语法来创建类的对象。
 
-**Pros:**
-Operator overloading can make code appear more intuitive because a class will behave in the same way as built-in types (such as int). Overloaded operators are more playful names for functions that are less-colorfully named, such as `Equals()` or `Add()`.
+**优点：**
+操作符重载使代码看上去更加直观，就像内建类型（如`int`）那样。相比`Equals()`、`Add()`等黯淡无光的函数名，操作符重载有趣多了。
 
-For some template functions to work correctly, you may need to define operators.
+为了使一些模板函数正确工作，你可能需要定义操作符。
 
-User-defined literals are a very concise notation for creating objects of user-defined types.
+自定义的文本是一个非常简洁的符号，用来创建用户自定义类型的对象。
 
-**Cons:**
-While operator overloading can make code more intuitive, it has several drawbacks:
+**缺点：**
+虽然操作符重载令代码更加直观，但也有以下不足：
 
-* It can fool our intuition into thinking that expensive operations are cheap, built-in operations.
-* It is much harder to find the call sites for overloaded operators. Searching for `equals()` is much easier than searching for relevant invocations of `==`.
-* Some operators work on pointers too, making it easy to introduce bugs. Foo + 4 may do one thing, while &Foo + 4 does something totally different. The compiler does not complain for either of these, making this very hard to debug.
-* User-defined literals allow creating new syntactic forms that are unfamiliar even to experienced C++ programmers. 
+* 混淆直觉，让你误以为一些耗时的操作像内建操作那样轻巧；
+* 查找重载操作符的调用处更加困难，查找Equals()显然比`==`容易的多；
+* 有的操作符可以对指针进行操作，容易导致bugs。`Foo + 4`做的是一件事，而`&Foo + 4`可能做的是完全不同的另一件事，对于二者，编译器都不会报错，使其很难调试；
+* 即便是对于老道的C++程序员，用户自定义文创建新的语法形式也是一件很陌生的事情。
 
-Overloading also has surprising ramifications. For instance, if a class overloads unary operator&, it cannot safely be forward-declared.
+重载还有令你吃惊的副作用，比如，前置声明重载操作符`&`的类很不安全。
 
-**Decision:**
-In general, do not overload operators. The assignment operator (`operator=`), in particular, is insidious and should be avoided. You can define functions like `equals()` and `clone()` if you need them. Likewise, avoid the dangerous unary operator& at all costs, if there's any possibility the class might be forward-declared.
+**结论：**
+一般不要重载操作符，尤其是赋值操作（`operator=`）暗藏杀机，应避免重载。如果需要的话，可以定义类似`Equals()`、`CopyFrom()`等函数。同样的，不惜一切代价避免重载一元操作符`&`，如果类有可能被前向声明的话。
 
-Do not overload `operator""`, i.e. do not introduce user-defined literals. 
+不要重载操作符`""`，比如，不要引入自定义文本。
 
-However, there may be rare cases where you need to overload an operator to interoperate with templates or "standard" C++ classes (such as `operator<< (ostream&, const T&)` for logging). These are acceptable if fully justified, but you should try to avoid these whenever possible. In particular, do not overload `operator==` or `operator<` just so that your class can be used as a key in an STL container; instead, you should create equality and comparison functor types when declaring the container.
+然而，极少数情况下需要重载操作符以便与模板或“标准”C++类衔接（如`operator<<(ostream&, const T&)`），如果被充分证明则是可接受的，但你仍要尽可能避免这样做。尤其是不要仅仅为了在STL容器中作为key使用就重载`operator==`或`operator<`，取而代之，你应该在声明容器的时候，创建相等判断和大小比较的仿函数类型。
 
-Some of the STL algorithms do require you to overload `operator==`, and you may do so in these cases, provided you document why.
+有些STL算法确实需要重载`operator==`时可以这么做，但是不要忘了提供文档说明原因。
 
 See also Copy Constructors and Function Overloading.
+亦可参考“拷贝构造函数”和“函数重载”章节。
 
-## Access Control
+## 访问控制Access Control
 
-Make data members private, and provide access to them through accessor functions as needed (for technical reasons, we allow data members of a test fixture class to be protected when using Google Test). Typically a variable would be called `_foo` and the accessor function `getFoo()` . You may also want a mutator function `setFoo()` . Exception: static const data members (typically called FOO) need not be private.
+将数据成员私有化，并提供相关访问函数（因技术原因，当使用Google测试时，允许test类中的数据成员是`protected`）。典型得，变量命名为`_foo`，取值函数为`getFoo()`，赋值函数为`setFoo()`。**例外**：静态常量数据成员（命名为`FOO`）不需要是`private`。
 
-The definitions of accessors are usually inlined in the header file.
+取值函数一般作为内联函数定义在头文件中。
 
 See also Inheritance and Function Names.
+亦可参考“继承”和“函数命名”章节。
 
-## Declaration Order
+## 声明顺序Declaration Order
 
-Use the specified order of declarations within a class: public: before private:, methods before data members (variables), etc.
+在类中使用特定的声明顺序：`public:`在`private:`之前，成员函数在数据成员（变量）之前等等。
 
-Your class definition should start with its public: section, followed by its protected: section and then its private: section. If any of these sections are empty, omit them.
+类的各部分定义顺序如下：首先是`public:`部分，然后是`protected:`部分，最后是`private:`部分。如果其中某部分没有，直接忽略即可。
 
-Within each section, the declarations generally should be in the following order:
+在上述任何部分内，声明需要遵循以下顺序：
 
-* Typedefs and Enums
-* Constants (`static const` data members)
-* Creators (`createXXX` methods)
-* Constructors
-* Destructor
-* Methods, including static methods
-* overriden methods (must have the `override` keyword as suffix)
-* Data Members (except `static const` data members)
+* `Typedefs`和`Enums`
+* 常量（`static const`类型的数据成员）
+* 创建函数（`createXXX`方法）
+* 构造函数
+* 析构函数
+* 成员方法，包括静态方法
+* 重载方法（必须以`override`关键字作为后缀）
+* 数据成员（`static const`数据成员除外）
 
-Friend declarations should always be in the private section, and the `DISALLOW_COPY_AND_ASSIGN` macro invocation should be at the end of the private: section. It should be the last thing in the class. See Copy Constructors.
+友元声明必须放在`private:`部分，宏`DISALLOW_COPY_AND_ASSIGN`应该放在`private:`部分最后。这应该是类的最后一部分内容。亦可参考"拷贝构造函数"章节。
 
-Method definitions in the corresponding .cpp file should be the same as the declaration order, as much as possible.
+.cpp文件中函数的定义应尽可能和声明次序一致。
 
 Do not put large method definitions inline in the class definition. Usually, only trivial or performance-critical, and very short, methods may be defined inline. See Inline Functions for more details.
+不要类的定义中内联大型函数定义。通常，只有那些没有特别意义的或者性能要求高的，并且比较短小的函数才被定义为内联函数。更多细节参考“内联函数”章节。
 
-Example:
+示例：
 ```cpp
 class MyNode : public Node
 {
@@ -900,15 +910,15 @@ private:
 }
 ```
 
-## Write Short Functions
+## 编写短函数Write Short Functions
 
-Prefer small and focused functions.
+优先选择短小、精炼的函数。
 
-We recognize that long functions are sometimes appropriate, so no hard limit is placed on functions length. If a function exceeds about 40 lines, think about whether it can be broken up without harming the structure of the program.
+长函数有时是恰当的，因此函数长度没有严格限制。但是如果函数超过40行，可以考虑在不影响程序结构的情况下将其分割一下。
 
-Even if your long function works perfectly now, someone modifying it in a few months may add new behavior. This could result in bugs that are hard to find. Keeping your functions short and simple makes it easier for other people to read and modify your code.
+即使一个长函数现在工作的非常完美，别人仍可能为其添加新的欣慰，这可能导致难以发现的bugs。保持函数短小、简单，方便他人阅读和修改代码。
 
-You could find long and complicated functions when working with some code. Do not be intimidated by modifying existing code: if working with such a function proves to be difficult, you find that errors are hard to debug, or you want to use a piece of it in several different contexts, consider breaking up the function into smaller and more manageable pieces.
+有时你可能会碰到复杂的长函数。不要害怕修改现有代码：如果证实这些代码难于使用、调试，或者你需要使用其中的一小块功能。考虑将其分割为更加短小、易于管理的若干函数。
 
 
 # 其它C++特性
