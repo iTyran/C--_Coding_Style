@@ -960,36 +960,42 @@ void FooConsumer(std::unique_ptr<Foo> ptr);
 除非是为了跟老版本的C++兼容，否在在新版本的C++代码中的不要使用`scoped_ptr`，永远不要使用`linked_ptr` 或者`std::auto_ptr`。在所有以上这三种情况下，用`std::unique_ptr`来代替.
 
 
-## Reference Arguments
+## 引用参数
 
-All parameters passed by reference must be labeled `const`.
+所有按引用传递的参数必须加上`const`.
 
-**Definition:**
-In C, if a function needs to modify a variable, the parameter must use a pointer, eg int foo(int *pval). In C++, the function can alternatively declare a reference parameter: int foo(int &val).
+**定义**
 
-**Pros:**
-Defining a parameter as reference avoids ugly code like (*pval)++. Necessary for some applications like copy constructors. Makes it clear, unlike with pointers, that a null pointer is not a possible value.
+在C语言中，如果函数需要修改变量的值，形参(parameter)必须为指针，比如 int foo(int *pval)。在C++中，函数还可以声明引用形参: int foo(int &val)。
 
-**Cons:**
-References can be confusing, as they have value syntax but pointer semantics.
+**优点:**
 
-**Decision:**
+定义形参为引用避免了像`(*pval)++`这样难看的代码，像拷贝构造函数这样的应用也是必须的。而且很清楚，不像指针那样不能使用空指针null。
 
-Within function parameter lists all references must be const:
+**缺点:**
+
+引用容易引起误解，因为引用在语法上是值但却有指针的语义。
+
+**结论:**
+
+
+函数形参表中，所有的引用必须是`const`:
 
 ```cpp
 void foo(const string &in, string *out);
 ```
 
-It is a very strong convention that input arguments are values or const references while output arguments are pointers. Input parameters may be const pointers, but we never allow non-const reference parameters except when required by convention, e.g., `swap()` .
+这是一个硬性约定:输入参数是值或者常数引用，输出参数为指针。输入参数可以是常数指针，但不能使用非常数引用形参，除非是约定需要，比如`swap()` 。
 
-However, there are some instances where using `const T*` is preferable to `const T&` for input parameters. For example:
+不过，有些情况下选择输入形参时，`const T*`比`const T&`更好。
 
-* You want to pass in a null pointer.
-* The function saves a pointer or reference to the input.
-* Passing `const char*` for strings
+例如:
 
-Remember that most of the time input parameters are going to be specified as `const T&` . Using `const T*` instead communicates to the reader that the input is somehow treated differently. So if you choose `const T*` rather than `const T&` , do so for a concrete reason; otherwise it will likely confuse readers by making them look for an explanation that doesn't exist.
+* 需要传递一个空指针。
+* 函数保存了一个指针或者引用作为输入。
+* 传递`const char*`给字符串。
+
+要记住，大多数情况下输入形参要被指定为`const T&`。使用 `const T*`会传达给读者这样一个信息:输入参数要以某种方式区别处理。因此有确切的理由时，再选择`const T*`而不是`const T&`作为形参输入，否则会误导读者去寻找有关这方面其实不存在的解释。
 
 ## Rvalue references
 
