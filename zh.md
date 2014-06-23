@@ -454,7 +454,7 @@ namespace fbz = ::foo::bar::baz;
 
 * 不要用内联命名空间。
 
-## 嵌套类(Nested Classes)
+## 嵌套类
 
 当公开嵌套类作为接口的一部分时，虽然可以直接将他们保持在全局作用域中，但将嵌套类的声明置于命名空间中是更好的选择。
 
@@ -499,12 +499,10 @@ private:
 
 如果你确实需要定义非成员函数，又只是在.cpp中使用，可使用未命名的命名空间或静态关联（如static int Foo() {...}）限定其作用域。
 
-## 局部变量（Local Variables）
+## 局部变量
 
 尽可能缩小函数变量的作用域，并在声明变量时将其初始化。
 
-
-C++ allows you to declare variables anywhere in a function. We encourage you to declare them in as local a scope as possible, and as close to the first use as possible. This makes it easier for the reader to find the declaration and see what type the variable is and what it was initialized to. In particular, initialization should be used instead of declaration and assignment, e.g.
 C++允许在函数的任何位置声明发量。我们提倡在尽可能小的作用域中声明变量，离第一次使用越近越好。这使得代码易于阅读，易于定位变量的声明位置、类型和初始值。特别是，应使用初始化代替声明+赋值的方式。
 
 ```cpp
@@ -542,7 +540,7 @@ for (int i = 0; i < 1000000; ++i) {
 }
 ```
 
-## 静态变量和全局变量(Static and Global Variables)
+## 静态变量和全局变量
 
 class类型的全局变量是被禁止的：这导致隐藏很深的bugs，因为构造和析构的顺序不明确。然而，允许`constexpr`类型的静态或全局变量：他们没有动态的初始化或者析构。
 
@@ -777,7 +775,6 @@ struct被用在仅包含数据的消极对象（passive objects）上，可能�
 
 ## 接口
 
-Classes that satisfy certain conditions are allowed, but not required, to end with an `Interface` suffix.
 接口是指满足特定条件的类，这些类以`Interface`为后缀（非必需）。
 
 **定义：**
@@ -792,14 +789,12 @@ Classes that satisfy certain conditions are allowed, but not required, to end wi
 接口类不能被直接实例化，因为它声明了纯虚函数。为确保接口类的所有实现可被正确销毁，必须为之声明虚析构函数（作为第1条规则的例外，析构函数不能是纯虚函数）。具体细节可参考Stroustrup的《The C++ Programming Language, 3rd edition》第12.4节。
 
 **优点：**
-Tagging a class with the `Interface` suffix lets others know that they must not add implemented methods or non static data members. This is particularly important in the case of multiple inheritance. Additionally, the interface concept is already well-understood by Java programmers.
 以`Interface`为后缀可令他人知道不能为该接口类增加实现函数或非静态数据成员，这一点对多重继承尤其重要。另外，对于Java程序员来说，接口的概念已经深入人心。
 
 **缺点：**
 Interface后缀增加了类名长度，给阅诺和理解带来不便，同时，接口属性作为实现细节不应暴露给客户。
 
 **结论：**
-A class may end with `Interface` only if it meets the above requirements. We do not require the converse, however: classes that meet the above requirements are not required to end with `Interface`.
 只有满足上述需要，类才可能以`Interface`结尾，但反过来，满足上述需要的类未必一定以`Interface`结尾。
 
 ## 操作符重载
@@ -838,7 +833,7 @@ A class may end with `Interface` only if it meets the above requirements. We do 
 See also Copy Constructors and Function Overloading.
 亦可参考“拷贝构造函数”和“函数重载”章节。
 
-## 访问控制Access Control
+## 访问控制
 
 将数据成员私有化，并提供相关访问函数（因技术原因，当使用Google测试时，允许test类中的数据成员是`protected`）。典型得，变量命名为`_foo`，取值函数为`getFoo()`，赋值函数为`setFoo()`。**例外**：静态常量数据成员（命名为`FOO`）不需要是`private`。
 
@@ -847,7 +842,7 @@ See also Copy Constructors and Function Overloading.
 See also Inheritance and Function Names.
 亦可参考“继承”和“函数命名”章节。
 
-## 声明顺序Declaration Order
+## 声明顺序
 
 在类中使用特定的声明顺序：`public:`在`private:`之前，成员函数在数据成员（变量）之前等等。
 
@@ -861,15 +856,14 @@ See also Inheritance and Function Names.
 * 构造函数
 * 析构函数
 * 成员方法，包括静态方法
-* 重载方法（必须以`override`关键字作为后缀）
+* 重写方法（overridden methods，必须以`override`关键字作为后缀）
 * 数据成员（`static const`数据成员除外）
 
 友元声明必须放在`private:`部分，宏`DISALLOW_COPY_AND_ASSIGN`应该放在`private:`部分最后。这应该是类的最后一部分内容。亦可参考"拷贝构造函数"章节。
 
 .cpp文件中函数的定义应尽可能和声明次序一致。
 
-Do not put large method definitions inline in the class definition. Usually, only trivial or performance-critical, and very short, methods may be defined inline. See Inline Functions for more details.
-不要类的定义中内联大型函数定义。通常，只有那些没有特别意义的或者性能要求高的，并且比较短小的函数才被定义为内联函数。更多细节参考“内联函数”章节。
+不要在类的定义中内联大型函数定义。通常，只有那些没有特别意义的或者性能要求高的，并且比较短小的函数才被定义为内联函数。更多细节参考“内联函数”章节。
 
 示例：
 ```cpp
@@ -910,7 +904,7 @@ private:
 }
 ```
 
-## 编写短函数Write Short Functions
+## 编写短函数
 
 优先选择短小、精炼的函数。
 
@@ -1052,23 +1046,24 @@ public:
 
 **Decision:** If you want to overload a function, consider qualifying the name with some information about the arguments, e.g., `appendString()` , `appendInt()` rather than just `append()` .
 
-## Default Arguments
+## 缺省参数
 
-We do not allow default function parameters, except in limited situations as explained below. Simulate them with function overloading instead, if appropriate.
+禁止使用缺省函数参数，除非是下述有限的几种情况之一。如果合适，用函数重载来替代。
 
-**Pros:** Often you have a function that uses default values, but occasionally you want to override the defaults. Default parameters allow an easy way to do this without having to define many functions for the rare exceptions. Compared to overloading the function, default arguments have a cleaner syntax, with less boilerplate and a clearer distinction between 'required' and 'optional' arguments.
+**优点：**
+经常一个函数带有缺省值，偶尔会重写一下这些值。缺省参数为极少的例外情况提供了少定义一些函数的方便。相比重载这个函数，缺省参数有更干净的语义，用更少的样板，并且更清晰的区分“必须”和“可选”的参数。
 
-**Cons:** Function pointers are confusing in the presence of default arguments, since the function signature often doesn't match the call signature. Adding a default argument to an existing function changes its type, which can cause problems with code taking its address. Adding function overloads avoids these problems. In addition, default parameters may result in bulkier code since they are replicated at every call-site -- as opposed to overloaded functions, where "the default" appears only in the function definition.
+**缺点：**
+缺省参数的存在使得函数指针产生迷惑，因为函数的签名与调用的签名经常不一致。往现有的函数中增加缺省参数会改变函数的类型，这会导致使用函数地址的代码出现问题。函数重载可以避免这些问题。而且，缺省参数会导致“笨重”的代码，因为他们在每个调用的地方都被重复，而重载的函数只有在定义的地方才出现“这些”缺省。
 
-**Decision:**
+**结论：**
+尽管上述的缺点并不是那么“繁重”，但是相比缺省参数带来的很小的好处，仍然是得不偿失。因此除了下述的例外，所有的参数都应该显式的指定。
 
-While the cons above are not that onerous, they still outweigh the (small) benefits of default arguments over function overloading. So except as described below, we require all arguments to be explicitly specified.
+一个特例是当函数是.cpp文件中静态函数（或者在一个未命名的命名空间里）。这种情况下，因为函数只在很小的作用域中使用，缺省参数的缺点就显得微不足道。
 
-One specific exception is when the function is a static function (or in an unnamed namespace) in a .cpp file. In this case, the cons don't apply since the function's use is so localized.
+通常情况下，cocos2dx的`createXXX`和`initXXX`方法允许使用却生参数。
 
-In particular, the `createXXX` and `initXXX` methods in cocos2dx are allowed to use default arguments.
-
-Another specific exception is when default arguments are used to simulate variable-length argument lists. Example:
+另外一个特例是缺省参数用于可变长度参数列表。例如：
 
 ```cpp
 // Support up to 4 params by using a default empty AlphaNum.
