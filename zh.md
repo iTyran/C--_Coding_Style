@@ -910,83 +910,92 @@ Even if your long function works perfectly now, someone modifying it in a few mo
 
 You could find long and complicated functions when working with some code. Do not be intimidated by modifying existing code: if working with such a function proves to be difficult, you find that errors are hard to debug, or you want to use a piece of it in several different contexts, consider breaking up the function into smaller and more manageable pieces.
 
-# Other C++ Features
 
-## Ownership and Smart Pointers
+# 其它C++特性
 
-Prefer to have single, fixed owners for dynamically allocated objects. Prefer to transfer ownership with smart pointers.
+## 所有权和智能指针
 
-**Definition:**
 
-"Ownership" is a bookkeeping technique for managing dynamically allocated memory (and other resources). The owner of a dynamically allocated object is an object or function that is responsible for ensuring that it is deleted when no longer needed. Ownership can sometimes be shared, in which case the last owner is typically responsible for deleting it. Even when ownership is not shared, it can be transferred from one piece of code to another.
+关于所有权和智能智能指针，最好使得动态分配的对象有单一、固定的所有者。最好用智能指针来转移所有权。
 
-"Smart" pointers are classes that act like pointers, e.g. by overloading the * and -> operators. Some smart pointer types can be used to automate ownership bookkeeping, to ensure these responsibilities are met. `std::unique_ptr` is a smart pointer type introduced in C++11, which expresses exclusive ownership of a dynamically allocated object; the object is deleted when the `std::unique_ptr` goes out of scope. It cannot be copied, but can be moved to represent ownership transfer. shared_ptr is a smart pointer type which expresses shared ownership of a dynamically allocated object. `shared_ptrs` can be copied; ownership of the object is shared among all copies, and the object is deleted when the last `shared_ptr` is destroyed.
+**定义**
 
-**Pros:**
+“所有权”是管理动态分配的内存(还有其它资源)的一种簿记(bookkeeping)技术。动态分配对象的所有者是一个对象或者函数，这个对象或者函数负责在动态分配对象不再需要时将其删除。所有权有时可以共享，在这种情况下，最后一个所有者通常负责将其删除。即使所有权不是共享的，它也可以通过代码段来转移。
 
-* It's virtually impossible to manage dynamically allocated memory without some sort of ownership logic.
-* Transferring ownership of an object can be cheaper than copying it (if copying it is even possible).
-* Transferring ownership can be simpler than 'borrowing' a pointer or reference, because it reduces the need to coordinate the lifetime of the object between the two users.
-* Smart pointers can improve readability by making ownership logic explicit, self-documenting, and unambiguous.
-* Smart pointers can eliminate manual ownership bookkeeping, simplifying the code and ruling out large classes of errors.
-* For const objects, shared ownership can be a simple and efficient alternative to deep copying.
 
-**Cons:**
+“智能”指针看起来像指针，比如通过重载*和 - >运算符。一些智能指针类型可用于自动化簿记所有权，通过自动化来确保所有权的上述责任可以得到满足。`std::unique_ptr`是C++11中介绍的一种智能指针类型，它表达了动态分配对象的独占所有权，在`std::unique_ptr`指针超出范围时这个对象被删除。这个对象不能被复制，但是可以将所有权转移。`shared_ptr`也是一种智能指针类型，它表达了动态分配对象的共享所有权。`shared_ptrs`可以被复制，并且对象的所有权被所有副本共享，当最后一个`shared_ptr`被销毁时对象被删除。
 
-* Ownership must be represented and transferred via pointers (whether smart or plain). Pointer semantics are more complicated than value semantics, especially in APIs: you have to worry not just about ownership, but also aliasing, lifetime, and mutability, among other issues.
-* The performance costs of value semantics are often overestimated, so the performance benefits of ownership transfer might not justify the readability and complexity costs.
-* APIs that transfer ownership force their clients into a single memory management model.
-* Code using smart pointers is less explicit about where the resource releases take place.
-* `std::unique_ptr` expresses ownership transfer using C++11's move semantics, which are generally forbidden in Google code, and may confuse some programmers.
-* Shared ownership can be a tempting alternative to careful ownership design, obfuscating the design of a system.
-* Shared ownership requires explicit bookkeeping at run-time, which can be costly.
-* In some cases (e.g. cyclic references), objects with shared ownership may never be deleted.
-* Smart pointers are not perfect substitutes for plain pointers.
+**优点:**
 
-**Decision:**
+* 在没有所有权逻辑的情况下不可能管理动态内存分配.
+* 相比起复制来说，转移对象的所有权消耗的资源更小(在可以复制的情况下).
+* 所有权转移比起’借用’(borrowing)指针或者引用更简单一些，因为不再需要在两个使用者之间协调对象的生命周期.
+* 使所有权逻辑清晰、自文档化、引用明确可以提高智能指针的可读性.
+* 智能指针可以消除所有权的主动簿记，简化代码，并且可以排除常见类型的错误.
+* 对于常量对象，共享所有权是替代深拷贝的简单有效的方法.
 
-If dynamic allocation is necessary, prefer to keep ownership with the code that allocated it. If other code needs access to the object, consider passing it a copy, or passing a pointer or reference without transferring ownership. Prefer to use `std::unique_ptr` to make ownership transfer explicit. For example:
+**缺点:**
+
+* 所有权必须通过指针来表示和转移(无论智能或者普通指针)。指针语义比普通值的语义要更复杂，尤其在API中: 不仅需要考虑到所有权，而且还要考虑对象引用混淆(aliasing)、生命周期、可变性等其它的问题.
+* 值语义(value semantics)的性能成本经常被高估，因此所有权转移的性能优点可能无法证明它的可读性和复杂性成本.
+* 所有权转移操作相关的API会强制将它们的操作源引入一个单一内存管理的模式.
+* 当资源释放发生的时候，使用智能指针的代码会有些不太明确.
+* `std::unique_ptr`在表示所有权转移时用的是C++11的操作语义，这在Google代码中是禁止的，这样使用的话可能会让一些程序员产生混淆.
+* 共享所有权操作会比所有权的谨慎设计更有诱惑性，这样处理会模糊系统的设计.
+* 所有权共享在系统运行时需要明确的簿记，这样的操作开销会比较大.
+* 在某些情况下(比如循环引用)，共享所有权的对象可能会永远得不到释放删除.
+* 智能指针不是普通指针的完美替代.
+
+**结论:**
+
+如果必须要动态分配对象，那么最好让分配所有权的代码一直持有所有权。如果其它代码需要访问持有所有权的对象，可以考虑不传递所有权而是传递一个副本、或者一个指针或引用。最好使用`std::unique_ptr`使得所有权的传递更明确。比如:
 
 ```cpp
 std::unique_ptr<Foo> FooFactory();
 void FooConsumer(std::unique_ptr<Foo> ptr);
 ```
 
-Do not design your code to use shared ownership without a very good reason. One such reason is to avoid expensive copy operations, but you should only do this if the performance benefits are significant, and the underlying object is immutable (i.e. `shared_ptr<const Foo>`). If you do use shared ownership, prefer to use shared_ptr.
+在不是很必要的情况下不要在你的代码中使用所有权共享。其中一种情况是为了避免复制操作的高昂开销，但是你应该只在性能优势提高很显著的情况下使用，并且底层的对象是不可变的(即`shared_ptr<const Foo>`)。如果要使用所有权共享，最好使用`shared_ptr`.
 
-Do not use `scoped_ptr` in new code unless you need to be compatible with older versions of C++. Never use `linked_ptr` or `std::auto_ptr`. In all three cases, use `std::unique_ptr` instead.
+除非是为了跟老版本的C++兼容，否在在新版本的C++代码中的不要使用`scoped_ptr`，永远不要使用`linked_ptr` 或者`std::auto_ptr`。在所有以上这三种情况下，用`std::unique_ptr`来代替.
 
 
-## Reference Arguments
+## 引用参数
 
-All parameters passed by reference must be labeled `const`.
+所有按引用传递的参数必须加上`const`.
 
-**Definition:**
-In C, if a function needs to modify a variable, the parameter must use a pointer, eg int foo(int *pval). In C++, the function can alternatively declare a reference parameter: int foo(int &val).
+**定义**
 
-**Pros:**
-Defining a parameter as reference avoids ugly code like (*pval)++. Necessary for some applications like copy constructors. Makes it clear, unlike with pointers, that a null pointer is not a possible value.
+在C语言中，如果函数需要修改变量的值，形参(parameter)必须为指针，比如 int foo(int *pval)。在C++中，函数还可以声明引用形参: int foo(int &val)。
 
-**Cons:**
-References can be confusing, as they have value syntax but pointer semantics.
+**优点:**
 
-**Decision:**
+定义形参为引用避免了像`(*pval)++`这样难看的代码，像拷贝构造函数这样的应用也是必须的。而且很清楚，不像指针那样不能使用空指针null。
 
-Within function parameter lists all references must be const:
+**缺点:**
+
+引用容易引起误解，因为引用在语法上是值但却有指针的语义。
+
+**结论:**
+
+
+函数形参表中，所有的引用必须是`const`:
 
 ```cpp
 void foo(const string &in, string *out);
 ```
 
-It is a very strong convention that input arguments are values or const references while output arguments are pointers. Input parameters may be const pointers, but we never allow non-const reference parameters except when required by convention, e.g., `swap()` .
+这是一个硬性约定:输入参数是值或者常数引用，输出参数为指针。输入参数可以是常数指针，但不能使用非常数引用形参，除非是约定需要，比如`swap()` 。
 
-However, there are some instances where using `const T*` is preferable to `const T&` for input parameters. For example:
+不过，有些情况下选择输入形参时，`const T*`比`const T&`更好。
 
-* You want to pass in a null pointer.
-* The function saves a pointer or reference to the input.
-* Passing `const char*` for strings
+例如:
 
-Remember that most of the time input parameters are going to be specified as `const T&` . Using `const T*` instead communicates to the reader that the input is somehow treated differently. So if you choose `const T*` rather than `const T&` , do so for a concrete reason; otherwise it will likely confuse readers by making them look for an explanation that doesn't exist.
+* 需要传递一个空指针。
+* 函数保存了一个指针或者引用作为输入。
+* 传递`const char*`给字符串。
+
+要记住，大多数情况下输入形参要被指定为`const T&`。使用 `const T*`会传达给读者这样一个信息:输入参数要以某种方式区别处理。因此有确切的理由时，再选择`const T*`而不是`const T&`作为形参输入，否则会误导读者去寻找有关这方面其实不存在的解释。
 
 ## Rvalue references
 
