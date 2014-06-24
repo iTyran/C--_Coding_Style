@@ -454,18 +454,18 @@ namespace fbz = ::foo::bar::baz;
 
 * 不要用内联命名空间。
 
-## Nested Classes
+## 嵌套类
 
-Although you may use public nested classes when they are part of an interface, consider a namespace to keep declarations out of the global scope.
+当公开嵌套类作为接口的一部分时，虽然可以直接将他们保持在全局作用域中，但将嵌套类的声明置于命名空间中是更好的选择。
 
-**Definition:**
-A class can define another class within it; this is also called a member class.
+**定义：**
+可以在一个类中定义另一个类，嵌套类也称成员类（member class）。
 
 ```cpp
 class Foo
 {
 private:
-    // Bar is a member class, nested within Foo.
+    // Bar是嵌套在Foo中的成员类
     class Bar
     {
        ...
@@ -473,68 +473,66 @@ private:
 };
 ```
 
-**Pros:**
-This is useful when the nested (or member) class is only used by the enclosing class; making it a member puts it in the enclosing class scope rather than polluting the outer scope with the class name. Nested classes can be forward declared within the enclosing class and then defined in the .cpp file to avoid including the nested class definition in the enclosing class declaration, since the nested class definition is usually only relevant to the implementation.
+**优点：**
+当嵌套（成员）类只在被嵌套类（enclosing class）中使用时很有用，将其置于被嵌套类作用域作为被嵌套类的成员不会污染其他作用域同名类。可在被嵌套类中前置声明嵌套类，在.cpp文件中定义嵌套类，避免在被嵌套类声明中包含嵌套类的定义，因为嵌套类的定义通常只与实现相关。
 
-**Cons:**
-Nested classes can be forward-declared only within the definition of the enclosing class. Thus, any header file manipulating a Foo::Bar* pointer will have to include the full class declaration for Foo.
+**缺点：**
+只能在被嵌套类的定义中才能前置声明嵌套类。因此，任何使用Foo::Bar*指针的头文件必须包含整个Foo类的声明。
 
-**Decision:**
-Do not make nested classes public unless they are actually part of the interface, e.g., a class that holds a set of options for some method.
+**结论：**
+不要将嵌套类定义为public，除非它们是接口的一部分，比如，某方法使用了这个类的一系列选项。
 
-## Nonmember, Static Member, and Global Functions
+## 非成员函数、静态成员函数、全局函数
 
-Prefer nonmember functions within a namespace or static member functions to global functions; use completely global functions rarely.
+优先使用命名空间中的非成员函数或者静态成员函数，尽可能不使用全局函数。
 
-**Pros:**
-Nonmember and static member functions can be useful in some situations. Putting nonmember functions in a namespace avoids polluting the global namespace.
+**优点：**
+某些情况下，非成员函数和静态成员函数是非常有用的，将非成员函数置于命名空间中可避免污染全局命名空间。
 
-**Cons:**
-Nonmember and static member functions may make more sense as members of a new class, especially if they access external resources or have significant dependencies.
+**缺点：**
+将非成员函数和静态成员函数作为新类的成员或许更有意义，当它们需要访问外部资源戒具有重要依赖时更是如此。
 
-**Decision:**
+**结论：**
+有时，不把函数限定在类的实体中是有益的，甚至是必要的，要么作为静态成员，要么作为非成员函数。非成员函数不应依赖外部发量，并尽量置于某个命名空间中。相比单纯为了封装若干不共享任何静态数据的静态成员函数而创建类，不如使用命名空间。
 
-Sometimes it is useful, or even necessary, to define a function not bound to a class instance. Such a function can be either a static member or a nonmember function. Nonmember functions should not depend on external variables, and should nearly always exist in a namespace. Rather than creating classes only to group static member functions which do not share static data, use namespaces instead.
+定义在同一编译单元的函数，可能会在被其他编译单元直接调用时引入不必要的耦合和链接依赖；静态成员函数对此尤其敏感。可以考虑提取到新类中，戒者将函数置于独立库的命名空间中。
 
-Functions defined in the same compilation unit as production classes may introduce unnecessary coupling and link-time dependencies when directly called from other compilation units; static member functions are particularly susceptible to this. Consider extracting a new class, or placing the functions in a namespace possibly in a separate library.
+如果你确实需要定义非成员函数，又只是在.cpp中使用，可使用未命名的命名空间或静态关联（如static int Foo() {...}）限定其作用域。
 
-If you must define a nonmember function and it is only needed in its .cpp file, use an unnamed namespace or static linkage (eg static int Foo() {...}) to limit its scope.
+## 局部变量
 
-## Local Variables
+尽可能缩小函数变量的作用域，并在声明变量时将其初始化。
 
-Place a function's variables in the narrowest scope possible, and initialize variables in the declaration.
-
-C++ allows you to declare variables anywhere in a function. We encourage you to declare them in as local a scope as possible, and as close to the first use as possible. This makes it easier for the reader to find the declaration and see what type the variable is and what it was initialized to. In particular, initialization should be used instead of declaration and assignment, e.g.
+C++允许在函数的任何位置声明发量。我们提倡在尽可能小的作用域中声明变量，离第一次使用越近越好。这使得代码易于阅读，易于定位变量的声明位置、类型和初始值。特别是，应使用初始化代替声明+赋值的方式。
 
 ```cpp
 int i;
-i = f();      // Bad -- initialization separate from declaration.
+i = f();      // // 坏——初始化和声明分离
 
-int j = g();  // Good -- declaration has initialization.
+int j = g();  // // 好——声明时初始化
 
 vector<int> v;
-v.push_back(1);  // Prefer initializing using brace initialization.
+v.push_back(1);  // 优先使用括号初始化。
 v.push_back(2);
 
-vector<int> v = {1, 2};  // Good -- v starts initialized.
+vector<int> v = {1, 2};  // 好－v有初始化。
 ```
-
-Note that gcc implements `for (int i = 0; i < 10; ++i)` correctly (the scope of i is only the scope of the for loop), so you can then reuse i in another for loop in the same scope. It also correctly scopes declarations in if and while statements, e.g.
+注意：gcc可正确实现了`for (int i = 0; i < 10; ++i)`（i的作用域仅限for循环），因此其他for循环中可重用i。if和while等语句中，作用域声明（scope declaration）同样是正确的。
 
 ```cpp
 while (const char* p = strchr(str, '/')) str = p + 1;
 ```
 
-There is one caveat: if the variable is an object, its constructor is invoked every time it enters scope and is created, and its destructor is invoked every time it goes out of scope.
+注意：如果变量是一个对象，每次进入作用域都要调用其构造函数，每次退出作用域都要调用其析构函数。
 
 ```cpp
-// Inefficient implementation:
+// 低效实现
 for (int i = 0; i < 1000000; ++i) {
     Foo f;  // My ctor and dtor get called 1000000 times each.
     f.doSomething(i);
 }
 
-It may be more efficient to declare such a variable used in a loop outside that loop:
+//类似变量放到循环作用域外面声明要高效的多：
 
 Foo f;  // My ctor and dtor get called once each.
 for (int i = 0; i < 1000000; ++i) {
@@ -542,21 +540,21 @@ for (int i = 0; i < 1000000; ++i) {
 }
 ```
 
-## Static and Global Variables
+## 静态变量和全局变量
 
-Static or global variables of class type are forbidden: they cause hard-to-find bugs due to indeterminate order of construction and destruction. However, such variables are allowed if they are `constexpr`: they have no dynamic initialization or destruction. 
+class类型的全局变量是被禁止的：这导致隐藏很深的bugs，因为构造和析构的顺序不明确。然而，允许`constexpr`类型的静态或全局变量：他们没有动态的初始化或者析构。
 
-Objects with static storage duration, including global variables, static variables, static class member variables, and function static variables, must be Plain Old Data (POD): only ints, chars, floats, or pointers, or arrays/structs of POD.
+包含静态存储的对象，包括全局变量，静态变量，全局类成员变量，以及函数静态变量，必须是POD类型(Plain Old Data)：只能是POD类型的整形(int)、字符(char)、浮点(float)或者指针或者数组/结构体
 
-The order in which class constructors and initializers for static variables are called is only partially specified in C++ and can even change from build to build, which can cause bugs that are difficult to find. Therefore in addition to banning globals of class type, we do not allow static POD variables to be initialized with the result of a function, unless that function (such as getenv(), or getpid()) does not itself depend on any other globals.
+对于静态变量，C++只定义了类构造和初始化的部分顺序，并且每次生成的结果可能不一样，这将导致隐藏很深的bugs。因此，除了禁用class类型的全局变量，也不允许使用函数的结果初始化静态POD变量，除非函数（如getenv(),getpid()）本身不依赖任何其他的全局变量。
 
-Likewise, global and static variables are destroyed when the program terminates, regardless of whether the termination is by returning from `main()` or by calling `exit()`. The order in which destructors are called is defined to be the reverse of the order in which the constructors were called. Since constructor order is indeterminate, so is destructor order. For example, at program-end time a static variable might have been destroyed, but code still running — perhaps in another thread — tries to access it and fails. Or the destructor for a static `string` variable might be run prior to the destructor for another variable that contains a reference to that string. 
+同样，全局变量和静态变量在程序终止时销毁，不管是因为`main()`返回还是调用了`exit()`。析构顺序和构造顺序刚好相反，因此析构顺序和构造顺序一样都是不明确的。例如，在程序结束时，静态变量可能已经销毁，但是仍在运行的代码-可能在另外一个线程-试图访问它，然后失败了。或者一个静态`string`变量先于另外一个包含该字符串的变量执行析构函数。
 
-One way to alleviate the destructor problem is to terminate the program by calling `quick_exit()` instead of `exit()`. The difference is that `quick_exit()` does not invoke destructors and does not invoke any handlers that were registered by calling `atexit()`. If you have a handler that needs to run when a program terminates via `quick_exit()` (flushing logs, for example), you can register it `using at_quick_exit()`. (If you have a handler that needs to run at both exit() and quick_exit(), you need to register it in both places.) 
+一个缓解析构函数问题的方法是调用`quick_exit()`而不是`exit()`来终止程序。区别是`quick_exit()`不调用析构函数，也不引入在`atexit()`中注册的任何句柄。如果程序终止时有句柄需要通过`quick_exit()`来运行（比如，刷新日志），在`at_quick_exit()`中注册它。（如果句柄需要在`exit()`和`quick_exit()`中都运行，那就在两个地方都注册）。
 
-As a result we only allow static variables to contain POD data. This rule completely disallows vector (use C arrays instead), or string (use const char []).
+综上所述，只允许静态变量包含POD数据。禁用`vector`（用C数组代替），禁用`string`（用`const char []`代替）。
 
-If you need a static or global variable of a class type, consider initializing a pointer (which will never be freed), from either your main() function or from pthread_once(). Note that this must be a raw pointer, not a "smart" pointer, since the smart pointer's destructor will have the order-of-destructor issue that we are trying to avoid.
+如果确实需要`class`类型的静态或者全局变量，考虑初始化一个指针（永不释放），要么在`main()`函数中，要么在`pthread_once()`中。注意指针必须是原始指针，不能是“智能”指针，因为智能指针的析构函数有我们一直在避免的析构函数顺序问题。
 
 # 类
 
@@ -667,13 +665,13 @@ private:
 };
 ```
 
-## Delegating and inheriting constructors
+## 委派和继承构造函数
 
-Use delegating and inheriting constructors when they reduce code duplication.
+可以减少重复代码时使用委派和继承构造函数。
 
-**Definition:**
+**定义：**
 
-Delegating and inheriting constructors are two different features, both introduced in C++11, for reducing code duplication in constructors. Delegating constructors allow one of a class's constructors to forward work to one of the class's other constructors, using a special variant of the initialization list syntax. For example:
+委派构造函数和继承构造函数是为了减少构造函数重复代码而在C++11中引入的两个不同的特性。委派构造函数允许类的一个构造函数通过特殊的初始化列表语法调用另外的构造函数。
 
 ```cpp
 X::X(const string& name) : name_(name) {
@@ -683,7 +681,7 @@ X::X(const string& name) : name_(name) {
 X::X() : X("") { }
 ```
 
-Inheriting constructors allow a derived class to have its base class's constructors available directly, just as with any of the base class's other member functions, instead of having to redeclare them. This is especially useful if the base has multiple constructors. For example:
+继承构造函数允许派生类可以直接使用基类的构造函数，就像使用基类的其他成员函数，而不需要重新声明这些构造函数。尤其当基类有多个构造函数时特别有用。
 
 ```cpp
 class Base {
@@ -700,168 +698,174 @@ public:
 };
 ```
 
-This is especially useful when Derived's constructors don't have to do anything more than calling Base's constructors.
+当派生类构造函数仅仅只是调用基类构造函数时特别有用。
 
-**Pros:**
+**优点：**
 
-Delegating and inheriting constructors reduce verbosity and boilerplate, which can improve readability.
+委派构造函数和继承构造函数可以减少冗余代码，从而提高代码可读性。
 
-Delegating constructors are familiar to Java programmers.
+Java编程人员对委派构造函数很熟悉。
 
-**Cons:**
+**缺点：**
 
-It's possible to approximate the behavior of delegating constructors by using a helper function.
+使用辅助函数可以预估委派构造函数的行为。
 
-Inheriting constructors may be confusing if a derived class introduces new member variables, since the base class constructor doesn't know about them.
+如果派生类引入了新的成员变量，那么继承构造函数会被迷惑，因为基类构造函数不知道这些新的成员变量。
 
-**Decision:**
+**结论：**
 
-Use delegating and inheriting constructors when they reduce boilerplate and improve readability. Be cautious about inheriting constructors when your derived class has new member variables. Inheriting constructors may still be appropriate in that case if you can use in-class member initialization for the derived class's member variables.
+当可以减少冗余、提高可读性的时候使用委派构造函数和继承构造函数。当派生类有新的成员变量的时候谨慎对待继承构造函数。如果派生类成员变量使用类内成员初始化(in-class member initialization)，继承构造函数仍然是适用的。
 
 
-## Structs vs. Classes
+## 结构体 vs 类
 
-Use a struct only for passive objects that carry data; everything else is a class.
+仅当只有数据时使用`struct`，其它一概使用`class`。
 
-The struct and class keywords behave almost identically in C++. We add our own semantic meanings to each keyword, so you should use the appropriate keyword for the data-type you're defining.
+在C++中，关键字`struct`和`class`几乎含义等同，我们为其人为添加语义，以便为定义的数据类型合理选择使用哪个关键字。
 
-structs should be used for passive objects that carry data, and may have associated constants, but lack any functionality other than access/setting the data members. The accessing/setting of fields is done by directly accessing the fields rather than through method invocations. Methods should not provide behavior but should only be used to set up the data members, e.g., constructor, destructor, Initialize(), Reset(), Validate().
+struct被用在仅包含数据的消极对象（passive objects）上，可能包括有关联的常量，但没有存取数据成员之外的函数功能，而存取功能通过直接访问实现而无需方法调用，这里提到的方法是指只用于s处理数据成员的，如构造函数、析构函数、Initialize()、Reset()、Validate()。
 
-If more functionality is required, a class is more appropriate. If in doubt, make it a class.
+如果需要更多的函数功能，`class`更适合，如果不确定的话，直接使用`class`。
 
-For consistency with STL, you can use struct instead of class for functors and traits.
+为了与STL保持一直，仿函数（functors）和特性（traits）可以不用`class`而是使用`struct`。
 
-Note that member variables in structs and classes have different naming rules.
+注意：类和结构体的成员变量使用不同的命名规则。
 
-## Inheritance
+## 继承
 
-Composition is often more appropriate than inheritance. When using inheritance, make it public.
+使用组合（composition，注，这一点也是GoF在《Design Patterns》里反复强调的）通常比使用继承更适宜，如果使用继承的话，只使用公共继承。
 
-**Definition:**
-When a sub-class inherits from a base class, it includes the definitions of all the data and operations that the parent base class defines. In practice, inheritance is used in two major ways in C++: implementation inheritance, in which actual code is inherited by the child, and interface inheritance, in which only method names are inherited.
+**定义：**
+当子类继承基类时，子类包含了父类所有数据及操作的定义。C++实践中，继承主要用于两种场合：实现继承（implementation inheritance），子类继承父类的实现代码；接口继承（interface inheritance），子类仅继承父类的方法名称。
 
-**Pros:**
-Implementation inheritance reduces code size by re-using the base class code as it specializes an existing type. Because inheritance is a compile-time declaration, you and the compiler can understand the operation and detect errors. Interface inheritance can be used to programmatically enforce that a class expose a particular API. Again, the compiler can detect errors, in this case, when a class does not define a necessary method of the API.
+**优点：**
+实现继承通过原封不动的重用基类代码减少了代码量。由于继承是编译时声明（compile-time declaration），编码者和编译器都可以理解相应操作并发现错误。接口继承可用于程序上增强类的特定API的功能，在类没有定义API的必要实现时，编译器同样可以侦错。
 
-**Cons:**
-For implementation inheritance, because the code implementing a sub-class is spread between the base and the sub-class, it can be more difficult to understand an implementation. The sub-class cannot override functions that are not virtual, so the sub-class cannot change implementation. The base class may also define some data members, so that specifies physical layout of the base class.
+**缺点：**
+对于实现继承，由于实现子类的代码在父类和子类间延展，要理解其实现变得更加困难。子类不能重写父类的非虚函数，当然也就不能修改其实现。基类也可能定义了一些数据成员，用于区分基类的物理布局（physical layout）
 
-**Decision:**
-All inheritance should be public. If you want to do private inheritance, you should be including an instance of the base class as a member instead.
+**结论：**
+所有继承必须是`public`的，如果想私有继承的话，应该采取包含基类实例作为成员的方式作为替代。
 
-Do not overuse implementation inheritance. Composition is often more appropriate. Try to restrict use of inheritance to the "is-a" case: Bar subclasses Foo if it can reasonably be said that Bar "is a kind of" Foo.
+不要滥用实现继承，组合通常更加合适。努力做到只在“是一个”（"is-a"，译者注，其他"has-a"情况下请使用组合）的情况下使用继承：如果Bar的确“是一种”Foo，才令Bar是Foo的子类。
 
-Make your destructor virtual if necessary. If your class has virtual methods, its destructor should be virtual.
+必要的话，令析构函数为`virtual`，这里必要是指该类具有虚函数。
 
-Limit the use of protected to those member functions that might need to be accessed from subclasses. Note that data members should be private.
+限定仅在子类访问的成员函数为`protected`，需要注意的是数据成员应始终为私有。
 
-When redefining an inherited virtual function, explicitly declare it virtual in the declaration of the derived class. Rationale: If virtual is omitted, the reader has to check all ancestors of the class in question to determine if the function is virtual or not.
+当重定义派生的虚函数时，在派生类中明确声明其为`virtual`。根本原因：如果遗漏`virtual`，读者需要检索类的所有祖先以确定该函数是否为虚函数（注，虽然不影响其为虚函数的本质）。
 
-## Multiple Inheritance
+## 多重继承
 
-Only very rarely is multiple implementation inheritance actually useful. We allow multiple inheritance only when at most one of the base classes has an implementation; all other base classes must be pure interface classes tagged with the Interface suffix.
+真正需要用到多重实现继承（multiple implementation inheritance）的时候非常少，只有当最多一个基类中含有实现，其他基类都是以`Interface`为后缀的纯接口类时才会使用多重继承。
 
-**Definition:** Multiple inheritance allows a sub-class to have more than one base class. We distinguish between base classes that are pure interfaces and those that have an implementation.
+**定义**
+多重继承允许子类拥有多个基类，要将作为纯接口的基类和具有实现的基类区别开来。
 
-**Pros:** Multiple implementation inheritance may let you re-use even more code than single inheritance (see Inheritance).
+**优点：**
+相比单继承，多重实现继承可令你重用更多代码（参考“继承”章节）。
 
-**Cons:** Only very rarely is multiple implementation inheritance actually useful. When multiple implementation inheritance seems like the solution, you can usually find a different, more explicit, and cleaner solution.
+**缺点：**
+真正需要用到多重实现继承的时候非常少。当多重实现继承看上去是不错的解决方案时，通常可以找到更加明确、清晰的、不同的解决方案。
 
-**Decision:** Multiple inheritance is allowed only when all superclasses, with the possible exception of the first one, are pure interfaces. In order to ensure that they remain pure interfaces, they must end with the Interface suffix.
+**结论：**
+只有当所有超类（`superclass`）除第一个外都是纯接口类时才能使用多重继承。为确保它们是纯接口，类必须以`Interface`为后缀。
 
-Note: There is an exception to this rule on Windows.
+注意：关于此规则，Windows下有种例外情况（译者注，将在本译文最后一篇的例外规则中阐述）。
 
-## Interfaces
+## 接口
 
-Classes that satisfy certain conditions are allowed, but not required, to end with an `Interface` suffix.
+接口是指满足特定条件的类，这些类以`Interface`为后缀（非必需）。
 
-**Definition:**
+**定义：**
 
-A class is a pure interface if it meets the following requirements:
+当一个类满足以下要求时，称之为纯接口：
 
-* It has only public pure virtual ("= 0") methods and static methods (but see below for destructor).
-* It may not have non-static data members.
-* It need not have any constructors defined. If a constructor is provided, it must take no arguments and it must be protected.
-* If it is a subclass, it may only be derived from classes that satisfy these conditions and are tagged with the Interface suffix.
+* 只有纯虚函数（"=0"）和静态函数（下文提到的析构函数除外）； 
+* 没有非静态数据成员；
+* 没有定义任何构造函数。如果有，也不含参数，并且为`protected`；
+* 如果是子类，也只能继承满足上述条件并且后缀是`Interface`的类。
 
-An interface class can never be directly instantiated because of the pure virtual method(s) it declares. To make sure all implementations of the interface can be destroyed correctly, the interface must also declare a virtual destructor (in an exception to the first rule, this should not be pure). See Stroustrup, The C++ Programming Language, 3rd edition, section 12.4 for details.
+接口类不能被直接实例化，因为它声明了纯虚函数。为确保接口类的所有实现可被正确销毁，必须为之声明虚析构函数（作为第1条规则的例外，析构函数不能是纯虚函数）。具体细节可参考Stroustrup的《The C++ Programming Language, 3rd edition》第12.4节。
 
-**Pros:**
-Tagging a class with the `Interface` suffix lets others know that they must not add implemented methods or non static data members. This is particularly important in the case of multiple inheritance. Additionally, the interface concept is already well-understood by Java programmers.
+**优点：**
+以`Interface`为后缀可令他人知道不能为该接口类增加实现函数或非静态数据成员，这一点对多重继承尤其重要。另外，对于Java程序员来说，接口的概念已经深入人心。
 
-**Cons:**
-The `Interface` suffix lengthens the class name, which can make it harder to read and understand. Also, the interface property may be considered an implementation detail that shouldn't be exposed to clients.
+**缺点：**
+Interface后缀增加了类名长度，给阅诺和理解带来不便，同时，接口属性作为实现细节不应暴露给客户。
 
-**Decision:**
-A class may end with `Interface` only if it meets the above requirements. We do not require the converse, however: classes that meet the above requirements are not required to end with `Interface`.
+**结论：**
+只有满足上述需要，类才可能以`Interface`结尾，但反过来，满足上述需要的类未必一定以`Interface`结尾。
 
-## Operator Overloading
+## 操作符重载
 
-Do not overload operators except in rare, special circumstances.
+除少数特定环境外，不要重载操作符。
 
-**Definition:**
-A class can define that operators such as + and / operate on the class as if it were a built-in type. An overload of `operator""` allows the built-in literal syntax to be used to create objects of class types. 
+**定义：**
+一个类可以定义诸如+、/等操作符，使其可以像内建类型一样直接使用。重载操作符`""`允许使用内置文本语法来创建类的对象。
 
-**Pros:**
-Operator overloading can make code appear more intuitive because a class will behave in the same way as built-in types (such as int). Overloaded operators are more playful names for functions that are less-colorfully named, such as `Equals()` or `Add()`.
+**优点：**
+操作符重载使代码看上去更加直观，就像内建类型（如`int`）那样。相比`Equals()`、`Add()`等黯淡无光的函数名，操作符重载有趣多了。
 
-For some template functions to work correctly, you may need to define operators.
+为了使一些模板函数正确工作，你可能需要定义操作符。
 
-User-defined literals are a very concise notation for creating objects of user-defined types.
+自定义的文本是一个非常简洁的符号，用来创建用户自定义类型的对象。
 
-**Cons:**
-While operator overloading can make code more intuitive, it has several drawbacks:
+**缺点：**
+虽然操作符重载令代码更加直观，但也有以下不足：
 
-* It can fool our intuition into thinking that expensive operations are cheap, built-in operations.
-* It is much harder to find the call sites for overloaded operators. Searching for `equals()` is much easier than searching for relevant invocations of `==`.
-* Some operators work on pointers too, making it easy to introduce bugs. Foo + 4 may do one thing, while &Foo + 4 does something totally different. The compiler does not complain for either of these, making this very hard to debug.
-* User-defined literals allow creating new syntactic forms that are unfamiliar even to experienced C++ programmers. 
+* 混淆直觉，让你误以为一些耗时的操作像内建操作那样轻巧；
+* 查找重载操作符的调用处更加困难，查找Equals()显然比`==`容易的多；
+* 有的操作符可以对指针进行操作，容易导致bugs。`Foo + 4`做的是一件事，而`&Foo + 4`可能做的是完全不同的另一件事，对于二者，编译器都不会报错，使其很难调试；
+* 即便是对于老道的C++程序员，用户自定义文创建新的语法形式也是一件很陌生的事情。
 
-Overloading also has surprising ramifications. For instance, if a class overloads unary operator&, it cannot safely be forward-declared.
+重载还有令你吃惊的副作用，比如，前置声明重载操作符`&`的类很不安全。
 
-**Decision:**
-In general, do not overload operators. The assignment operator (`operator=`), in particular, is insidious and should be avoided. You can define functions like `equals()` and `clone()` if you need them. Likewise, avoid the dangerous unary operator& at all costs, if there's any possibility the class might be forward-declared.
+**结论：**
+一般不要重载操作符，尤其是赋值操作（`operator=`）暗藏杀机，应避免重载。如果需要的话，可以定义类似`Equals()`、`CopyFrom()`等函数。同样的，不惜一切代价避免重载一元操作符`&`，如果类有可能被前向声明的话。
 
-Do not overload `operator""`, i.e. do not introduce user-defined literals. 
+不要重载操作符`""`，比如，不要引入自定义文本。
 
-However, there may be rare cases where you need to overload an operator to interoperate with templates or "standard" C++ classes (such as `operator<< (ostream&, const T&)` for logging). These are acceptable if fully justified, but you should try to avoid these whenever possible. In particular, do not overload `operator==` or `operator<` just so that your class can be used as a key in an STL container; instead, you should create equality and comparison functor types when declaring the container.
+然而，极少数情况下需要重载操作符以便与模板或“标准”C++类衔接（如`operator<<(ostream&, const T&)`），如果被充分证明则是可接受的，但你仍要尽可能避免这样做。尤其是不要仅仅为了在STL容器中作为key使用就重载`operator==`或`operator<`，取而代之，你应该在声明容器的时候，创建相等判断和大小比较的仿函数类型。
 
-Some of the STL algorithms do require you to overload `operator==`, and you may do so in these cases, provided you document why.
+有些STL算法确实需要重载`operator==`时可以这么做，但是不要忘了提供文档说明原因。
 
 See also Copy Constructors and Function Overloading.
+亦可参考“拷贝构造函数”和“函数重载”章节。
 
-## Access Control
+## 访问控制
 
-Make data members private, and provide access to them through accessor functions as needed (for technical reasons, we allow data members of a test fixture class to be protected when using Google Test). Typically a variable would be called `_foo` and the accessor function `getFoo()` . You may also want a mutator function `setFoo()` . Exception: static const data members (typically called FOO) need not be private.
+将数据成员私有化，并提供相关访问函数（因技术原因，当使用Google测试时，允许test类中的数据成员是`protected`）。典型得，变量命名为`_foo`，取值函数为`getFoo()`，赋值函数为`setFoo()`。**例外**：静态常量数据成员（命名为`FOO`）不需要是`private`。
 
-The definitions of accessors are usually inlined in the header file.
+取值函数一般作为内联函数定义在头文件中。
 
 See also Inheritance and Function Names.
+亦可参考“继承”和“函数命名”章节。
 
-## Declaration Order
+## 声明顺序
 
-Use the specified order of declarations within a class: public: before private:, methods before data members (variables), etc.
+在类中使用特定的声明顺序：`public:`在`private:`之前，成员函数在数据成员（变量）之前等等。
 
-Your class definition should start with its public: section, followed by its protected: section and then its private: section. If any of these sections are empty, omit them.
+类的各部分定义顺序如下：首先是`public:`部分，然后是`protected:`部分，最后是`private:`部分。如果其中某部分没有，直接忽略即可。
 
-Within each section, the declarations generally should be in the following order:
+在上述任何部分内，声明需要遵循以下顺序：
 
-* Typedefs and Enums
-* Constants (`static const` data members)
-* Creators (`createXXX` methods)
-* Constructors
-* Destructor
-* Methods, including static methods
-* overriden methods (must have the `override` keyword as suffix)
-* Data Members (except `static const` data members)
+* `Typedefs`和`Enums`
+* 常量（`static const`类型的数据成员）
+* 创建函数（`createXXX`方法）
+* 构造函数
+* 析构函数
+* 成员方法，包括静态方法
+* 重写方法（overridden methods，必须以`override`关键字作为后缀）
+* 数据成员（`static const`数据成员除外）
 
-Friend declarations should always be in the private section, and the `DISALLOW_COPY_AND_ASSIGN` macro invocation should be at the end of the private: section. It should be the last thing in the class. See Copy Constructors.
+友元声明必须放在`private:`部分，宏`DISALLOW_COPY_AND_ASSIGN`应该放在`private:`部分最后。这应该是类的最后一部分内容。亦可参考"拷贝构造函数"章节。
 
-Method definitions in the corresponding .cpp file should be the same as the declaration order, as much as possible.
+.cpp文件中函数的定义应尽可能和声明次序一致。
 
-Do not put large method definitions inline in the class definition. Usually, only trivial or performance-critical, and very short, methods may be defined inline. See Inline Functions for more details.
+不要在类的定义中内联大型函数定义。通常，只有那些没有特别意义的或者性能要求高的，并且比较短小的函数才被定义为内联函数。更多细节参考“内联函数”章节。
 
-Example:
+示例：
 ```cpp
 class MyNode : public Node
 {
@@ -900,15 +904,15 @@ private:
 }
 ```
 
-## Write Short Functions
+## 编写短函数
 
-Prefer small and focused functions.
+优先选择短小、精炼的函数。
 
-We recognize that long functions are sometimes appropriate, so no hard limit is placed on functions length. If a function exceeds about 40 lines, think about whether it can be broken up without harming the structure of the program.
+长函数有时是恰当的，因此函数长度没有严格限制。但是如果函数超过40行，可以考虑在不影响程序结构的情况下将其分割一下。
 
-Even if your long function works perfectly now, someone modifying it in a few months may add new behavior. This could result in bugs that are hard to find. Keeping your functions short and simple makes it easier for other people to read and modify your code.
+即使一个长函数现在工作的非常完美，别人仍可能为其添加新的行为，这可能导致难以发现的bugs。保持函数短小、简单，方便他人阅读和修改代码。
 
-You could find long and complicated functions when working with some code. Do not be intimidated by modifying existing code: if working with such a function proves to be difficult, you find that errors are hard to debug, or you want to use a piece of it in several different contexts, consider breaking up the function into smaller and more manageable pieces.
+有时你可能会碰到复杂的长函数。不要害怕修改现有代码：如果证实这些代码难于使用、调试，或者你需要使用其中的一小块功能。考虑将其分割为更加短小、易于管理的若干函数。
 
 
 # 其它C++特性
@@ -1042,23 +1046,24 @@ public:
 
 **Decision:** If you want to overload a function, consider qualifying the name with some information about the arguments, e.g., `appendString()` , `appendInt()` rather than just `append()` .
 
-## Default Arguments
+## 缺省参数
 
-We do not allow default function parameters, except in limited situations as explained below. Simulate them with function overloading instead, if appropriate.
+禁止使用缺省函数参数，除非是下述有限的几种情况之一。如果合适，用函数重载来替代。
 
-**Pros:** Often you have a function that uses default values, but occasionally you want to override the defaults. Default parameters allow an easy way to do this without having to define many functions for the rare exceptions. Compared to overloading the function, default arguments have a cleaner syntax, with less boilerplate and a clearer distinction between 'required' and 'optional' arguments.
+**优点：**
+经常一个函数带有缺省值，偶尔会重写一下这些值。缺省参数为极少的例外情况提供了少定义一些函数的方便。相比重载这个函数，缺省参数有更干净的语义，用更少的样板，并且更清晰的区分“必须”和“可选”的参数。
 
-**Cons:** Function pointers are confusing in the presence of default arguments, since the function signature often doesn't match the call signature. Adding a default argument to an existing function changes its type, which can cause problems with code taking its address. Adding function overloads avoids these problems. In addition, default parameters may result in bulkier code since they are replicated at every call-site -- as opposed to overloaded functions, where "the default" appears only in the function definition.
+**缺点：**
+缺省参数的存在使得函数指针产生迷惑，因为函数的签名与调用的签名经常不一致。往现有的函数中增加缺省参数会改变函数的类型，这会导致使用函数地址的代码出现问题。函数重载可以避免这些问题。而且，缺省参数会导致“笨重”的代码，因为他们在每个调用的地方都被重复，而重载的函数只有在定义的地方才出现“这些”缺省。
 
-**Decision:**
+**结论：**
+尽管上述的缺点并不是那么“繁重”，但是相比缺省参数带来的很小的好处，仍然是得不偿失。因此除了下述的例外，所有的参数都应该显式的指定。
 
-While the cons above are not that onerous, they still outweigh the (small) benefits of default arguments over function overloading. So except as described below, we require all arguments to be explicitly specified.
+一个特例是当函数是.cpp文件中静态函数（或者在一个未命名的命名空间里）。这种情况下，因为函数只在很小的作用域中使用，缺省参数的缺点就显得微不足道。
 
-One specific exception is when the function is a static function (or in an unnamed namespace) in a .cpp file. In this case, the cons don't apply since the function's use is so localized.
+通常情况下，cocos2dx的`createXXX`和`initXXX`方法允许使用缺省参数。
 
-In particular, the `createXXX` and `initXXX` methods in cocos2dx are allowed to use default arguments.
-
-Another specific exception is when default arguments are used to simulate variable-length argument lists. Example:
+另外一个特例是缺省参数用于可变长度参数列表。例如：
 
 ```cpp
 // Support up to 4 params by using a default empty AlphaNum.
