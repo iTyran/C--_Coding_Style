@@ -704,7 +704,7 @@ public:
 
 委派构造函数和继承构造函数可以减少冗余代码，从而提高代码可读性。
 
-Java编程人员对委派构造函数很熟悉。
+Java程序员对委派构造函数很熟悉。
 
 **缺点：**
 
@@ -1063,7 +1063,7 @@ public:
 
 通常情况下，cocos2dx的`createXXX`和`initXXX`方法允许使用缺省参数。
 
-另外一个特例是缺省参数用于可变长度参数列表。例如：
+另外一个特例是缺省参数用于变长参数列表。例如：
 
 ```cpp
 // Support up to 4 params by using a default empty AlphaNum.
@@ -1073,75 +1073,79 @@ string strCat(const AlphaNum &a,
               const AlphaNum &d = gEmptyAlphaNum);
 ```
 
-## Variable-Length Arrays and alloca()
+## 变长数组和alloca
 
-We do not allow variable-length arrays or alloca().
+禁止使用变长数组和`alloca()`。
 
-**Pros:** Variable-length arrays have natural-looking syntax. Both variable-length arrays and alloca() are very efficient.
+**优点：**
+变长数组具有浑然天成的语法。变长数组和`alloca()`也都很高效。
 
-**Cons:** Variable-length arrays and alloca are not part of Standard C++. More importantly, they allocate a data-dependent amount of stack space that can trigger difficult-to-find memory overwriting bugs: "It ran fine on my machine, but dies mysteriously in production".
+**缺点：**
+变长数组和`alloca()`不是标准C++的组成部分，更重要的是，它们在堆栈（stack）上根据数据分配大小可能导致难以发现的内存泄漏：“在我的机器上运行的好好的，到了产品中却莫名其妙的挂掉了”。
 
-**Decision:** Use a safe allocator instead, such as scoped_ptr/scoped_array.
+**结论：**
+使用安全的分配器（allocator），如`scoped_ptr`/`scoped_array`。
 
-## Friends
+## 友元
 
-We allow use of friend classes and functions, within reason.
+允许合理使用友元类及友元函数。
 
-Friends should usually be defined in the same file so that the reader does not have to look in another file to find uses of the private members of a class. A common use of friend is to have a FooBuilder class be a friend of Foo so that it can construct the inner state of Foo correctly, without exposing this state to the world. In some cases it may be useful to make a unittest class a friend of the class it tests.
+通常将友元定义在同一文件下，避免读者跑到其他文件中查找其对某个类私有成员的使用。经常用到友元的一个地方是将`FooBuilder`声明为`Foo`的友元，`FooBuilder`以便可以正确构造`Foo`的内部状态，而无需将该状态暴露出来。某些情况下，将一个单元测试用类声明为待测类的友元会很方便。
 
-Friends extend, but do not break, the encapsulation boundary of a class. In some cases this is better than making a member public when you want to give only one other class access to it. However, most classes should interact with other classes solely through their public members.
+友元延伸了（但没有打破）类的封装界线，当你希望只允许另一个类访问某个成员时，使用友元有时比将其声明为public要好得多。当然，大多数类应该只提供公共成员与其交互。
 
-## Exceptions
+## 异常
 
-We do not use C++ exceptions.
+禁止使用C++异常。
 
-**Pros:**
+**优点：**
 
-* Exceptions allow higher levels of an application to decide how to handle "can't happen" failures in deeply nested functions, without the obscuring and error-prone bookkeeping of error codes.
-* Exceptions are used by most other modern languages. Using them in C++ would make it more consistent with Python, Java, and the C++ that others are familiar with.
-* Some third-party C++ libraries use exceptions, and turning them off internally makes it harder to integrate with those libraries.
-* Exceptions are the only way for a constructor to fail. We can simulate this with a factory function or an `init()` method, but these require heap allocation or a new "invalid" state, respectively.
-* Exceptions are really handy in testing frameworks.
+* 异常允许应用的更上层代码决定如何处理在底层嵌套函数中发生的“不可能发生”的失败，不像出错代码的记录那么模糊费解；
+* 应用于其他很多现代语言中，引入异常使得C++与Python、Java及其他和C++相近的语言更加兼容；
+* 有些C++第三方库使用了异常，关闭异常会使继承更加困难；
+* 异常是解决构造函数失败的唯一方案，虽然可以通过工厂函数（factory function）和Init()方法模拟异常，但他们分别需要堆分配或者新的“非法”状态；
+* 在测试框架（testing framework）中，异常确实很好用。
 
-**Cons:**
+**缺点：**
 
-* When you add a throw statement to an existing function, you must examine all of its transitive callers. Either they must make at least the basic exception safety guarantee, or they must never catch the exception and be happy with the program terminating as a result. For instance, if f() calls g() calls h(), and h throws an exception that f catches, g has to be careful or it may not clean up properly.
-* More generally, exceptions make the control flow of programs difficult to evaluate by looking at code: functions may return in places you don't expect. This causes maintainability and debugging difficulties. You can minimize this cost via some rules on how and where exceptions can be used, but at the cost of more that a developer needs to know and understand.
-* Exception safety requires both RAII and different coding practices. Lots of supporting machinery is needed to make writing correct exception-safe code easy. Further, to avoid requiring readers to understand the entire call graph, exception-safe code must isolate logic that writes to persistent state into a "commit" phase. This will have both benefits and costs (perhaps where you're forced to obfuscate code to isolate the commit). Allowing exceptions would force us to always pay those costs even when they're not worth it.
-* Turning on exceptions adds data to each binary produced, increasing compile time (probably slightly) and possibly increasing address space pressure.
-* The availability of exceptions may encourage developers to throw them when they are not appropriate or recover from them when it's not safe to do so. For example, invalid user input should not cause exceptions to be thrown. We would need to make the style guide even longer to document these restrictions!
+* 在现有函数中添加throw时，必须检查所有调用处，即使它们至少具有基本的异常安全保护，或者程序正常结束，永远不可能捕获该异常。例如：如果`f()`依次调用了`g()`和`h()`，`h`抛出被`f`捕获的异常，`g`就要当心了，避免出现错误清理；
+* 通俗一点说，异常会导致无法通过查看代码确定程序控制流：函数有可能在不确定的地方返回，从而导致代码管理和调试困难，当然，你可以通过规定何时何地如何使用异常来最小化的降低开销，却给开发人员带来掌插这些规定的负担；
+* 异常安全需要RAII和不同编码实践。轻松的编写异常安全（exception-safe）的代码需要大量的支持机制。进一步，为了避免需要读者去理解整个调用表，异常安全代码必须隔离将持久状态写入到“提交”阶段的逻辑。这样做有利有弊（或许你不得不为了隔离提交而混淆代码）。允许使用异常将会付出这些不值得的代价。
+* 加入异常使二进制文件体积发大，增加了编译时长（或许影响不大），还可能增加地址空间压力；
+* 异常的实用性可能会刺激开发人员在不恰当的时候抛出异常，或者在不安全的地方从异常中恢复，例如，非法用户输入不应该导致抛出异常。如果允许使用异常会使得这样一篇编程风格指南长出很多。
 
-**Decision:**
+**结论：**
 
-On their face, the benefits of using exceptions outweigh the costs, especially in new projects. However, for existing code, the introduction of exceptions has implications on all dependent code. If exceptions can be propagated beyond a new project, it also becomes problematic to integrate the new project into existing exception-free code. Because most existing C++ code at Google is not prepared to deal with exceptions, it is comparatively difficult to adopt new code that generates exceptions.
+表面上看，使用异常利大于弊，尤其是在新项目中。然而，对于现有代码，引入异常会牵连到所有依赖的代码。如果允许异常在新项目中使用，在跟以前没有使用异常的代码集成时也是一个麻烦。因为Google现有的大多数C++代码都没有异常处理，引入带有异常处理的新代码相当困难。
 
-Given that Google's existing code is not exception-tolerant, the costs of using exceptions are somewhat greater than the costs in a new project. The conversion process would be slow and error-prone. We don't believe that the available alternatives to exceptions, such as error codes and assertions, introduce a significant burden.
+鉴于Google现有代码不接受异常，在现有代码中使用异常比在新项目中使用的代价多少要大一点，迁移过程会比较慢，也容易出错。我们也不相信异常的有效替代方案，如错误代码、断言等，都是严重负担。
 
-Our advice against using exceptions is not predicated on philosophical or moral grounds, but practical ones. Because we'd like to use our open-source projects at Google and it's difficult to do so if those projects use exceptions, we need to advise against exceptions in Google open-source projects as well. Things would probably be different if we had to do it all over again from scratch.
+我们并不是在哲学或道德层面反对使用异常，而是在实践的基础上。因为我们希望使用Google上的开源项目，但项目中使用异常会为此带来不便，因为我们也建议不要在Google上的开源项目中使用异常，如果我们需要把这些项目推倒重来显然不太现实。
 
-This prohibition also applies to the exception-related features added in C++11, such as noexcept, `std::exception_ptr`, and `std::nested_exception`. 
+这一禁止同样适用于C++11中的异常相关的特性，例如`noexcept`，`std::exception_ptr`和`std::nested_exception`。
 
-There is an exception to this rule (no pun intended) for Windows code.
+对于Windows来说，这一点有个例外（没有歧义）。
 
-## Run-Time Type Information (RTTI)
+## 运行时类型识别
 
-cocos2dx requires Run Time Type Information (RTTI) in order to compile and run. That being said, you should be careful and not abuse the RTTI features.
+cocos2dx编译、运行都需要RTTI。也就是说，不禁用RTTI，但是要小心使用。
 
-**Definition:** RTTI allows a programmer to query the C++ class of an object at run time. This is done by use of typeid or dynamic_cast.
+**定义：**
+RTTI允许程序员在运行时识别C++类对象的类型。通过使用`typeid`或者`dynamic_cast`完成。
 
-**Cons:**
+**缺点：**
 
-Querying the type of an object at run-time frequently means a design problem. Needing to know the type of an object at runtime is often an indication that the design of your class hierarchy is flawed.
+运行时查询对象的类型通常意味着设计出了问题，而运行时需要知道对象的类型则意味着类的层次有缺陷。
 
-Undisciplined use of RTTI makes code hard to maintain. It can lead to type-based decision trees or switch statements scattered throughout the code, all of which must be examined when making further changes.
+零散地使用RTTI使代码维护变得困难，它使得基于类型的判断树或者`switch`语句散落在代码中，当以后修改的时候这些代码都必须重新测试。
 
-**Pros:**
+**优点：**
 
-The standard alternatives to RTTI (described below) require modification or redesign of the class hierarchy in question. Sometimes such modifications are infeasible or undesirable, particularly in widely-used or mature code.
+RTTI的标准替代方案（后面将描述）需要修改或者重新设计有问题的类层次。有时候，这样的修改是不可行或不可取的，特别是对于使用广泛的或成熟的代码。
 
-RTTI can be useful in some unit tests. For example, it is useful in tests of factory classes where the test has to verify that a newly created object has the expected dynamic type. It is also useful in managing the relationship between objects and their mocks.
+RTTI在某些单元测试中非常有用，如在进行工厂类测试时用于检验一个新建对象是否为期望的动态类型。RTTI对于管理对象和派生对象的关系也很有用。
 
-RTTI is useful when considering multiple abstract objects. Consider
+当管理多个抽象对象时，RTTI也很有用。
 
 ```cpp
 bool Base::equal(Base* other) = 0;
@@ -1154,16 +1158,16 @@ bool Derived::equal(Base* other)
 }
 ```
 
-**Decision:**
+**结论：**
 
-RTTI has legitimate uses but is prone to abuse, so you must be careful when using it. You may use it freely in unittests, but avoid it when possible in other code. In particular, think twice before using RTTI in new code. If you find yourself needing to write code that behaves differently based on the class of an object, consider one of the following alternatives to querying the type:
+RTTI有合法的用途但是容易被滥用，因此你要小心的使用它。在单元测试中你可以随意使用，但是在其他代码中尽可能去避免使用RTTI。特别是在新代码中使用RTTI时，请三思而后行。如果需要根据对象类型来做不同的行为，考虑换一种方案来查询类型：
 
-* Virtual methods are the preferred way of executing different code paths depending on a specific subclass type. This puts the work within the object itself.
-* If the work belongs outside the object and instead in some processing code, consider a double-dispatch solution, such as the Visitor design pattern. This allows a facility outside the object itself to determine the type of class using the built-in type system.
+* 虚函数可以实现随子类类型不同而执行不同代码，对象本身完成了这项工作。
+* 如果工作在对象之外的代码中完成，考虑双重分发方案，如Visitor模式，可以方便的在对象本身外确定类的类型。
 
-When the logic of a program guarantees that a given instance of a base class is in fact an instance of a particular derived class, then a `dynamic_cast` may be used freely on the object. Usually one can use a `static_cast` as an alternative in such situations.
+如果程序保证给定的基类实例实际上是某个派生类的实例，那么可以自由使用`dynamic_cast`。通常这种情况下可以使用`static_cast`来替代。
 
-Decision trees based on type are a strong indication that your code is on the wrong track.
+基于类型的判断树是一个强烈的信号，指示你的代码行走在错误的轨道上。
 
 ```cpp
 if (typeid(*data) == typeid(D1)) {
@@ -1174,9 +1178,9 @@ if (typeid(*data) == typeid(D1)) {
     ...
 ```
 
-Code such as this usually breaks when additional subclasses are added to the class hierarchy. Moreover, when properties of a subclass change, it is difficult to find and modify all the affected code segments.
+这样的代码通常在有引入新的子类时崩溃。而且，当某个子类的属性发生改变，很难找到并修改所有受影响的代码。
 
-Do not hand-implement an RTTI-like workaround. The arguments against RTTI apply just as much to workarounds like class hierarchies with type tags. Moreover, workarounds disguise your true intent.
+不要手工实现一个类似RTTI的发难。我们反对使用RTTI，同样反对类似带类型标签的类层次的解决方案。这些解决方案掩盖你的真实意图。
 
 ## Casting
 
