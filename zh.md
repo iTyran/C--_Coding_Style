@@ -8,86 +8,86 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 
 - [头文件](#header-files)
 	- [#define用法](#the-define-guard)
-	- [前向声明](#forward-declarations) cissyhope
-	- [内联函数](#inline-functions) cissyhope
-	- [inl.h文件](#the--inlh-files) cissyhope
-	- [参数顺序](#function-parameter-ordering) cissyhope
-	- [头文件包含的顺序](#names-and-order-of-includes) cissyhope
-- [作用域](#scoping) balabula
-	- [名字空间](#namespaces) balabula
-		- [未命名空间](#unnamed-namespaces) balabula
-		- [命名空间](#named-namespaces) balabula
-	- [嵌套类](#nested-classes) balabula
-	- [非成员,静态成员,全局函数](#nonmember-static-member-and-global-functions) balabula
-	- [局部变量](#local-variables) balabula
-	- [静态与全局变量](#static-and-global-variables) balabula
-- [类](#classes) NickYang
-	- [构造函数中的工作](#doing-work-in-constructors) NickYang
-	- [初始化](#initialization) NickYang
-	- [明确的构造函数](#explicit-constructors) NickYang
-	- [拷贝构造函数](#copy-constructors) NickYang
+	- [前向声明](#forward-declarations) 
+	- [内联函数](#inline-functions) 
+	- [inl.h文件](#the--inlh-files) 
+	- [参数顺序](#function-parameter-ordering) 
+	- [头文件包含的顺序](#names-and-order-of-includes) 
+- [作用域](#scoping) 
+	- [名字空间](#namespaces) 
+		- [未命名空间](#unnamed-namespaces) 
+		- [命名空间](#named-namespaces) 
+	- [嵌套类](#nested-classes) 
+	- [非成员,静态成员,全局函数](#nonmember-static-member-and-global-functions) 
+	- [局部变量](#local-variables) 
+	- [静态与全局变量](#static-and-global-variables) 
+- [类](#classes) 
+	- [构造函数中的工作](#doing-work-in-constructors) 
+	- [初始化](#initialization) 
+	- [显式构造函数](#explicit-constructors) 
+	- [拷贝构造函数](#copy-constructors) 
 	- [委派和继承构造函数](#delegating-and-inheriting-constructors)
-	- [结构 vs 类](#structs-vs-classes)
-	- [继承权](#inheritance)
+	- [结构体 vs 类](#structs-vs-classes)
+	- [继承](#inheritance)
 	- [多重继承](#multiple-inheritance)
 	- [接口](#interfaces)
 	- [运算符重载](#operator-overloading)
 	- [访问控制](#access-control)
 	- [声明顺序](#declaration-order)
 	- [短函数](#write-short-functions)
-- [其他C++特性](#other-c-features) bruce0505
-	- [所有权和智能指针](#ownership-and-smart-pointers) bruce0505
-	- [参考参数](#reference-arguments) bruce0505
-	- [右值引用](#rvalue-references) bruce0505
-	- [函数重载](#function-overloading) bruce0505
-	- [默认参数](#default-arguments)
+- [其他C++特性](#other-c-features) 
+	- [所有权和智能指针](#ownership-and-smart-pointers) 
+	- [引用参数](#reference-arguments) 
+	- [右值引用](#rvalue-references) aquaporcus
+	- [函数重载](#function-overloading) aquaporcus
+	- [缺省参数](#default-arguments)
 	- [变长数组和alloca()](#variable-length-arrays-and-alloca)
 	- [友员](#friends)
 	- [异常](#exceptions)
 	- [运行时类型信息(RTTI)](#run-time-type-information-rtti)
-	- [转换](#casting)
-	- [流](#streams)
-	- [预递增和递减](#preincrement-and-predecrement)
-	- [const用法](#use-of-const)
-	- [constexpr用法](#use-of-constexpr)
-	- [constexpr用法](#use-of-constexpr-1)
-	- [Integer类型](#integer-types)
+	- [造型](#casting)aquaporcus
+	- [流](#streams)aquaporcus
+	- [前置自增和前置自减](#preincrement-and-predecrement)aquaporcus
+	- [const用法](#use-of-const)aquaporcus
+	- [constexpr用法](#use-of-constexpr)aquaporcus
+	- [constexpr用法](#use-of-constexpr-1)aquaporcus
+	- [Integer类型](#integer-types)aquaporcus
 		- [Unsigned Integer类型](#on-unsigned-integers)
-	- [64位移植性](#64-bit-portability)
-	- [预处理宏](#preprocessor-macros)
-	- [0与nullptr/NULL](#0-and-nullptrnull)
-	- [sizeof](#sizeof)
-	- [auto](#auto)
-	- [布雷斯初始化](#brace-initialization)
-	- [Lambda表达式](#lambda-expressions)
-	- [Boost](#boost)
-	- [C++11](#c11)
-	- [一般命名规则](#general-naming-rules)
-	- [文件名](#file-names)
-	- [类型名称](#type-names)
-	- [变量名](#variable-names)
-		- [常见的变量名](#common-variable-names)
-		- [类的数据成员](#class-data-members)
-		- [结构体变量](#struct-variables)
-		- [全局变量](#global-variables)
+	- [64位移植性](#64-bit-portability)aquaporcus
+	- [预处理宏](#preprocessor-macros)aquaporcus
+	- [0与nullptr/NULL](#0-and-nullptrnull)aquaporcus
+	- [sizeof](#sizeof)aquaporcus
+	- [auto](#auto)aquaporcus
+	- [大括号初始化](#brace-initialization)aquaporcus
+	- [Lambda表达式](#lambda-expressions)aquaporcus
+	- [Boost](#boost)aquaporcus
+	- [C++11](#c11)aquaporcus
+	- [一般命名规则](#general-naming-rules)aquaporcus
+	- [文件名](#file-names)aquaporcus
+	- [类型名称](#type-names)aquaporcus
+	- [变量名](#variable-names)aquaporcus
+		- [常见的变量名](#common-variable-names)aquaporcus
+		- [类的数据成员](#class-data-members)aquaporcus
+		- [结构体变量](#struct-variables)aquaporcus
+		- [全局变量](#global-variables)aquaporcus
 	- [常量名](#constant-names)
 	- [函数名称](#function-names)
-		- [正则函数](#regular-functions)
+		- [普通函数](#regular-functions)
 		- [accessor和mutator](#accessors-and-mutators)
 	- [命名空间的名称](#namespace-names)
-	- [枚举名称](#enumerator-names)
-	- [宏名](#macro-names)
-	- [例外的命名规则](#exceptions-to-naming-rules)
+	- [枚举器名称](#enumerator-names)
+	- [宏命名](#macro-names)
+	- [异常的命名规则](#exceptions-to-naming-rules)
 		- [bigopen()](#bigopen)
 		- [uint](#uint)
 		- [bigpos](#bigpos)
 		- [sparse_hash_map](#sparse_hash_map)
 		- [LONGLONG_MAX](#longlong_max)
-- [注释](#comments) aquaporcus
-	- [Doxygen](#doxygen) aquaporcus
-	- [注释规范](#comment-style) aquaporcus
-	- [文件注释](#file-comments) aquaporcus
-		- [法律声明和作者](#legal-notice-and-author-line) aquaporcus
+- [注释](#comments) 
+	- [Doxygen](#doxygen) 
+	- [注释规范](#comment-style) 
+	- [文件注释](#file-comments) 
+		- [法律声明和作者](#legal-notice-and-author-line) 
 		- [文件内容](#file-contents)
 	- [类注释](#class-comments)
 	- [函数注释](#function-comments)
@@ -105,32 +105,32 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 	- [TODO注释](#todo-comments)
 	- [弃用注释](#deprecation-comments)
 - [格式化](#formatting)
-	- [一行长度](#line-length)
+	- [行长度](#line-length)
 	- [非ASCII字符](#non-ascii-characters)
 	- [空格 vs. 制表符](#spaces-vs-tabs)
 	- [函数定义与声明](#function-declarations-and-definitions)
-	- [函数调用](#function-calls)
-	- [初始化列表](#braced-initializer-lists)
-	- [条件语句](#conditionals)
-	- [循环和switch语句](#loops-and-switch-statements)
-	- [指针和引用表达式](#pointer-and-reference-expressions)
-	- [布尔表达式](#boolean-expressions)
-	- [返回值](#return-values)
-	- [变量和数组初始化](#variable-and-array-initialization)
-	- [预处理器指令](#preprocessor-directives)
-	- [类格式](#class-format)
-	- [构造函数初始化列表](#constructor-initializer-lists)
-	- [命名空间格式化](#namespace-formatting)
-	- [水平空白](#horizontal-whitespace)
-		- [一般](#general)
-		- [循环和条件](#loops-and-conditionals)
-		- [运营商](#operators)
-		- [模板和强制转换](#templates-and-casts)
-	- [垂直空白](#vertical-whitespace)
-- [例外规则](#exceptions-to-the-rules)
-	- [现存的不符合标准的代码](#existing-non-conformant-code)
-	- [Windows代码](#windows-code)
-- [赠言](#parting-words)
+	- [函数调用](#function-calls)Yiming
+	- [初始化列表](#braced-initializer-lists)Yiming
+	- [条件语句](#conditionals)Yiming
+	- [循环和switch语句](#loops-and-switch-statements)Yiming
+	- [指针和引用表达式](#pointer-and-reference-expressions)Yiming
+	- [布尔表达式](#boolean-expressions)Yiming
+	- [返回值](#return-values)Yiming
+	- [变量和数组初始化](#variable-and-array-initialization)Yiming
+	- [预处理器指令](#preprocessor-directives)Yiming
+	- [类格式](#class-format)Yiming
+	- [构造函数初始化列表](#constructor-initializer-lists)aquaporcus
+	- [命名空间格式化](#namespace-formatting)aquaporcus
+	- [水平空白](#horizontal-whitespace)aquaporcus
+		- [一般](#general)aquaporcus
+		- [循环和条件](#loops-and-conditionals)aquaporcus
+		- [运营商](#operators)aquaporcus
+		- [模板和强制转换](#templates-and-casts)aquaporcus
+	- [垂直空白](#vertical-whitespace)aquaporcus
+- [例外规则](#exceptions-to-the-rules)Yiming
+	- [现存的不符合标准的代码](#existing-non-conformant-code)Yiming
+	- [Windows代码](#windows-code)Yiming
+- [赠言](#parting-words)Yiming
 
 # 头文件
 
@@ -1752,15 +1752,15 @@ struct UrlTableProperties {
 
 对全局变量没有特别要求，少用就好，可以以`g_`或其他易与局部变量区分的标志为前缀。
 
-## Constant Names
+## 常量名
 
-Constant names should all be in UPPERCASE with underscores to separate the words.
+常量名应该全部大写并用下划线分隔不同的词。
 
-Do not use `#define` for consts.
+常量不要使用关键字`#define`。
 
-Prefer strongly typed enums over `const` variables, whenever it makes sense.
+尽量使用强类型枚举常量，只要这样做可行。
 
-All compile-time constants, whether they are declared locally, globally, or as part of a class, follow a slightly different naming convention from other variables. They should be declared in UPPERCASE and use underscore to separate the different words:
+所有编译时常量,它们是否声明在局部或全局范围内,或作为一个类的一部分,遵循一个略微不同的来自其他变量的命名约定。他们应该用大写字母中声明和使用下划线分隔不同的词:
 
 ```cpp
 const int MENU_DEFAULT_VALUE = 10;
@@ -1779,15 +1779,15 @@ enum class PixelFormat {
 };
 ```
 
-## Function Names
+## 函数名称
 
-Regular functions have mixed case; accessors and mutators match the name of the variable: `myExcitingFunction()`, `myExcitingMethod()`, `getMyExcitingMemberVariable()`, `setMyExcitingMemberVariable`.
+通常函数名有大小写混合的；访问器和存取器相匹配的变量的名称: `myExcitingFunction()`, `myExcitingMethod()`, `getMyExcitingMemberVariable()`, `setMyExcitingMemberVariable`。
 
-### Regular Functions
+### 一般函数
 
-Functions should start with lowercase and have a capital letter for each new word. No underscores.
+函数应该以小写开始，并且后面每个新的单词的首字母都要大写。没有下划线。
 
-If your function crashes upon an error, you should append OrDie to the function name. This only applies to functions which could be used by production code and to errors that are reasonably likely to occur during normal operation.
+如果你的函数因为一个错误而崩溃,你应该将OrDie添加到函数名。这只适用于函数可以用合理的产生代码和一些可能发生在正常操作的错误。
 
 ```cpp
 addTableEntry()
@@ -1795,9 +1795,9 @@ deleteUrl()
 openFileOrDie()
 ```
 
-### Accessors and Mutators
+### 访问器和存储器
 
-Accessors and mutators ( `get` and `set` functions) should match the name of the variable they are getting and setting. This shows an excerpt of a class whose instance variable is `_numEntries` .
+访问器和存储器 ( `get` 和 `set` 函数) 应该匹配他们要设置或获取的变量的名字。这个展示了一个类的片段，它的实例变量是`_numEntries`。
 
 ```cpp
 class MyClass {
@@ -1811,17 +1811,18 @@ class MyClass {
 };
 ```
 
-## Namespace Names
+## 命名空间的名称
 
-Namespace names are all lower-case, and based on project names and possibly their directory structure: google_awesome_project.
+命名空间的名称全部为小写，并且是基于项目名称或目录结构：google_awesome_project。
 
-See Namespaces for a discussion of namespaces and how to name them.
+看命名空间关于命名空间的讨论和如何命名。
 
-## Enumerator Names
+## 枚举器名称
 
-Enumerators should be named either like constants: `ENUM_NAME`.
+枚举器的命名应该像常量：`ENUM_NAME`。
 
 Prefer strongly typed enums over non-strongly typed enums.
+
 
 ```cpp
 enum class UrlTableErrors {
@@ -1831,11 +1832,11 @@ enum class UrlTableErrors {
 };
 ```
 
-## Macro Names
+## 宏命名
 
-You're not really going to define a macro, are you? If you do, they're like this: CC_MY_MACRO_THAT_SCARES_SMALL_CHILDREN.
+你是不是真的要定义一个宏，是吗？ 如果是, 他们应该像这样: CC_MY_MACRO_THAT_SCARES_SMALL_CHILDREN。
 
-Please see the description of macros; in general macros should not be used. However, if they are absolutely needed, then they should be named with all capitals and underscores, and they should be prefixed with `CC_` or `CC`
+请看宏的描述：通常情况下，宏不应该被使用，但是如果一定需要的话, 那么所有的字符应该大写并带有下划线, 而且要有`CC_`或`CC`前缀。
 
 ```cpp
 #define CC_ROUND(x) ...
@@ -1843,29 +1844,29 @@ Please see the description of macros; in general macros should not be used. Howe
 #define CCLOG(x) ...
 ```
 
-## Exceptions to Naming Rules
+## 异常的命名规则
 
-If you are naming something that is analogous to an existing C or C++ entity then you can follow the existing naming convention scheme.
+如果你命名的东西，类似于现有的C或C++的实体，那么你可以使用哪个现有的命名规范方案。
 
 ### `bigopen()`
     
-function name, follows form of open() 
+函数名, 符合open()形式 
 
 ### `uint`
 
-typedef 
+类型定义 
 
 ### `bigpos`
 
-struct or class, follows form of pos 
+结构体或类, 符合pos形式 
 
 ### `sparse_hash_map`
 
-STL-like entity; follows STL naming conventions 
+类似STL实体; 符合STL命名规范 
 
 ### `LONGLONG_MAX`
 
-a constant, as in INT_MAX 
+一个常量, 在INT_MAX中  
 
 # 注释
 
@@ -2166,56 +2167,54 @@ TODO注释要包含全大写的TODO字符，紧跟着是最适合完成TODO事�
 
 新的代码不能调用已弃用的接口，使用新的接口来作为替代。如果你无法理解说明，向创建废弃的人咨询如何使用新的接口。
 
-# Formatting
+# 格式化
 
-Coding style and formatting are pretty arbitrary, but a project is much easier to follow if everyone uses the same style. Individuals may not agree with every aspect of the formatting rules, and some of the rules may take some getting used to, but it is important that all project contributors follow the style rules so that they can all read and understand everyone's code easily.
+编码风格和格式是相当随意的，但如果每个人都使用相同的样式一个项目是很容易遵循这套风格的。个人可能不统一格式规则各个方面规则，有些规则可能需要一些时间来适应，但重要的是，所有的项目贡献者遵循的同样的规则，使他们都可以阅读和轻松地了解每个人的代码。
 
-To help you format code correctly, we've created a settings file for emacs.
+要正确地帮你格式化代码，我们为emacs创建了一个配置文件。
 
-## Line Length
+## 行长度
 
-Each line of text in your code should be at most 80 characters long.
+你的代码中每行不能超过80个字符长度。
 
-We recognize that this rule is controversial, but so much existing code already adheres to it, and we feel that consistency is important.
+我们意识到，这条规则是有争议的，但这么多的现有代码已经坚持它，并且我们觉得这种一致性是很重要的。
 
-**Pros:** Those who favor this rule argue that it is rude to force them to resize their windows and there is no need for anything longer. Some folks are used to having several code windows side-by-side, and thus don't have room to widen their windows in any case. People set up their work environment assuming a particular maximum window width, and 80 columns has been the traditional standard. Why change it?
+**优点:** 那些赞成这个规则的人认为，迫使他们改变自己的习惯这是不礼貌的，也没有必要对任何事都如此。有些人习惯把几个代码窗口并排侧，因此无论怎样都没有足够的空间扩阔他们的代码窗。人们建立自己的工作环境假设一个非常最大的窗口宽度并且80列一直是传统的标准。为什么要改变呢？
 
-**Cons:** Proponents of change argue that a wider line can make code more readable. The 80-column limit is an hidebound throwback to 1960s mainframes; modern equipment has wide screens that can easily show longer lines.
+**缺点:** 变革的支持者认为，一个更宽的行可以使代码更具可读性。80列的限制是一个墨守成规倒退到20世纪60年代的大型机;现代化的设备具有很广的屏幕，可以很容易地显示出更长的行。
 
-**Decision:**
+**决策:**
 
-80 characters is the maximum.
+80个字符长度是上线。
 
-Exception: if a comment line contains an example command or a literal URL longer than 80 characters, that line may be longer than 80 characters for ease of cut and paste.
+例外: 如果一个注释行包含一个示例命令或文字的URL长度超过80个字符，该行可能会超过80个字符以便于剪切和粘贴。
 
-Exception: an #include statement with a long path may exceed 80 columns. Try to avoid situations where this becomes necessary.
+例外: 一个有很长路径的#include语句可能会超过80列。 尽量避免这种情况成为必要。
 
-Exception: you needn't be concerned about header guards that exceed the maximum length.
+例外: 你不必关心超过最大长度的报头警卫。
 
-## Non-ASCII Characters
+## 非ASCII字符
 
-Non-ASCII characters should be rare, and must use UTF-8 formatting.
+尽量不使用非ASCII字符，使用时必须使用UTF-8格式。
 
-You shouldn't hard-code user-facing text in source, even English, so use of non-ASCII characters should be rare. However, in certain cases it is appropriate to include such words in your code. For example, if your code parses data files from foreign sources, it may be appropriate to hard-code the non-ASCII string(s) used in those data files as delimiters. More commonly, unittest code (which does not need to be localized) might contain non-ASCII strings. In such cases, you should use UTF-8, since that is an encoding understood by most tools able to handle more than just ASCII.
+哪怕是英文，也丌应将用户界面的文本硬编码到源代码中，因此非ASCII字符要少用。特殊情冴下可以适当包吨此类字符。如，代码分析外部数据文件时，可以适当硬编码数据文件中作为分隔符的非ASCII字符串； 更常用的是（不需要本地化的）单元测试代码可能包含非ASCII字符串。此类情况下，应使用UTF-8格式，因为很多工具都可以理解和处理其编码，十六进制编码也可以，尤其是在增强可读性的情况下——如"\xEF\xBB\xBF"是Unicode的zero-width no-break space字符，以UTF-8格式包含在源文件中是不可见的。
 
-Hex encoding is also OK, and encouraged where it enhances readability — for example, `"\xEF\xBB\xBF"`, or, even more simply, `u8"\uFEFF"`, is the Unicode zero-width no-break space character, which would be invisible if included in the source as straight UTF-8.
+使用`U8`前缀，以保证一个字符串包含`\uXXXX`转义序列编码为UTF-8。不要使用它含有编码为UTF-8非ASCII字符的字符串，因为这会产生不正确的输出，如果编译器不解释源文件为UTF-8。
 
-Use the `u8` prefix to guarantee that a string literal containing `\uXXXX` escape sequences is encoded as UTF-8. Do not use it for strings containing non-ASCII characters encoded as UTF-8, because that will produce incorrect output if the compiler does not interpret the source file as UTF-8.
-
-You shouldn't use the C++11 `char16_t` and `char32_t` character types, since they're for non-UTF-8 text. For similar reasons you also shouldn't use `wchar_t` (unless you're writing code that interacts with the Windows API, which uses `wchar_t` extensively).
+你不应该使用C++11的`char16_t`和`char32_t`字符类型，因为它们是用于非UTF-8的文本。出于类似的原因，你也不要使用`wchar_t`（除非你正在编写与Windows交互的API，它广泛使用`wchar_t`）。
 
 
-## Spaces vs. Tabs
+## 空格还是制表位
 
-Use only spaces, and indent 4 spaces at a time.
+只使用空格，每次缩进4个空格。
 
-We use spaces for indentation. Do not use tabs in your code. You should set your editor to emit spaces when you hit the tab key.
+使用空格进行缩进，不要在代码中使用tabs，设定编辑器将tab转为空格。
 
-## Function Declarations and Definitions
+## 函数声明与定义
 
-Return type on the same line as function name, parameters on the same line if they fit.
+返回类型和函数名在同一行，合适的话，参数也放在同一行。
 
-Functions look like this:
+函数看上去像这样：
 
 ```cpp
 ReturnType ClassName::FunctionName(Type par_name1, Type par_name2)
@@ -2225,7 +2224,7 @@ ReturnType ClassName::FunctionName(Type par_name1, Type par_name2)
 }
 ```
 
-If you have too much text to fit on one line:
+如果同一行文本较多，容不下所有参数：
 
 ```cpp
 ReturnType ClassName::ReallyLongFunctionName(Type par_name1, Type par_name2,
@@ -2236,7 +2235,7 @@ ReturnType ClassName::ReallyLongFunctionName(Type par_name1, Type par_name2,
 }
 ```
 
-or if you cannot fit even the first parameter:
+甚至还第一个参数都放不下：
 
 ```cpp
 ReturnType LongClassName::ReallyReallyReallyLongFunctionName(
@@ -2249,45 +2248,44 @@ ReturnType LongClassName::ReallyReallyReallyLongFunctionName(
 }
 ```
 
-Some points to note:
+注意以下几点：
 
+* 如果你无法使的返回类型和函数名​​在同一行中，分开它们。
+* 如果一个函数定义的返回类型后停止，不缩进。
+* 左括号总是和函数名在同一行。
+* 函数名和左括号之间永远不要有空格。
+* 括号和参数之间永远不要有空格。
+* 左大括号总是在同一行的最后一个参数的结尾。
+* 结束大括号或者是由本身的最后一行或（如果其他样式规则允许）在同一行的大括号。
+* 右括号和大括号之间应该有一个空格。
+* 所有的参数应该被命名，在该声明和实现相同的名称。
+* 所有参数应尽可能保持一致。
+* 默认缩进4个空格。
+* 包装参数有4个空格缩进。
 
-* If you cannot fit the return type and the function name on a single line, break between them.
-* If you break after the return type of a function definition, do not indent.
-* The open parenthesis is always on the same line as the function name.
-* There is never a space between the function name and the open parenthesis.
-* There is never a space between the parentheses and the parameters.
-* The open curly brace is always at the end of the same line as the last parameter.
-* The close curly brace is either on the last line by itself or (if other style rules permit) on the same line as the open curly brace.
-* There should be a space between the close parenthesis and the open curly brace.
-* All parameters should be named, with identical names in the declaration and implementation.
-* All parameters should be aligned if possible.
-* Default indentation is 4 spaces.
-* Wrapped parameters have a 4 space indent.
-
-If some parameters are unused, comment out the variable name in the function definition:
+如果某些参数是未使用的，在函数定义中注释掉变量名：
 
 ```cpp
-// Always have named parameters in interfaces.
+// 接口中总是有一个命名了的参数。
 class Shape
 {
 public:
     virtual void rotate(double radians) = 0;
 }
 
-// Always have named parameters in the declaration.
+// 声明中总是有一个命名了的参数。
 class Circle : public Shape
 {
 public:
     virtual void rotate(double radians);
 }
 
-// Comment out unused named parameters in definitions.
+// 注释掉定义中未使用的命名参数。
 void Circle::rotate(double /*radians*/)
 {}
 
-// Bad - if someone wants to implement later, it's not clear what the
-// variable means.
+// 不好的做法。如果有人想之后再实现，那么变量的意义目前还不清楚是什么。
+
 void Circle::rotate(double)
 {}
 ```
