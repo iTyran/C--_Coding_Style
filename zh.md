@@ -8,86 +8,86 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 
 - [头文件](#header-files)
 	- [#define用法](#the-define-guard)
-	- [前向声明](#forward-declarations) cissyhope
-	- [内联函数](#inline-functions) cissyhope
-	- [inl.h文件](#the--inlh-files) cissyhope
-	- [参数顺序](#function-parameter-ordering) cissyhope
-	- [头文件包含的顺序](#names-and-order-of-includes) cissyhope
-- [作用域](#scoping) balabula
-	- [名字空间](#namespaces) balabula
-		- [未命名空间](#unnamed-namespaces) balabula
-		- [命名空间](#named-namespaces) balabula
-	- [嵌套类](#nested-classes) balabula
-	- [非成员,静态成员,全局函数](#nonmember-static-member-and-global-functions) balabula
-	- [局部变量](#local-variables) balabula
-	- [静态与全局变量](#static-and-global-variables) balabula
-- [类](#classes) NickYang
-	- [构造函数中的工作](#doing-work-in-constructors) NickYang
-	- [初始化](#initialization) NickYang
-	- [明确的构造函数](#explicit-constructors) NickYang
-	- [拷贝构造函数](#copy-constructors) NickYang
+	- [前向声明](#forward-declarations) 
+	- [内联函数](#inline-functions) 
+	- [inl.h文件](#the--inlh-files) 
+	- [参数顺序](#function-parameter-ordering) 
+	- [头文件包含的顺序](#names-and-order-of-includes) 
+- [作用域](#scoping) 
+	- [名字空间](#namespaces) 
+		- [未命名空间](#unnamed-namespaces) 
+		- [命名空间](#named-namespaces) 
+	- [嵌套类](#nested-classes) 
+	- [非成员,静态成员,全局函数](#nonmember-static-member-and-global-functions) 
+	- [局部变量](#local-variables) 
+	- [静态与全局变量](#static-and-global-variables) 
+- [类](#classes) 
+	- [构造函数中的工作](#doing-work-in-constructors) 
+	- [初始化](#initialization) 
+	- [显式构造函数](#explicit-constructors) 
+	- [拷贝构造函数](#copy-constructors) 
 	- [委派和继承构造函数](#delegating-and-inheriting-constructors)
-	- [结构 vs 类](#structs-vs-classes)
-	- [继承权](#inheritance)
+	- [结构体 vs 类](#structs-vs-classes)
+	- [继承](#inheritance)
 	- [多重继承](#multiple-inheritance)
 	- [接口](#interfaces)
 	- [运算符重载](#operator-overloading)
 	- [访问控制](#access-control)
 	- [声明顺序](#declaration-order)
 	- [短函数](#write-short-functions)
-- [其他C++特性](#other-c-features) bruce0505
-	- [所有权和智能指针](#ownership-and-smart-pointers) bruce0505
-	- [参考参数](#reference-arguments) bruce0505
-	- [右值引用](#rvalue-references) bruce0505
-	- [函数重载](#function-overloading) bruce0505
-	- [默认参数](#default-arguments)
+- [其他C++特性](#other-c-features) 
+	- [所有权和智能指针](#ownership-and-smart-pointers) 
+	- [引用参数](#reference-arguments) 
+	- [右值引用](#rvalue-references) aquaporcus
+	- [函数重载](#function-overloading) aquaporcus
+	- [缺省参数](#default-arguments)
 	- [变长数组和alloca()](#variable-length-arrays-and-alloca)
 	- [友员](#friends)
 	- [异常](#exceptions)
 	- [运行时类型信息(RTTI)](#run-time-type-information-rtti)
-	- [转换](#casting)
-	- [流](#streams)
-	- [预递增和递减](#preincrement-and-predecrement)
-	- [const用法](#use-of-const)
-	- [constexpr用法](#use-of-constexpr)
-	- [constexpr用法](#use-of-constexpr-1)
-	- [Integer类型](#integer-types)
+	- [造型](#casting)aquaporcus
+	- [流](#streams)aquaporcus
+	- [前置自增和前置自减](#preincrement-and-predecrement)aquaporcus
+	- [const用法](#use-of-const)aquaporcus
+	- [constexpr用法](#use-of-constexpr)aquaporcus
+	- [constexpr用法](#use-of-constexpr-1)aquaporcus
+	- [Integer类型](#integer-types)aquaporcus
 		- [Unsigned Integer类型](#on-unsigned-integers)
-	- [64位移植性](#64-bit-portability)
-	- [预处理宏](#preprocessor-macros)
-	- [0与nullptr/NULL](#0-and-nullptrnull)
-	- [sizeof](#sizeof)
-	- [auto](#auto)
-	- [布雷斯初始化](#brace-initialization)
-	- [Lambda表达式](#lambda-expressions)
-	- [Boost](#boost)
-	- [C++11](#c11)
-	- [一般命名规则](#general-naming-rules)
-	- [文件名](#file-names)
-	- [类型名称](#type-names)
-	- [变量名](#variable-names)
-		- [常见的变量名](#common-variable-names)
-		- [类的数据成员](#class-data-members)
-		- [结构体变量](#struct-variables)
-		- [全局变量](#global-variables)
-	- [常量名](#constant-names)
-	- [函数名称](#function-names)
-		- [正则函数](#regular-functions)
-		- [accessor和mutator](#accessors-and-mutators)
-	- [命名空间的名称](#namespace-names)
-	- [枚举名称](#enumerator-names)
-	- [宏名](#macro-names)
-	- [例外的命名规则](#exceptions-to-naming-rules)
-		- [bigopen()](#bigopen)
-		- [uint](#uint)
-		- [bigpos](#bigpos)
-		- [sparse_hash_map](#sparse_hash_map)
-		- [LONGLONG_MAX](#longlong_max)
-- [注释](#comments) aquaporcus
-	- [Doxygen](#doxygen) aquaporcus
-	- [注释规范](#comment-style) aquaporcus
-	- [文件注释](#file-comments) aquaporcus
-		- [法律声明和作者](#legal-notice-and-author-line) aquaporcus
+	- [64位移植性](#64-bit-portability)aquaporcus
+	- [预处理宏](#preprocessor-macros)aquaporcus
+	- [0与nullptr/NULL](#0-and-nullptrnull)aquaporcus
+	- [sizeof](#sizeof)aquaporcus
+	- [auto](#auto)aquaporcus
+	- [大括号初始化](#brace-initialization)aquaporcus
+	- [Lambda表达式](#lambda-expressions)aquaporcus
+	- [Boost](#boost)aquaporcus
+	- [C++11](#c11)aquaporcus
+	- [一般命名规则](#general-naming-rules)aquaporcus
+	- [文件名](#file-names)aquaporcus
+	- [类型名称](#type-names)aquaporcus
+	- [变量名](#variable-names)aquaporcus
+		- [常见的变量名](#common-variable-names)aquaporcus
+		- [类的数据成员](#class-data-members)aquaporcus
+		- [结构体变量](#struct-variables)aquaporcus
+		- [全局变量](#global-variables)aquaporcus
+	- [常量名](#constant-names)Yiming
+	- [函数名称](#function-names)Yiming
+		- [正则函数](#regular-functions)Yiming
+		- [accessor和mutator](#accessors-and-mutators)Yiming
+	- [命名空间的名称](#namespace-names)Yiming
+	- [枚举名称](#enumerator-names)Yiming
+	- [宏名](#macro-names)Yiming
+	- [例外的命名规则](#exceptions-to-naming-rules)Yiming
+		- [bigopen()](#bigopen)Yiming
+		- [uint](#uint)Yiming
+		- [bigpos](#bigpos)Yiming
+		- [sparse_hash_map](#sparse_hash_map)Yiming
+		- [LONGLONG_MAX](#longlong_max)Yiming
+- [注释](#comments) 
+	- [Doxygen](#doxygen) 
+	- [注释规范](#comment-style) 
+	- [文件注释](#file-comments) 
+		- [法律声明和作者](#legal-notice-and-author-line) 
 		- [文件内容](#file-contents)
 	- [类注释](#class-comments)
 	- [函数注释](#function-comments)
@@ -104,33 +104,33 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 	- [标点，拼写和语法](#punctuation-spelling-and-grammar)
 	- [TODO注释](#todo-comments)
 	- [弃用注释](#deprecation-comments)
-- [格式化](#formatting)
-	- [一行长度](#line-length)
-	- [非ASCII字符](#non-ascii-characters)
-	- [空格 vs. 制表符](#spaces-vs-tabs)
-	- [函数定义与声明](#function-declarations-and-definitions)
-	- [函数调用](#function-calls)
-	- [初始化列表](#braced-initializer-lists)
-	- [条件语句](#conditionals)
-	- [循环和switch语句](#loops-and-switch-statements)
-	- [指针和引用表达式](#pointer-and-reference-expressions)
-	- [布尔表达式](#boolean-expressions)
-	- [返回值](#return-values)
-	- [变量和数组初始化](#variable-and-array-initialization)
-	- [预处理器指令](#preprocessor-directives)
-	- [类格式](#class-format)
-	- [构造函数初始化列表](#constructor-initializer-lists)
-	- [命名空间格式化](#namespace-formatting)
-	- [水平空白](#horizontal-whitespace)
-		- [一般](#general)
-		- [循环和条件](#loops-and-conditionals)
-		- [运营商](#operators)
-		- [模板和强制转换](#templates-and-casts)
-	- [垂直空白](#vertical-whitespace)
-- [例外规则](#exceptions-to-the-rules)
-	- [现存的不符合标准的代码](#existing-non-conformant-code)
-	- [Windows代码](#windows-code)
-- [赠言](#parting-words)
+- [格式化](#formatting)Yiming
+	- [一行长度](#line-length)Yiming
+	- [非ASCII字符](#non-ascii-characters)Yiming
+	- [空格 vs. 制表符](#spaces-vs-tabs)Yiming
+	- [函数定义与声明](#function-declarations-and-definitions)Yiming
+	- [函数调用](#function-calls)Yiming
+	- [初始化列表](#braced-initializer-lists)Yiming
+	- [条件语句](#conditionals)Yiming
+	- [循环和switch语句](#loops-and-switch-statements)Yiming
+	- [指针和引用表达式](#pointer-and-reference-expressions)Yiming
+	- [布尔表达式](#boolean-expressions)Yiming
+	- [返回值](#return-values)Yiming
+	- [变量和数组初始化](#variable-and-array-initialization)Yiming
+	- [预处理器指令](#preprocessor-directives)Yiming
+	- [类格式](#class-format)Yiming
+	- [构造函数初始化列表](#constructor-initializer-lists)aquaporcus
+	- [命名空间格式化](#namespace-formatting)aquaporcus
+	- [水平空白](#horizontal-whitespace)aquaporcus
+		- [一般](#general)aquaporcus
+		- [循环和条件](#loops-and-conditionals)aquaporcus
+		- [运营商](#operators)aquaporcus
+		- [模板和强制转换](#templates-and-casts)aquaporcus
+	- [垂直空白](#vertical-whitespace)aquaporcus
+- [例外规则](#exceptions-to-the-rules)Yiming
+	- [现存的不符合标准的代码](#existing-non-conformant-code)Yiming
+	- [Windows代码](#windows-code)Yiming
+- [赠言](#parting-words)Yiming
 
 # 头文件
 
