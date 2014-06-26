@@ -70,13 +70,13 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 		- [类的数据成员](#class-data-members)aquaporcus
 		- [结构体变量](#struct-variables)aquaporcus
 		- [全局变量](#global-variables)aquaporcus
-	- [常量名](#constant-names)Yiming
-	- [函数名称](#function-names)Yiming
-		- [正则函数](#regular-functions)Yiming
-		- [accessor和mutator](#accessors-and-mutators)Yiming
-	- [命名空间的名称](#namespace-names)Yiming
-	- [枚举名称](#enumerator-names)Yiming
-	- [宏名](#macro-names)Yiming
+	- [常量名](#constant-names)
+	- [函数名称](#function-names)
+		- [普通函数](#regular-functions)
+		- [accessor和mutator](#accessors-and-mutators)
+	- [命名空间的名称](#namespace-names)
+	- [枚举器名称](#enumerator-names)
+	- [宏命名](#macro-names)
 	- [例外的命名规则](#exceptions-to-naming-rules)Yiming
 		- [bigopen()](#bigopen)Yiming
 		- [uint](#uint)Yiming
@@ -1757,15 +1757,15 @@ See Structs vs. Classes for a discussion of when to use a struct versus a class.
 
 There are no special requirements for global variables, which should be rare in any case, but if you use one, consider prefixing it with `g_` or some other marker to easily distinguish it from local variables.
 
-## Constant Names
+## 常量名
 
-Constant names should all be in UPPERCASE with underscores to separate the words.
+常量名应该全部大写并用下划线分隔不同的词。
 
-Do not use `#define` for consts.
+常量不要使用关键字`#define`。
 
-Prefer strongly typed enums over `const` variables, whenever it makes sense.
+尽量使用强类型枚举常量，只要这样做可行。
 
-All compile-time constants, whether they are declared locally, globally, or as part of a class, follow a slightly different naming convention from other variables. They should be declared in UPPERCASE and use underscore to separate the different words:
+所有编译时常量,它们是否声明在局部或全局范围内,或作为一个类的一部分,遵循一个略微不同的来自其他变量的命名约定。他们应该用大写字母中声明和使用下划线分隔不同的词:
 
 ```cpp
 const int MENU_DEFAULT_VALUE = 10;
@@ -1784,15 +1784,15 @@ enum class PixelFormat {
 };
 ```
 
-## Function Names
+## 函数名称
 
-Regular functions have mixed case; accessors and mutators match the name of the variable: `myExcitingFunction()`, `myExcitingMethod()`, `getMyExcitingMemberVariable()`, `setMyExcitingMemberVariable`.
+通常函数名有大小写混合的；访问器和存取器相匹配的变量的名称: `myExcitingFunction()`, `myExcitingMethod()`, `getMyExcitingMemberVariable()`, `setMyExcitingMemberVariable`。
 
-### Regular Functions
+### 一般函数
 
-Functions should start with lowercase and have a capital letter for each new word. No underscores.
+函数应该以小写开始，并且后面每个新的单词的首字母都要大写。没有下划线。
 
-If your function crashes upon an error, you should append OrDie to the function name. This only applies to functions which could be used by production code and to errors that are reasonably likely to occur during normal operation.
+如果你的函数因为一个错误而崩溃,你应该将OrDie添加到函数名。这只适用于函数可以用合理的产生代码和一些可能发生在正常操作的错误。
 
 ```cpp
 addTableEntry()
@@ -1800,9 +1800,9 @@ deleteUrl()
 openFileOrDie()
 ```
 
-### Accessors and Mutators
+### 访问器和存储器
 
-Accessors and mutators ( `get` and `set` functions) should match the name of the variable they are getting and setting. This shows an excerpt of a class whose instance variable is `_numEntries` .
+访问器和存储器 ( `get` 和 `set` 函数) 应该匹配他们要设置或获取的变量的名字。这个展示了一个类的片段，它的实例变量是`_numEntries`。
 
 ```cpp
 class MyClass {
@@ -1816,17 +1816,18 @@ class MyClass {
 };
 ```
 
-## Namespace Names
+## 命名空间的名称
 
-Namespace names are all lower-case, and based on project names and possibly their directory structure: google_awesome_project.
+命名空间的名称全部为小写，并且是基于项目名称或目录结构：google_awesome_project。
 
-See Namespaces for a discussion of namespaces and how to name them.
+看命名空间关于命名空间的讨论和如何命名。
 
-## Enumerator Names
+## 枚举器名称
 
-Enumerators should be named either like constants: `ENUM_NAME`.
+枚举器的命名应该像常量：`ENUM_NAME`。
 
 Prefer strongly typed enums over non-strongly typed enums.
+
 
 ```cpp
 enum class UrlTableErrors {
@@ -1836,11 +1837,11 @@ enum class UrlTableErrors {
 };
 ```
 
-## Macro Names
+## 宏命名
 
-You're not really going to define a macro, are you? If you do, they're like this: CC_MY_MACRO_THAT_SCARES_SMALL_CHILDREN.
+你是不是真的要定义一个宏，是吗？ 如果是, 他们应该像这样: CC_MY_MACRO_THAT_SCARES_SMALL_CHILDREN。
 
-Please see the description of macros; in general macros should not be used. However, if they are absolutely needed, then they should be named with all capitals and underscores, and they should be prefixed with `CC_` or `CC`
+请看宏的描述：通常情况下，宏不应该被使用，但是如果一定需要的话, 那么所有的字符应该大写并带有下划线, 而且要有`CC_`或`CC`前缀。
 
 ```cpp
 #define CC_ROUND(x) ...
@@ -1850,27 +1851,27 @@ Please see the description of macros; in general macros should not be used. Howe
 
 ## Exceptions to Naming Rules
 
-If you are naming something that is analogous to an existing C or C++ entity then you can follow the existing naming convention scheme.
+如果你命名的东西，类似于现有的C或C++的实体，那么你可以使用哪个现有的命名规范方案。
 
 ### `bigopen()`
     
-function name, follows form of open() 
+函数名, 符合open()形式 
 
 ### `uint`
 
-typedef 
+类型定义 
 
 ### `bigpos`
 
-struct or class, follows form of pos 
+结构体或类, 符合pos形式 
 
 ### `sparse_hash_map`
 
-STL-like entity; follows STL naming conventions 
+类似STL实体; 符合STL命名规范 
 
 ### `LONGLONG_MAX`
 
-a constant, as in INT_MAX 
+一个常量, 在INT_MAX中  
 
 # 注释
 
