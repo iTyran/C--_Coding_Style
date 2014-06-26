@@ -38,38 +38,38 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 - [其他C++特性](#other-c-features) 
 	- [所有权和智能指针](#ownership-and-smart-pointers) 
 	- [引用参数](#reference-arguments) 
-	- [右值引用](#rvalue-references) aquaporcus
-	- [函数重载](#function-overloading) aquaporcus
+	- [右值引用](#rvalue-references)
+	- [函数重载](#function-overloading)
 	- [缺省参数](#default-arguments)
 	- [变长数组和alloca()](#variable-length-arrays-and-alloca)
 	- [友员](#friends)
 	- [异常](#exceptions)
 	- [运行时类型信息(RTTI)](#run-time-type-information-rtti)
-	- [造型](#casting)aquaporcus
-	- [流](#streams)aquaporcus
-	- [前置自增和前置自减](#preincrement-and-predecrement)aquaporcus
-	- [const用法](#use-of-const)aquaporcus
-	- [constexpr用法](#use-of-constexpr)aquaporcus
-	- [constexpr用法](#use-of-constexpr-1)aquaporcus
-	- [Integer类型](#integer-types)aquaporcus
+	- [类型转换](#casting)
+	- [流](#streams)
+	- [前置自增和前置自减](#preincrement-and-predecrement)
+	- [const用法](#use-of-const)
+	- [constexpr用法](#use-of-constexpr)
+	- [constexpr用法](#use-of-constexpr-1)
+	- [Integer类型](#integer-types)
 		- [Unsigned Integer类型](#on-unsigned-integers)
-	- [64位移植性](#64-bit-portability)aquaporcus
-	- [预处理宏](#preprocessor-macros)aquaporcus
-	- [0与nullptr/NULL](#0-and-nullptrnull)aquaporcus
-	- [sizeof](#sizeof)aquaporcus
-	- [auto](#auto)aquaporcus
-	- [大括号初始化](#brace-initialization)aquaporcus
-	- [Lambda表达式](#lambda-expressions)aquaporcus
-	- [Boost](#boost)aquaporcus
-	- [C++11](#c11)aquaporcus
-	- [一般命名规则](#general-naming-rules)aquaporcus
-	- [文件名](#file-names)aquaporcus
-	- [类型名称](#type-names)aquaporcus
-	- [变量名](#variable-names)aquaporcus
-		- [常见的变量名](#common-variable-names)aquaporcus
-		- [类的数据成员](#class-data-members)aquaporcus
-		- [结构体变量](#struct-variables)aquaporcus
-		- [全局变量](#global-variables)aquaporcus
+	- [64位移植性](#64-bit-portability)
+	- [预处理宏](#preprocessor-macros)
+	- [0与nullptr/NULL](#0-and-nullptrnull)
+	- [sizeof](#sizeof)
+	- [auto](#auto)
+	- [大括号初始化](#brace-initialization)
+	- [Lambda表达式](#lambda-expressions)
+	- [Boost](#boost)
+	- [C++11](#c11)
+	- [一般命名规则](#general-naming-rules)
+	- [文件名](#file-names)
+	- [类型名称](#type-names)
+	- [变量名](#variable-names)
+		- [常见的变量名](#common-variable-names)
+		- [类的数据成员](#class-data-members)
+		- [结构体变量](#struct-variables)
+		- [全局变量](#global-variables)
 	- [常量名](#constant-names)
 	- [函数名称](#function-names)
 		- [普通函数](#regular-functions)
@@ -119,14 +119,14 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 	- [变量和数组初始化](#variable-and-array-initialization)Yiming
 	- [预处理器指令](#preprocessor-directives)Yiming
 	- [类格式](#class-format)Yiming
-	- [构造函数初始化列表](#constructor-initializer-lists)aquaporcus
-	- [命名空间格式化](#namespace-formatting)aquaporcus
-	- [水平空白](#horizontal-whitespace)aquaporcus
-		- [一般](#general)aquaporcus
-		- [循环和条件](#loops-and-conditionals)aquaporcus
-		- [运营商](#operators)aquaporcus
-		- [模板和强制转换](#templates-and-casts)aquaporcus
-	- [垂直空白](#vertical-whitespace)aquaporcus
+	- [构造函数初始化列表](#constructor-initializer-lists)
+	- [命名空间格式化](#namespace-formatting)
+	- [水平空白](#horizontal-whitespace)
+		- [一般](#general)
+		- [循环和条件](#loops-and-conditionals)
+		- [操作符](#operators)
+		- [模板和类型转换](#templates-and-casts)
+	- [垂直空白](#vertical-whitespace)
 - [例外规则](#exceptions-to-the-rules)Yiming
 	- [现存的不符合标准的代码](#existing-non-conformant-code)Yiming
 	- [Windows代码](#windows-code)Yiming
