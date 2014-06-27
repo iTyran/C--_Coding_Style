@@ -109,16 +109,16 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 	- [非ASCII字符](#non-ascii-characters)
 	- [空格 vs. 制表符](#spaces-vs-tabs)
 	- [函数定义与声明](#function-declarations-and-definitions)
-	- [函数调用](#function-calls)Yiming
-	- [初始化列表](#braced-initializer-lists)Yiming
-	- [条件语句](#conditionals)Yiming
-	- [循环和switch语句](#loops-and-switch-statements)Yiming
-	- [指针和引用表达式](#pointer-and-reference-expressions)Yiming
-	- [布尔表达式](#boolean-expressions)Yiming
-	- [返回值](#return-values)Yiming
-	- [变量和数组初始化](#variable-and-array-initialization)Yiming
-	- [预处理器指令](#preprocessor-directives)Yiming
-	- [类格式](#class-format)Yiming
+	- [函数调用](#function-calls)
+	- [初始化列表](#braced-initializer-lists)
+	- [条件语句](#conditionals)
+	- [循环和switch语句](#loops-and-switch-statements)
+	- [指针和引用表达式](#pointer-and-reference-expressions)
+	- [布尔表达式](#boolean-expressions)
+	- [返回值](#return-values)
+	- [变量和数组初始化](#variable-and-array-initialization)
+	- [预处理器指令](#preprocessor-directives)
+	- [类格式](#class-format)
 	- [构造函数初始化列表](#constructor-initializer-lists)
 	- [命名空间格式化](#namespace-formatting)
 	- [水平空白](#horizontal-whitespace)
@@ -127,10 +127,10 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 		- [操作符](#operators)
 		- [模板和类型转换](#templates-and-casts)
 	- [垂直空白](#vertical-whitespace)
-- [例外规则](#exceptions-to-the-rules)Yiming
-	- [现存的不符合标准的代码](#existing-non-conformant-code)Yiming
-	- [Windows代码](#windows-code)Yiming
-- [赠言](#parting-words)Yiming
+- [例外规则](#exceptions-to-the-rules)
+	- [现存的不符合标准的代码](#existing-non-conformant-code)
+	- [Windows代码](#windows-code)
+- [赠言](#parting-words)
 
 # 头文件
 
@@ -2527,11 +2527,11 @@ const string & str;  // 不好 - &两边空格
 
 你应该这样做，始终在一个单一的文件，因此，修改现有文件时，使用的样式在该文件中。
 
-## Boolean Expressions
+## 布尔表达式
 
-When you have a boolean expression that is longer than the standard line length, be consistent in how you break up the lines.
+当你有一个布尔表达式，它是比标准线的长度长，将线一致的分开。
 
-In this example, the logical AND operator is always at the end of the lines:
+在这个例子中，逻辑AND运算符总是在行末端：
 
 ```cpp
 if (thisOneThing > thisOtherThing &&
@@ -2541,28 +2541,28 @@ if (thisOneThing > thisOtherThing &&
 }
 ```
 
-Note that when the code wraps in this example, both of the && logical AND operators are at the end of the line. This is more common in Google code, though wrapping all operators at the beginning of the line is also allowed. Feel free to insert extra parentheses judiciously because they can be very helpful in increasing readability when used appropriately. Also note that you should always use the punctuation operators, such as && and ~, rather than the word operators, such as and and compl.
+请注意，当代码在这个例子包，&&和逻辑AND运算符是在该行的末尾。这是谷歌的代码更常见，虽然在该行的开头包装的所有操作符也是允许的。随意明智地插入额外的括号，因为如果使用得当，对于增加可读性他们是非常有用的。另外请注意，你应该总是使用标点符号操作符，如&&和〜，而不是词操作符，如and和compl。
 
-## Return Values
+## 返回值
 
-Do not needlessly surround the return expression with parentheses.
+不要无谓地围绕的返回有括号的表达式。
 
-Use parentheses in `return expr;` only where you would use them in `x = expr;`.
+使用括号中`return expr;`你只会在那里使用他们在`x = expr;`。
 
 ```cpp
-return result;                  // No parentheses in the simple case.
-return (someLongCondition &&    // Parentheses ok to make a complex
-        anotherCondition);      //     expression more readable.
+return result;                  // 没有括号中的简单情况。
+return (someLongCondition &&    // 括号很好使一个复杂的表达式更可读
+        anotherCondition);      
 
-return (value);                // You wouldn't write var = (value);
-return(result);                // return is not a function!
+return (value);                // 你不会写 var = (value);
+return(result);                // return 不是一个函数
 ```
 
-## Variable and Array Initialization
+## 变量和数组初始化
 
-Your choice of `=`, `()`, or `{}`.
+你的选择是 `=`, `()`, or `{}`。
 
-You may choose between `=`, `()`, and `{}`; the following are all correct:
+你可能在`=`, `()`, 或 `{}`之间选择; 一下都是正确的:
 
 ```cpp
 int x = 3;
@@ -2573,32 +2573,32 @@ string name("Some Name");
 string name{"Some Name"};
 ```
 
-Be careful when using the `{}` on a type that takes an initializer_list in one of its constructors. The `{}` syntax prefers the initializer_list constructor whenever possible. To get the non- initializer_list constructor, use `()`.
+当一个类型使用`{}`，它接受一个initializer_list在其构造函数之一时要小心。该`{}`语法有时更喜欢initializer_list构造。要获得非initializer_list构造，使用`（）`。
 
 ```cpp
-vector<int> v(100, 1);  // A vector of 100 1s.
-vector<int> v{100, 1};  // A vector of 100, 1.
+vector<int> v(100, 1);  // 一个有100个1的向量
+vector<int> v{100, 1};  // 一个向量有100和1
 ```
 
-Also, the brace form prevents narrowing of integral types. This can prevent some types of programming errors.
+此外，花括号形式防止整型范围变窄。这可以防止某些类型的编程错误。
 
 ```cpp
-int pi(3.14);  // OK -- pi == 3.
-int pi{3.14};  // Compile error: narrowing conversion.
+int pi(3.14);  // 正确 pi == 3.
+int pi{3.14};  // 编译错误: 缩小转换.
 ```
 
-## Preprocessor Directives
+## 预处理器指令
 
-The hash mark that starts a preprocessor directive should always be at the beginning of the line.
+启动一个预处理器指令的散列标记应始终在该行的开头。
 
-Even when preprocessor directives are within the body of indented code, the directives should start at the beginning of the line.
+即使在预处理器指令是缩进代码的体内，这些指令应该开始在一行的开头。
 
 ```cpp
-// Good - directives at beginning of line
+// 很好 - 指令在行的开始
   if (lopsidedScore) {
-#if DISASTER_PENDING      // Correct -- Starts at beginning of line
+#if DISASTER_PENDING      // 正确 -- 在行首开始
     dropEverything();
-# if NOTIFY               // OK but not required -- Spaces after #
+# if NOTIFY               // 正确但不要求 -- #后面接空格
     notifyClient();
 # endif
 #endif
@@ -2607,26 +2607,26 @@ Even when preprocessor directives are within the body of indented code, the dire
 ```
 
 ```cpp
-// Bad - indented directives
+// 不好 - 指令缩进
   if (lopsidedScore) {
-    #if DISASTER_PENDING  // Wrong!  The "#if" should be at beginning of line
+    #if DISASTER_PENDING  // 错误!  "#if"应该在行首
     dropEverything();
-    #endif                // Wrong!  Do not indent "#endif"
+    #endif                // 错误!  "#endif"不要缩进
     backToNormal();
   }
 ```
 
-## Class Format
+## 类格式
 
-Sections in public, protected and private order, each indented one space.
+在类中，protected和private的顺序，每个缩进一个空格。
 
-The basic format for a class declaration (lacking the comments, see Class Comments for a discussion of what comments are needed) is:
+一个类声明的基本格式（缺少注释，请参阅类注释需要哪些意见的讨论）是：
 
 ```cpp
 class MyClass : public OtherClass
 {
-public:      // Note the 0 space indent!
-    MyClass();  // Regular 4 space indent.
+public:      // 注意没有空格缩进!
+    MyClass();  // 通常4个空格缩进
     explicit MyClass(int var);
     ~MyClass() {}
 
@@ -2646,14 +2646,14 @@ private:
 };
 ```
 
-Things to note:
+注意事项:
 
-* Any base class name should be on the same line as the subclass name, subject to the 80-column limit.
-* The `public:`, `protected:`, and `private:` keywords should not be indented.
-* Except for the first instance, these keywords should be preceded by a blank line. This rule is optional in small classes.
-* Do not leave a blank line after these keywords.
-* The `public:` section should be first, followed by the `protected:` and finally the `private:` section.
-* See Declaration Order for rules on ordering declarations within each of these sections.
+* 所有基类的名称应该和子类名在同一行，受80列的限制。
+* `public:`, `protected:`, 和`private:` 关键字不应该缩进。
+* 除第一个实例，这些关键字应该在前面加一个空行。这条规则是可选的小类。
+* 这些关键词后不留下一个空行。
+* `public:`应该在最前面, 紧接着是`protected:`最后是`private:`。
+* 看到声明顺序排序在每个部分规则声明。
 
 
 ## 构造函数初始化列表
@@ -2803,46 +2803,46 @@ set< list<string> > x;      // 你也可以在两个`<`之间对称地添加空�
 * 函数开始和结束的空行对提高代码可读性没啥作用
 * 在`if-else`的一个链内添加空行可以提高代码可读性。
 
-# Exceptions to the Rules
+# 例外的规则
 
-The coding conventions described above are mandatory. However, like all good rules, these sometimes have exceptions, which we discuss here.
+上面描述的编码惯例是强制性的。然而,就像所有好的规则,这些有时会有例外,我们在这里讨论。
 
-## Existing Non-conformant Code
+## 现存的不符合标准的代码
 
-You may diverge from the rules when dealing with code that does not conform to this style guide.
+在处理代码时你可能会偏离规则,不符合这个风格指南。
 
-If you find yourself modifying code that was written to specifications other than those presented by this guide, you may have to diverge from these rules in order to stay consistent with the local conventions in that code. If you are in doubt about how to do this, ask the original author or the person currently responsible for the code. Remember that consistency includes local consistency, too.
+如果你发现自己修改代码在编写本指南提供的规范以外,在那些代码你中可能不得不偏离这些规则为了与原有惯例保持一致。如果你在怀疑关于如何做到这一点,请原作者或人目前负责的代码。记住,一致性与原有的的一致性。
 
-## Windows Code
+## Windows代码
 
-Windows programmers have developed their own set of coding conventions, mainly derived from the conventions in Windows headers and other Microsoft code. We want to make it easy for anyone to understand your code, so we have a single set of guidelines for everyone writing C++ on any platform.
+Windows程序员开发了他们自己的编码惯例,主要源自于约定在Windows头文件和其他微软的代码。我们想让人很容易理解你的代码,所以我们为家写了一套适合任何平台的c++在指南。
 
-It is worth reiterating a few of the guidelines that you might forget if you are used to the prevalent Windows style:
+值得重申的一些指导,你可能会忘记如果你习惯于普通的Windows风格:
 
-* Do not use Hungarian notation (for example, naming an integer iNum). Use the Google naming conventions, including the .cpp extension for source files.
-* Windows defines many of its own synonyms for primitive types, such as DWORD, HANDLE, etc. It is perfectly acceptable, and encouraged, that you use these types when calling Windows API functions. Even so, keep as close as you can to the underlying C++ types. For example, use const TCHAR * instead of LPCTSTR.
-* When compiling with Microsoft Visual C++, set the compiler to warning level 3 or higher, and treat all warnings as errors.
-* Do not use #pragma once; instead use the standard Google include guards. The path in the include guards should be relative to the top of your project tree.
-* In fact, do not use any nonstandard extensions, like #pragma and __declspec, unless you absolutely must. Using `__declspec(dllimport)` and `__declspec(dllexport)` is allowed; however, you must use them through macros such as `DLLIMPORT` and `DLLEXPORT` or `CC_DLL`, so that someone can easily disable the extensions if they share the code.
+* 不要使用匈牙利命名法(例如,命名一个整数为iNum)。使用谷歌的命名约定,包括.cpp扩展源文件。
+* Windows定义了许多原始类型的同义词,如双字、句柄,等等。这是完全可以接受的,并鼓励,当调用Windows API函数时你使用这些类型。即便如此,保持尽可能接近底层c++类型。例如,使用常量TCHAR *代替LPCTSTR。
+* 当微软Visual C++编译时,编译器警告3级或更高,并将所有警告作为错误。
+* 不要使用#ragma;而使用标准的谷歌include警卫。include警卫的路径应该是相对于你的项目树的顶端。
+* 实际上,不使用任何非标准扩展,如#pragma和使用__declspec,除非一定要这么做。使用`__declspec(dllimport)`和`__declspec(dllexport)`是允许的;然而,你必须通过宏如`DLLIMPORT`和`DLLEXPORT`或`CC_DLL`来使用它,这样的话别人可以很容易地禁用扩展,如果他们分享代码。
 
-However, there are just a few rules that we occasionally need to break on Windows:
+然而,有几个规则,我们有时需要在Windows上打破:
 
-* Normally we forbid the use of multiple implementation inheritance; however, it is required when using COM and some ATL/WTL classes. You may use multiple implementation inheritance to implement COM or ATL/WTL classes and interfaces.
-* Although you should not use exceptions in your own code, they are used extensively in the ATL and some STLs, including the one that comes with Visual C++. When using the ATL, you should define _ATL_NO_EXCEPTIONS to disable exceptions. You should investigate whether you can also disable exceptions in your STL, but if not, it is OK to turn on exceptions in the compiler. (Note that this is only to get the STL to compile. You should still not write exception handling code yourself.)
-* The usual way of working with precompiled headers is to include a header file at the top of each source file, typically with a name like StdAfx.h or precompile.h. To make your code easier to share with other projects, avoid including this file explicitly (except in precompile.cpp), and use the /FI compiler option to include the file automatically.
-* Resource headers, which are usually named resource.h and contain only macros, do not need to conform to these style guidelines.
+* 通常我们禁止使用多继承实现;然而,它需要在使用COM和一些ATL/WTL类是必要的。你可以使用多继承实现来实现COM或ATL/WTL类和接口。
+* 虽然你不应该在自己的代码中使用异常,它们广泛用于ATL和一些STL中,包括一个带有Visual C++。当使用ATL,你应该定义_ATL_NO_EXCEPTIONS来禁用例外。你应该弄清是否还可以禁用STL例外,但如果不是这样,在编译器打开异常也行。(注意,这只是让STL编译。你应该还没有编写异常处理代码)。
+* 通常使用预编译头文件的方法是包含一个头文件的每个源文件时,通常用一个名字像StdAfx.h或precompile.h。为了你的代码更容易与其他项目,避免包括这个文件明确(除了precompile.cpp),并使用自动/ FI编译器选项包括文件。
+* 资源标题,通常命名资源.h并只包含宏,不需要符合这些样式指南。
 
-# Parting Words
+# 赠言
 
-Use common sense and **BE CONSISTENT**.
+使用常识并**保持一致**。
 
-If you are editing code, take a few minutes to look at the code around you and determine its style. If they use spaces around their if clauses, you should, too. If their comments have little boxes of stars around them, make your comments have little boxes of stars around them too.
+如果您正在编辑代码,花几分钟看看你周围的代码并确定其风格。如果他们使用空格在条款,你也应该这么做。如果他们的评论有小盒子的恒星周围,让你的评论也有小盒周围的恒星。
 
-The point of having style guidelines is to have a common vocabulary of coding so people can concentrate on what you are saying, rather than on how you are saying it. We present global style rules here so people know the vocabulary. But local style is also important. If code you add to a file looks drastically different from the existing code around it, the discontinuity throws readers out of their rhythm when they go to read it. Try to avoid this.
+有风格指南的目的是有一个公共的词汇表的编码,这样人们就能专注于你在说什么,而不是你如何说它。我们这里展示全球样式规则这样人们知道规则。但个人风格也很重要。如果代码添加到一个文件从现有代码看起来截然不同,不连续引发读者的节奏当他们去读它。尽量避免这种情况。
 
-OK, enough writing about writing code; the code itself is much more interesting. Have fun!
+好,关于如何写编写代码的规则以及足够了,代码本身更有趣。玩得开心!
 
 
 [1]: https://lh3.googleusercontent.com/-glwwzmFyUmk/UQgPnlx40uI/AAAAAAAArzg/WPRW10kkecM/s144/cocos2d-x-logo.png
 
-**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+**表的内容**  *生成于 [DocToc](http://doctoc.herokuapp.com/)*
