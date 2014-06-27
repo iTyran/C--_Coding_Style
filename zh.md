@@ -2290,24 +2290,24 @@ void Circle::rotate(double)
 {}
 ```
 
-## Function Calls
+## 函数调用
 
-On one line if it fits; otherwise, wrap arguments at the parenthesis.
+在同一行，如果它适合;否则，包裹在括号中的参数。
 
-Function calls have the following format:
+函数调用有以下格式:
 
 ```cpp
 bool retval = doSomething(argument1, argument2, argument3);
 ```
 
-If the arguments do not all fit on one line, they should be broken up onto multiple lines, with each subsequent line aligned with the first argument. Do not add spaces after the open paren or before the close paren:
+如果参数没有在同一行的全部适合的，他们应该被分解到多行，每个后续行与第一个参数一致。左括号后或右括号前不要加空格：
 
 ```cpp
 bool retval = doSomething(averyveryveryverylongargument1,
                           argument2, argument3);
 ```
 
-If the function has many arguments, consider having one per line if this makes the code more readable:
+如果函数有很多参数，考虑每行一个，如果这使得代码更易读：
 
 ```cpp
 bool retval = doSomething(argument1,
@@ -2316,7 +2316,7 @@ bool retval = doSomething(argument1,
                           argument4);
 ```
 
-Arguments may optionally all be placed on subsequent lines, with one line per argument:
+所有参数可以有选择的放在随后的行上，每一行一个参数：
 
 ```cpp
 if (...) {
@@ -2331,21 +2331,21 @@ if (...) {
     }
 ```
 
-In particular, this should be done if the function signature is so long that it cannot fit within the maximum line length.
+特别注意的是，如果函数签名很长，所以它不能在行最大长度内适应。
 
-## Braced Initializer Lists
+## 大括号初始化列表
 
-Format a braced list exactly like you would format a function call in its place.
+格式化大括号列表就像你会格式化在其位置的函数调用。
 
-If the braced list follows a name (e.g. a type or variable name), format as if the `{}` were the parentheses of a function call with that name. If there is no name, assume a zero-length name.
+如果大括号列表后面跟一个名称（例如一个类型或变量名），格式如`{}`都具有该名称的函数调用。如果没有名字，假设一个长度为零的名字。
 
 ```cpp
-// Examples of braced init list on a single line.
+// 对单行大括号初始化列表的例子
 return {foo, bar};
 functioncall({foo, bar});
 pair<int, int> p{foo, bar};
 
-// When you have to wrap.
+// 当你必须封装时
 SomeFunction(
     {"assume a zero-length name before {"},
     some_other_function_parameter);
@@ -2368,88 +2368,86 @@ MyType m = {  // Here, you could also break before {.
 ```
 
 
-## Conditionals
+## 条件语句
 
-Prefer no spaces inside parentheses. The else keyword belongs on a new line.
+宁愿括号内不能有空格。其他的关键字属于新的一行。
 
-There are two acceptable formats for a basic conditional statement. One includes spaces between the parentheses and the condition, and one does not.
+一个基本的条件语句有两种可接受的格式。一个包括在圆括号和条件之间的空间，另外一个没有。
 
-The most common form is without spaces. Either is fine, but be consistent. If you are modifying a file, use the format that is already present. If you are writing new code, use the format that the other files in that directory or project use. If in doubt and you have no personal preference, do not add the spaces.
+最常见的形式是没有空格。要么是好的，但要保持一致。如果要修改一个文件，使用已经存在的格式。如果您正在编写新的代码，使用该目录或项目使用的其他文件的格式。如果有疑问，在没有偏好的情况下，不加空格。
 
 ```cpp
-if (condition) {  // no spaces inside parentheses
-    ...  // 4 space indent.
-} else if (...) {  // The else goes on the same line as the closing brace.
-    ...
+if (condition) {  // 括号内没有空格
+    ...  // 4 空格缩进
+} else if (...) {  // else在同一行的右大括号旁边
 } else {
     ...
 }
 ```
 
-If you prefer you may add spaces inside the parentheses:
+如果喜欢可以在括号内加空格
 
 ```cpp
-if ( condition ) {  // spaces inside parentheses - rare
-    ...  // 4 space indent.
-} else {  // The else goes on the same line as the closing brace.
+if ( condition ) {  // 括号内加空格 少用
+    ...  // 4 空格缩进
+} else {  // else在同一行的右大括号旁边
     ...
 }
 ```
 
-Note that in all cases you must have a space between the `if` and the open parenthesis. You must also have a space between the close parenthesis and the curly brace, if you're using one.
+请注意，在所有情况下，`if`和左括号之间你必须有空格。右括号和大括号之间必须有空格，如果你使用一个。
 
 ```cpp
-if(condition)     // Bad - space missing after IF.
-if (condition){   // Bad - space missing before {.
-if(condition){    // Doubly bad.
+if(condition)     // 不好 - IF后面没有空格.
+if (condition){   // 不好 - {前面没有空格
+if(condition){    // 不好
 
-if (condition) {  // Good - proper space after IF and before {.
+if (condition) {  // 好 - IF后和{前都有空格
 ```
 
-Short conditional statements may be written on one line if this enhances readability. You may use this only when the line is brief and the statement does not use the else clause.
+简短的条件语句可以写在一行，如果这增强了可读性。只有当行非常短而且语句不使用else子句时你可以使用这个。
 
 ```cpp
 if (x == FOO) return new Foo();
 if (x == BAR) return new Bar();
 ```
 
-This is not allowed when the if statement has an `else`:
+当if语句有一个`else`是不允许的：
 
 ```cpp
-// Not allowed - IF statement on one line when there is an ELSE clause
+// 不允许 - 有一个ELSE子句时IF语句在同一行
 if (x) doThis();
 else doThat();
 ```
 
-In general, curly braces are not required for single-line statements, but they are allowed if you like them; conditional or loop statements with complex conditions or statements may be more readable with curly braces. Some projects require that an if must always always have an accompanying brace.
+一般情况下，是不需要单行语句大括号，但他们如果你喜欢他们被允许;复杂条件或条件语句或循环语句可能更容易阅读使用花括号。有些项目需要的，如果必须始终始终有一个附带的支架。
 
 ```cpp
 if (condition)
-    doSomething();  // 4 space indent.
+    doSomething();  // 缩进4个空格
 
 if (condition) {
-    doSomething();  // 4 space indent.
+    doSomething();  // 缩进4个空格
 }
 ```
 
-However, if one part of an if-else statement uses curly braces, the other part must too:
+但是，如果一个if-else语句的一部分使用花括号，另一部分也一样：
 
 ```cpp
-// Not allowed - curly on IF but not ELSE
+// 不允许 - IF中有花括号但ELSE中没有
 if (condition) {
     foo;
 } else
     bar;
 
-// Not allowed - curly on ELSE but not IF
+// 不允许 - ELSE中有花括号但IF中没有
 if (condition)
     foo;
 else {
     bar;
 }
 
-// Curly braces around both IF and ELSE required because
-// one of the clauses used braces.
+// 大括号围绕两个IF和ELSE是必需的，因为子句之一使用了大括号。
 if (condition) {
     foo;
 } else {
@@ -2457,18 +2455,18 @@ if (condition) {
 }
 ```
 
-## Loops and Switch Statements
+## 循环和选择语句
 
-Switch statements may use braces for blocks. Annotate non-trivial fall-through between cases. Empty loop bodies should use {} or continue.
+switch语句可以使用大括号块。在情况间注释特别的失败。空循环体应使用{}或continue。
 
-case blocks in switch statements can have curly braces or not, depending on your preference. If you do include curly braces they should be placed as shown below.
+在switch语句中case块可以有大括号与否，取决于您的喜好。如果你这样做，包括大括号他们应放在如下所示。
 
-If not conditional on an enumerated value, switch statements should always have a default case (in the case of an enumerated value, the compiler will warn you if any values are not handled). If the default case should never execute, simply assert:
+如果枚举值不是有条件的，switch语句应该始终有一个默认的情况下（在枚举值的情况下，编译器会警告你，如果不处理任何值）。如果默认情况下不应该执行，简单地断言：
 
 ```cpp
 switch (var) {
-    case 0: {    // 4 space indent
-        ...      // 4 space indent
+    case 0: {    // 4个缩进空格
+        ...      // 4个缩进空格
         break;
     }
     case 1: {
@@ -2481,23 +2479,24 @@ switch (var) {
 }
 ```
 
-Empty loop bodies should use `{}` or `continue`, but not a single semicolon.
+空循环体应使用`{}`或`continue`，但不是一个单一的分号。
 
 ```cpp
 while (condition) {
-    // Repeat test until it returns false.
+    // 反复测试直到返回false.
 }
-for (int i = 0; i < SOME_NUMBER; ++i) {}  // Good - empty body.
-while (condition) continue;  // Good - continue indicates no logic.
+for (int i = 0; i < SOME_NUMBER; ++i) {}  // 很好 - 内容为空.
+while (condition) continue;  // 很好 - continue暗示没有逻辑实现
 
-while (condition);  // Bad - looks like part of do/while loop.
+while (condition);  // 不好 - 看起来像do/while循环的一部分
 ```
 
-## Pointer and Reference Expressions
+## 指针和引用表达式
 
 No spaces around period or arrow. Pointer operators do not have trailing spaces.
+没有空格围绕句号或箭头。指针运算符没有空格结尾。
 
-The following are examples of correctly-formatted pointer and reference expressions:
+以下是格式正确的指针和引用表达式的例子：
 
 ```cpp
 x = *p;
@@ -2506,27 +2505,27 @@ x = r.y;
 x = r->y;
 ```
 
-Note that:
+需要注意的是：
 
-* There are no spaces around the period or arrow when accessing a member.
-* Pointer operators have no space after the * or &.
+* 访问成员时句号或箭头周围没有空格。
+* 指针运算符*或＆后没有空格。
 
-When declaring a pointer variable or argument, you may place the asterisk adjacent to either the type or to the variable name:
+当声明一个指针变量或参数，你可以将星号放到相邻的任一类型或变量名：
 
 ```cpp
-// These are fine, space preceding.
+// 这些都很好，空间之前。
 char *c;
 const string &str;
 
-// These are fine, space following.
-char* c;    // but remember to do "char* c, *d, *e, ...;"!
+// 这些都很好，后面跟空格。
+char* c;    // 记得做"char* c, *d, *e, ...;"!
 const string& str;
 
-char * c;  // Bad - spaces on both sides of *
-const string & str;  // Bad - spaces on both sides of &
+char * c;  // 不好 - *两边空格
+const string & str;  // 不好 - &两边空格
 ```
 
-You should do this consistently within a single file, so, when modifying an existing file, use the style in that file.
+你应该这样做，始终在一个单一的文件，因此，修改现有文件时，使用的样式在该文件中。
 
 ## Boolean Expressions
 
