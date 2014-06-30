@@ -4,7 +4,6 @@ _v0.2 - Last updated November 8, 2013_
 
 _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml) rev. 3.274_
 
-**目录** 由[DocToc](http://doctoc.herokuapp.com/)生成
 
 # 头文件
 
@@ -2719,4 +2718,3 @@ Windows程序员开发了他们自己的编码惯例,主要源自于约定在Win
 
 [1]: https://lh3.googleusercontent.com/-glwwzmFyUmk/UQgPnlx40uI/AAAAAAAArzg/WPRW10kkecM/s144/cocos2d-x-logo.png
 
-**表的内容**  *生成于 [DocToc](http://doctoc.herokuapp.com/)*
