@@ -109,16 +109,16 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 	- [非ASCII字符](#non-ascii-characters)
 	- [空格 vs. 制表符](#spaces-vs-tabs)
 	- [函数定义与声明](#function-declarations-and-definitions)
-	- [函数调用](#function-calls)Yiming
-	- [初始化列表](#braced-initializer-lists)Yiming
-	- [条件语句](#conditionals)Yiming
-	- [循环和switch语句](#loops-and-switch-statements)Yiming
-	- [指针和引用表达式](#pointer-and-reference-expressions)Yiming
-	- [布尔表达式](#boolean-expressions)Yiming
-	- [返回值](#return-values)Yiming
-	- [变量和数组初始化](#variable-and-array-initialization)Yiming
-	- [预处理器指令](#preprocessor-directives)Yiming
-	- [类格式](#class-format)Yiming
+	- [函数调用](#function-calls)
+	- [初始化列表](#braced-initializer-lists)
+	- [条件语句](#conditionals)
+	- [循环和switch语句](#loops-and-switch-statements)
+	- [指针和引用表达式](#pointer-and-reference-expressions)
+	- [布尔表达式](#boolean-expressions)
+	- [返回值](#return-values)
+	- [变量和数组初始化](#variable-and-array-initialization)
+	- [预处理器指令](#preprocessor-directives)
+	- [类格式](#class-format)
 	- [构造函数初始化列表](#constructor-initializer-lists)
 	- [命名空间格式化](#namespace-formatting)
 	- [水平空白](#horizontal-whitespace)
@@ -127,10 +127,10 @@ _源自 [Google's C++ coding style](http://google-styleguide.googlecode.com/svn/
 		- [操作符](#operators)
 		- [模板和类型转换](#templates-and-casts)
 	- [垂直空白](#vertical-whitespace)
-- [例外规则](#exceptions-to-the-rules)Yiming
-	- [现存的不符合标准的代码](#existing-non-conformant-code)Yiming
-	- [Windows代码](#windows-code)Yiming
-- [赠言](#parting-words)Yiming
+- [例外规则](#exceptions-to-the-rules)
+	- [现存的不符合标准的代码](#existing-non-conformant-code)
+	- [Windows代码](#windows-code)
+- [赠言](#parting-words)
 
 # 头文件
 
@@ -2290,24 +2290,24 @@ void Circle::rotate(double)
 {}
 ```
 
-## Function Calls
+## 函数调用
 
-On one line if it fits; otherwise, wrap arguments at the parenthesis.
+在同一行，如果它适合;否则，包裹在括号中的参数。
 
-Function calls have the following format:
+函数调用有以下格式:
 
 ```cpp
 bool retval = doSomething(argument1, argument2, argument3);
 ```
 
-If the arguments do not all fit on one line, they should be broken up onto multiple lines, with each subsequent line aligned with the first argument. Do not add spaces after the open paren or before the close paren:
+如果参数没有在同一行的全部适合的，他们应该被分解到多行，每个后续行与第一个参数一致。左括号后或右括号前不要加空格：
 
 ```cpp
 bool retval = doSomething(averyveryveryverylongargument1,
                           argument2, argument3);
 ```
 
-If the function has many arguments, consider having one per line if this makes the code more readable:
+如果函数有很多参数，考虑每行一个，如果这使得代码更易读：
 
 ```cpp
 bool retval = doSomething(argument1,
@@ -2316,7 +2316,7 @@ bool retval = doSomething(argument1,
                           argument4);
 ```
 
-Arguments may optionally all be placed on subsequent lines, with one line per argument:
+所有参数可以有选择的放在随后的行上，每一行一个参数：
 
 ```cpp
 if (...) {
@@ -2331,21 +2331,21 @@ if (...) {
     }
 ```
 
-In particular, this should be done if the function signature is so long that it cannot fit within the maximum line length.
+特别注意的是，如果函数签名很长，所以它不能在行最大长度内适应。
 
-## Braced Initializer Lists
+## 大括号初始化列表
 
-Format a braced list exactly like you would format a function call in its place.
+格式化大括号列表就像你会格式化在其位置的函数调用。
 
-If the braced list follows a name (e.g. a type or variable name), format as if the `{}` were the parentheses of a function call with that name. If there is no name, assume a zero-length name.
+如果大括号列表后面跟一个名称（例如一个类型或变量名），格式如`{}`都具有该名称的函数调用。如果没有名字，假设一个长度为零的名字。
 
 ```cpp
-// Examples of braced init list on a single line.
+// 对单行大括号初始化列表的例子
 return {foo, bar};
 functioncall({foo, bar});
 pair<int, int> p{foo, bar};
 
-// When you have to wrap.
+// 当你必须封装时
 SomeFunction(
     {"assume a zero-length name before {"},
     some_other_function_parameter);
@@ -2368,88 +2368,86 @@ MyType m = {  // Here, you could also break before {.
 ```
 
 
-## Conditionals
+## 条件语句
 
-Prefer no spaces inside parentheses. The else keyword belongs on a new line.
+宁愿括号内不能有空格。其他的关键字属于新的一行。
 
-There are two acceptable formats for a basic conditional statement. One includes spaces between the parentheses and the condition, and one does not.
+一个基本的条件语句有两种可接受的格式。一个包括在圆括号和条件之间的空间，另外一个没有。
 
-The most common form is without spaces. Either is fine, but be consistent. If you are modifying a file, use the format that is already present. If you are writing new code, use the format that the other files in that directory or project use. If in doubt and you have no personal preference, do not add the spaces.
+最常见的形式是没有空格。要么是好的，但要保持一致。如果要修改一个文件，使用已经存在的格式。如果您正在编写新的代码，使用该目录或项目使用的其他文件的格式。如果有疑问，在没有偏好的情况下，不加空格。
 
 ```cpp
-if (condition) {  // no spaces inside parentheses
-    ...  // 4 space indent.
-} else if (...) {  // The else goes on the same line as the closing brace.
-    ...
+if (condition) {  // 括号内没有空格
+    ...  // 4 空格缩进
+} else if (...) {  // else在同一行的右大括号旁边
 } else {
     ...
 }
 ```
 
-If you prefer you may add spaces inside the parentheses:
+如果喜欢可以在括号内加空格
 
 ```cpp
-if ( condition ) {  // spaces inside parentheses - rare
-    ...  // 4 space indent.
-} else {  // The else goes on the same line as the closing brace.
+if ( condition ) {  // 括号内加空格 少用
+    ...  // 4 空格缩进
+} else {  // else在同一行的右大括号旁边
     ...
 }
 ```
 
-Note that in all cases you must have a space between the `if` and the open parenthesis. You must also have a space between the close parenthesis and the curly brace, if you're using one.
+请注意，在所有情况下，`if`和左括号之间你必须有空格。右括号和大括号之间必须有空格，如果你使用一个。
 
 ```cpp
-if(condition)     // Bad - space missing after IF.
-if (condition){   // Bad - space missing before {.
-if(condition){    // Doubly bad.
+if(condition)     // 不好 - IF后面没有空格.
+if (condition){   // 不好 - {前面没有空格
+if(condition){    // 不好
 
-if (condition) {  // Good - proper space after IF and before {.
+if (condition) {  // 好 - IF后和{前都有空格
 ```
 
-Short conditional statements may be written on one line if this enhances readability. You may use this only when the line is brief and the statement does not use the else clause.
+简短的条件语句可以写在一行，如果这增强了可读性。只有当行非常短而且语句不使用else子句时你可以使用这个。
 
 ```cpp
 if (x == FOO) return new Foo();
 if (x == BAR) return new Bar();
 ```
 
-This is not allowed when the if statement has an `else`:
+当if语句有一个`else`是不允许的：
 
 ```cpp
-// Not allowed - IF statement on one line when there is an ELSE clause
+// 不允许 - 有一个ELSE子句时IF语句在同一行
 if (x) doThis();
 else doThat();
 ```
 
-In general, curly braces are not required for single-line statements, but they are allowed if you like them; conditional or loop statements with complex conditions or statements may be more readable with curly braces. Some projects require that an if must always always have an accompanying brace.
+一般情况下，是不需要单行语句大括号，但他们如果你喜欢他们被允许;复杂条件或条件语句或循环语句可能更容易阅读使用花括号。有些项目需要的，如果必须始终始终有一个附带的支架。
 
 ```cpp
 if (condition)
-    doSomething();  // 4 space indent.
+    doSomething();  // 缩进4个空格
 
 if (condition) {
-    doSomething();  // 4 space indent.
+    doSomething();  // 缩进4个空格
 }
 ```
 
-However, if one part of an if-else statement uses curly braces, the other part must too:
+但是，如果一个if-else语句的一部分使用花括号，另一部分也一样：
 
 ```cpp
-// Not allowed - curly on IF but not ELSE
+// 不允许 - IF中有花括号但ELSE中没有
 if (condition) {
     foo;
 } else
     bar;
 
-// Not allowed - curly on ELSE but not IF
+// 不允许 - ELSE中有花括号但IF中没有
 if (condition)
     foo;
 else {
     bar;
 }
 
-// Curly braces around both IF and ELSE required because
-// one of the clauses used braces.
+// 大括号围绕两个IF和ELSE是必需的，因为子句之一使用了大括号。
 if (condition) {
     foo;
 } else {
@@ -2457,18 +2455,18 @@ if (condition) {
 }
 ```
 
-## Loops and Switch Statements
+## 循环和选择语句
 
-Switch statements may use braces for blocks. Annotate non-trivial fall-through between cases. Empty loop bodies should use {} or continue.
+switch语句可以使用大括号块。在情况间注释特别的失败。空循环体应使用{}或continue。
 
-case blocks in switch statements can have curly braces or not, depending on your preference. If you do include curly braces they should be placed as shown below.
+在switch语句中case块可以有大括号与否，取决于您的喜好。如果你这样做，包括大括号他们应放在如下所示。
 
-If not conditional on an enumerated value, switch statements should always have a default case (in the case of an enumerated value, the compiler will warn you if any values are not handled). If the default case should never execute, simply assert:
+如果枚举值不是有条件的，switch语句应该始终有一个默认的情况下（在枚举值的情况下，编译器会警告你，如果不处理任何值）。如果默认情况下不应该执行，简单地断言：
 
 ```cpp
 switch (var) {
-    case 0: {    // 4 space indent
-        ...      // 4 space indent
+    case 0: {    // 4个缩进空格
+        ...      // 4个缩进空格
         break;
     }
     case 1: {
@@ -2481,23 +2479,24 @@ switch (var) {
 }
 ```
 
-Empty loop bodies should use `{}` or `continue`, but not a single semicolon.
+空循环体应使用`{}`或`continue`，但不是一个单一的分号。
 
 ```cpp
 while (condition) {
-    // Repeat test until it returns false.
+    // 反复测试直到返回false.
 }
-for (int i = 0; i < SOME_NUMBER; ++i) {}  // Good - empty body.
-while (condition) continue;  // Good - continue indicates no logic.
+for (int i = 0; i < SOME_NUMBER; ++i) {}  // 很好 - 内容为空.
+while (condition) continue;  // 很好 - continue暗示没有逻辑实现
 
-while (condition);  // Bad - looks like part of do/while loop.
+while (condition);  // 不好 - 看起来像do/while循环的一部分
 ```
 
-## Pointer and Reference Expressions
+## 指针和引用表达式
 
 No spaces around period or arrow. Pointer operators do not have trailing spaces.
+没有空格围绕句号或箭头。指针运算符没有空格结尾。
 
-The following are examples of correctly-formatted pointer and reference expressions:
+以下是格式正确的指针和引用表达式的例子：
 
 ```cpp
 x = *p;
@@ -2506,33 +2505,33 @@ x = r.y;
 x = r->y;
 ```
 
-Note that:
+需要注意的是：
 
-* There are no spaces around the period or arrow when accessing a member.
-* Pointer operators have no space after the * or &.
+* 访问成员时句号或箭头周围没有空格。
+* 指针运算符*或＆后没有空格。
 
-When declaring a pointer variable or argument, you may place the asterisk adjacent to either the type or to the variable name:
+当声明一个指针变量或参数，你可以将星号放到相邻的任一类型或变量名：
 
 ```cpp
-// These are fine, space preceding.
+// 这些都很好，空间之前。
 char *c;
 const string &str;
 
-// These are fine, space following.
-char* c;    // but remember to do "char* c, *d, *e, ...;"!
+// 这些都很好，后面跟空格。
+char* c;    // 记得做"char* c, *d, *e, ...;"!
 const string& str;
 
-char * c;  // Bad - spaces on both sides of *
-const string & str;  // Bad - spaces on both sides of &
+char * c;  // 不好 - *两边空格
+const string & str;  // 不好 - &两边空格
 ```
 
-You should do this consistently within a single file, so, when modifying an existing file, use the style in that file.
+你应该这样做，始终在一个单一的文件，因此，修改现有文件时，使用的样式在该文件中。
 
-## Boolean Expressions
+## 布尔表达式
 
-When you have a boolean expression that is longer than the standard line length, be consistent in how you break up the lines.
+当你有一个布尔表达式，它是比标准线的长度长，将线一致的分开。
 
-In this example, the logical AND operator is always at the end of the lines:
+在这个例子中，逻辑AND运算符总是在行末端：
 
 ```cpp
 if (thisOneThing > thisOtherThing &&
@@ -2542,28 +2541,28 @@ if (thisOneThing > thisOtherThing &&
 }
 ```
 
-Note that when the code wraps in this example, both of the && logical AND operators are at the end of the line. This is more common in Google code, though wrapping all operators at the beginning of the line is also allowed. Feel free to insert extra parentheses judiciously because they can be very helpful in increasing readability when used appropriately. Also note that you should always use the punctuation operators, such as && and ~, rather than the word operators, such as and and compl.
+请注意，当代码在这个例子包，&&和逻辑AND运算符是在该行的末尾。这是谷歌的代码更常见，虽然在该行的开头包装的所有操作符也是允许的。随意明智地插入额外的括号，因为如果使用得当，对于增加可读性他们是非常有用的。另外请注意，你应该总是使用标点符号操作符，如&&和〜，而不是词操作符，如and和compl。
 
-## Return Values
+## 返回值
 
-Do not needlessly surround the return expression with parentheses.
+不要无谓地围绕的返回有括号的表达式。
 
-Use parentheses in `return expr;` only where you would use them in `x = expr;`.
+使用括号中`return expr;`你只会在那里使用他们在`x = expr;`。
 
 ```cpp
-return result;                  // No parentheses in the simple case.
-return (someLongCondition &&    // Parentheses ok to make a complex
-        anotherCondition);      //     expression more readable.
+return result;                  // 没有括号中的简单情况。
+return (someLongCondition &&    // 括号很好使一个复杂的表达式更可读
+        anotherCondition);      
 
-return (value);                // You wouldn't write var = (value);
-return(result);                // return is not a function!
+return (value);                // 你不会写 var = (value);
+return(result);                // return 不是一个函数
 ```
 
-## Variable and Array Initialization
+## 变量和数组初始化
 
-Your choice of `=`, `()`, or `{}`.
+你的选择是 `=`, `()`, or `{}`。
 
-You may choose between `=`, `()`, and `{}`; the following are all correct:
+你可能在`=`, `()`, 或 `{}`之间选择; 一下都是正确的:
 
 ```cpp
 int x = 3;
@@ -2574,32 +2573,32 @@ string name("Some Name");
 string name{"Some Name"};
 ```
 
-Be careful when using the `{}` on a type that takes an initializer_list in one of its constructors. The `{}` syntax prefers the initializer_list constructor whenever possible. To get the non- initializer_list constructor, use `()`.
+当一个类型使用`{}`，它接受一个initializer_list在其构造函数之一时要小心。该`{}`语法有时更喜欢initializer_list构造。要获得非initializer_list构造，使用`（）`。
 
 ```cpp
-vector<int> v(100, 1);  // A vector of 100 1s.
-vector<int> v{100, 1};  // A vector of 100, 1.
+vector<int> v(100, 1);  // 一个有100个1的向量
+vector<int> v{100, 1};  // 一个向量有100和1
 ```
 
-Also, the brace form prevents narrowing of integral types. This can prevent some types of programming errors.
+此外，花括号形式防止整型范围变窄。这可以防止某些类型的编程错误。
 
 ```cpp
-int pi(3.14);  // OK -- pi == 3.
-int pi{3.14};  // Compile error: narrowing conversion.
+int pi(3.14);  // 正确 pi == 3.
+int pi{3.14};  // 编译错误: 缩小转换.
 ```
 
-## Preprocessor Directives
+## 预处理器指令
 
-The hash mark that starts a preprocessor directive should always be at the beginning of the line.
+启动一个预处理器指令的散列标记应始终在该行的开头。
 
-Even when preprocessor directives are within the body of indented code, the directives should start at the beginning of the line.
+即使在预处理器指令是缩进代码的体内，这些指令应该开始在一行的开头。
 
 ```cpp
-// Good - directives at beginning of line
+// 很好 - 指令在行的开始
   if (lopsidedScore) {
-#if DISASTER_PENDING      // Correct -- Starts at beginning of line
+#if DISASTER_PENDING      // 正确 -- 在行首开始
     dropEverything();
-# if NOTIFY               // OK but not required -- Spaces after #
+# if NOTIFY               // 正确但不要求 -- #后面接空格
     notifyClient();
 # endif
 #endif
@@ -2608,26 +2607,26 @@ Even when preprocessor directives are within the body of indented code, the dire
 ```
 
 ```cpp
-// Bad - indented directives
+// 不好 - 指令缩进
   if (lopsidedScore) {
-    #if DISASTER_PENDING  // Wrong!  The "#if" should be at beginning of line
+    #if DISASTER_PENDING  // 错误!  "#if"应该在行首
     dropEverything();
-    #endif                // Wrong!  Do not indent "#endif"
+    #endif                // 错误!  "#endif"不要缩进
     backToNormal();
   }
 ```
 
-## Class Format
+## 类格式
 
-Sections in public, protected and private order, each indented one space.
+在类中，protected和private的顺序，每个缩进一个空格。
 
-The basic format for a class declaration (lacking the comments, see Class Comments for a discussion of what comments are needed) is:
+一个类声明的基本格式（缺少注释，请参阅类注释需要哪些意见的讨论）是：
 
 ```cpp
 class MyClass : public OtherClass
 {
-public:      // Note the 0 space indent!
-    MyClass();  // Regular 4 space indent.
+public:      // 注意没有空格缩进!
+    MyClass();  // 通常4个空格缩进
     explicit MyClass(int var);
     ~MyClass() {}
 
@@ -2647,14 +2646,14 @@ private:
 };
 ```
 
-Things to note:
+注意事项:
 
-* Any base class name should be on the same line as the subclass name, subject to the 80-column limit.
-* The `public:`, `protected:`, and `private:` keywords should not be indented.
-* Except for the first instance, these keywords should be preceded by a blank line. This rule is optional in small classes.
-* Do not leave a blank line after these keywords.
-* The `public:` section should be first, followed by the `protected:` and finally the `private:` section.
-* See Declaration Order for rules on ordering declarations within each of these sections.
+* 所有基类的名称应该和子类名在同一行，受80列的限制。
+* `public:`, `protected:`, 和`private:` 关键字不应该缩进。
+* 除第一个实例，这些关键字应该在前面加一个空行。这条规则是可选的小类。
+* 这些关键词后不留下一个空行。
+* `public:`应该在最前面, 紧接着是`protected:`最后是`private:`。
+* 看到声明顺序排序在每个部分规则声明。
 
 
 ## 构造函数初始化列表
@@ -2804,46 +2803,46 @@ set< list<string> > x;      // 你也可以在两个`<`之间对称地添加空�
 * 函数开始和结束的空行对提高代码可读性没啥作用
 * 在`if-else`的一个链内添加空行可以提高代码可读性。
 
-# Exceptions to the Rules
+# 例外的规则
 
-The coding conventions described above are mandatory. However, like all good rules, these sometimes have exceptions, which we discuss here.
+上面描述的编码惯例是强制性的。然而,就像所有好的规则,这些有时会有例外,我们在这里讨论。
 
-## Existing Non-conformant Code
+## 现存的不符合标准的代码
 
-You may diverge from the rules when dealing with code that does not conform to this style guide.
+在处理代码时你可能会偏离规则,不符合这个风格指南。
 
-If you find yourself modifying code that was written to specifications other than those presented by this guide, you may have to diverge from these rules in order to stay consistent with the local conventions in that code. If you are in doubt about how to do this, ask the original author or the person currently responsible for the code. Remember that consistency includes local consistency, too.
+如果你发现自己修改代码在编写本指南提供的规范以外,在那些代码你中可能不得不偏离这些规则为了与原有惯例保持一致。如果你在怀疑关于如何做到这一点,请原作者或人目前负责的代码。记住,一致性与原有的的一致性。
 
-## Windows Code
+## Windows代码
 
-Windows programmers have developed their own set of coding conventions, mainly derived from the conventions in Windows headers and other Microsoft code. We want to make it easy for anyone to understand your code, so we have a single set of guidelines for everyone writing C++ on any platform.
+Windows程序员开发了他们自己的编码惯例,主要源自于约定在Windows头文件和其他微软的代码。我们想让人很容易理解你的代码,所以我们为家写了一套适合任何平台的c++在指南。
 
-It is worth reiterating a few of the guidelines that you might forget if you are used to the prevalent Windows style:
+值得重申的一些指导,你可能会忘记如果你习惯于普通的Windows风格:
 
-* Do not use Hungarian notation (for example, naming an integer iNum). Use the Google naming conventions, including the .cpp extension for source files.
-* Windows defines many of its own synonyms for primitive types, such as DWORD, HANDLE, etc. It is perfectly acceptable, and encouraged, that you use these types when calling Windows API functions. Even so, keep as close as you can to the underlying C++ types. For example, use const TCHAR * instead of LPCTSTR.
-* When compiling with Microsoft Visual C++, set the compiler to warning level 3 or higher, and treat all warnings as errors.
-* Do not use #pragma once; instead use the standard Google include guards. The path in the include guards should be relative to the top of your project tree.
-* In fact, do not use any nonstandard extensions, like #pragma and __declspec, unless you absolutely must. Using `__declspec(dllimport)` and `__declspec(dllexport)` is allowed; however, you must use them through macros such as `DLLIMPORT` and `DLLEXPORT` or `CC_DLL`, so that someone can easily disable the extensions if they share the code.
+* 不要使用匈牙利命名法(例如,命名一个整数为iNum)。使用谷歌的命名约定,包括.cpp扩展源文件。
+* Windows定义了许多原始类型的同义词,如双字、句柄,等等。这是完全可以接受的,并鼓励,当调用Windows API函数时你使用这些类型。即便如此,保持尽可能接近底层c++类型。例如,使用常量TCHAR *代替LPCTSTR。
+* 当微软Visual C++编译时,编译器警告3级或更高,并将所有警告作为错误。
+* 不要使用#ragma;而使用标准的谷歌include警卫。include警卫的路径应该是相对于你的项目树的顶端。
+* 实际上,不使用任何非标准扩展,如#pragma和使用__declspec,除非一定要这么做。使用`__declspec(dllimport)`和`__declspec(dllexport)`是允许的;然而,你必须通过宏如`DLLIMPORT`和`DLLEXPORT`或`CC_DLL`来使用它,这样的话别人可以很容易地禁用扩展,如果他们分享代码。
 
-However, there are just a few rules that we occasionally need to break on Windows:
+然而,有几个规则,我们有时需要在Windows上打破:
 
-* Normally we forbid the use of multiple implementation inheritance; however, it is required when using COM and some ATL/WTL classes. You may use multiple implementation inheritance to implement COM or ATL/WTL classes and interfaces.
-* Although you should not use exceptions in your own code, they are used extensively in the ATL and some STLs, including the one that comes with Visual C++. When using the ATL, you should define _ATL_NO_EXCEPTIONS to disable exceptions. You should investigate whether you can also disable exceptions in your STL, but if not, it is OK to turn on exceptions in the compiler. (Note that this is only to get the STL to compile. You should still not write exception handling code yourself.)
-* The usual way of working with precompiled headers is to include a header file at the top of each source file, typically with a name like StdAfx.h or precompile.h. To make your code easier to share with other projects, avoid including this file explicitly (except in precompile.cpp), and use the /FI compiler option to include the file automatically.
-* Resource headers, which are usually named resource.h and contain only macros, do not need to conform to these style guidelines.
+* 通常我们禁止使用多继承实现;然而,它需要在使用COM和一些ATL/WTL类是必要的。你可以使用多继承实现来实现COM或ATL/WTL类和接口。
+* 虽然你不应该在自己的代码中使用异常,它们广泛用于ATL和一些STL中,包括一个带有Visual C++。当使用ATL,你应该定义_ATL_NO_EXCEPTIONS来禁用例外。你应该弄清是否还可以禁用STL例外,但如果不是这样,在编译器打开异常也行。(注意,这只是让STL编译。你应该还没有编写异常处理代码)。
+* 通常使用预编译头文件的方法是包含一个头文件的每个源文件时,通常用一个名字像StdAfx.h或precompile.h。为了你的代码更容易与其他项目,避免包括这个文件明确(除了precompile.cpp),并使用自动/ FI编译器选项包括文件。
+* 资源标题,通常命名资源.h并只包含宏,不需要符合这些样式指南。
 
-# Parting Words
+# 赠言
 
-Use common sense and **BE CONSISTENT**.
+使用常识并**保持一致**。
 
-If you are editing code, take a few minutes to look at the code around you and determine its style. If they use spaces around their if clauses, you should, too. If their comments have little boxes of stars around them, make your comments have little boxes of stars around them too.
+如果您正在编辑代码,花几分钟看看你周围的代码并确定其风格。如果他们使用空格在条款,你也应该这么做。如果他们的评论有小盒子的恒星周围,让你的评论也有小盒周围的恒星。
 
-The point of having style guidelines is to have a common vocabulary of coding so people can concentrate on what you are saying, rather than on how you are saying it. We present global style rules here so people know the vocabulary. But local style is also important. If code you add to a file looks drastically different from the existing code around it, the discontinuity throws readers out of their rhythm when they go to read it. Try to avoid this.
+有风格指南的目的是有一个公共的词汇表的编码,这样人们就能专注于你在说什么,而不是你如何说它。我们这里展示全球样式规则这样人们知道规则。但个人风格也很重要。如果代码添加到一个文件从现有代码看起来截然不同,不连续引发读者的节奏当他们去读它。尽量避免这种情况。
 
-OK, enough writing about writing code; the code itself is much more interesting. Have fun!
+好,关于如何写编写代码的规则以及足够了,代码本身更有趣。玩得开心!
 
 
 [1]: https://lh3.googleusercontent.com/-glwwzmFyUmk/UQgPnlx40uI/AAAAAAAArzg/WPRW10kkecM/s144/cocos2d-x-logo.png
 
-**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+**表的内容**  *生成于 [DocToc](http://doctoc.herokuapp.com/)*
